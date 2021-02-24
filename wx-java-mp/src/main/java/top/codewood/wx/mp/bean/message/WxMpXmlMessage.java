@@ -14,7 +14,7 @@ import java.io.Serializable;
  * </xml>
  */
 @XStreamAlias("xml")
-public class MpXmlMessage implements Serializable {
+public class WxMpXmlMessage implements Serializable {
 
     @XStreamAlias("ToUserName")
     private String toUser;
@@ -28,8 +28,20 @@ public class MpXmlMessage implements Serializable {
     @XStreamAlias("MsgType")
     private String msgType;
 
+    @XStreamAlias("MsgId")
+    private String msgId;
+
     @XStreamAlias("Content")
     private String content;
+
+    @XStreamAlias("Event")
+    private String event;
+
+    @XStreamAlias("EventKey")
+    private String eventKey;
+
+    @XStreamAlias("MenuId")
+    private String menuId;
 
     public String getToUser() {
         return toUser;
@@ -63,6 +75,14 @@ public class MpXmlMessage implements Serializable {
         this.msgType = msgType;
     }
 
+    public String getMsgId() {
+        return msgId;
+    }
+
+    public void setMsgId(String msgId) {
+        this.msgId = msgId;
+    }
+
     public String getContent() {
         return content;
     }
@@ -71,14 +91,34 @@ public class MpXmlMessage implements Serializable {
         this.content = content;
     }
 
+    public String getEvent() {
+        return event;
+    }
+
+    public void setEvent(String event) {
+        this.event = event;
+    }
+
+    public String getEventKey() {
+        return eventKey;
+    }
+
+    public void setEventKey(String eventKey) {
+        this.eventKey = eventKey;
+    }
+
     @Override
     public String toString() {
-        return "MpXmlMessage{" +
+        return "WxMpXmlMessage{" +
                 "toUser='" + toUser + '\'' +
                 ", fromUser='" + fromUser + '\'' +
                 ", createTime=" + createTime +
                 ", msgType='" + msgType + '\'' +
+                ", msgId='" + msgId + '\'' +
                 ", content='" + content + '\'' +
+                ", event='" + event + '\'' +
+                ", eventKey='" + eventKey + '\'' +
                 '}';
     }
+
 }

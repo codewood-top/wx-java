@@ -1,0 +1,12 @@
+server:
+  port: 9091
+
+weixin:
+  mp:
+    property:
+      appid:
+      appsecret:
+
+logging:
+  level:
+    top.codewood.wx: debug

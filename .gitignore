@@ -8,7 +8,7 @@
 /**/.apt_generated/
 /**/.factorypath
 /**/application-local*.yml
-/**/application-prod2.yml
+/**/application-prod*.yml
 /**/application-test.yml
 /.recommenders/
 /**/src/main/resources/files/cert/

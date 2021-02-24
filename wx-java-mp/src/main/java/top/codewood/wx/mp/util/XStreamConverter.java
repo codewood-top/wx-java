@@ -1,4 +1,4 @@
-package top.codewood.wx.mp.bean.util;
+package top.codewood.wx.mp.util;
 
 import com.thoughtworks.xstream.XStream;
 

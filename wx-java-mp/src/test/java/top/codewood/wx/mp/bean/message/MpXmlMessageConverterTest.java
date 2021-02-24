@@ -1,7 +1,7 @@
 package top.codewood.wx.mp.bean.message;
 
 import org.junit.Test;
-import top.codewood.wx.mp.bean.util.XStreamConverter;
+import top.codewood.wx.mp.util.XStreamConverter;
 
 public class MpXmlMessageConverterTest {
 
@@ -14,7 +14,7 @@ public class MpXmlMessageConverterTest {
                 " <MsgType><![CDATA[text]]></MsgType>\n" +
                 " <Content><![CDATA[test]]></Content>\n" +
                 "</xml>";
-        MpXmlMessage mpXmlMessage = XStreamConverter.fromXml(MpXmlMessage.class, XML_STR);
+        WxMpXmlMessage mpXmlMessage = XStreamConverter.fromXml(WxMpXmlMessage.class, XML_STR);
         System.out.println("message bean: " + mpXmlMessage);
     }
 

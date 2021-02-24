@@ -1,4 +1,4 @@
-package top.codewood.wx.mp.bean.util;
+package top.codewood.wx.mp.util;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.core.util.QuickWriter;
@@ -30,6 +30,9 @@ public class XStreamInitilizer {
 
     public static XStream create() {
         XStream xStream = new XStream(XPP_DRIVER);
+
+        xStream.ignoreUnknownElements();
+
         XStream.setupDefaultSecurity(xStream);
         xStream.addPermission(new WildcardTypePermission(new String[]{"top.codewood.**"}));
         return xStream;
