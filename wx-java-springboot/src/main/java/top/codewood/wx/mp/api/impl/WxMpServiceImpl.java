@@ -1,23 +1,19 @@
-package top.codewood.wx.mp.service.impl;
+package top.codewood.wx.mp.api.impl;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestTemplate;
 import top.codewood.wx.common.util.json.WxGsonBuilder;
+import top.codewood.wx.mp.api.WxMpApi;
+import top.codewood.wx.mp.api.WxMpService;
 import top.codewood.wx.mp.bean.menu.WxMenu;
 import top.codewood.wx.mp.property.WxMpProperty;
-import top.codewood.wx.mp.service.WxMpService;
 import top.codewood.wx.util.Strings;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 
 @Service("wxMpService")
 public class WxMpServiceImpl implements WxMpService {
@@ -25,9 +21,6 @@ public class WxMpServiceImpl implements WxMpService {
     static final Logger LOGGER = LoggerFactory.getLogger(WxMpServiceImpl.class);
 
     private static WxAcessToken WX_ACCESS_TOKEN = null;
-
-    @Autowired
-    private RestTemplate restTemplate;
 
     @Override
     public String getAccessToken() {
@@ -45,14 +38,16 @@ public class WxMpServiceImpl implements WxMpService {
     @Override
     public void createMenu(WxMenu wxMenu) {
         Assert.notNull(wxMenu, "菜单不能为空");
+        String respStr = WxMpApi.createMenu(getAccessToken(), wxMenu);
+        LOGGER.debug("resp: {}", respStr);
 
-        String create_menu_url = String.format("https://api.weixin.qq.com/cgi-bin/menu/create?access_token=%s", getAccessToken());
-        Gson gson = WxGsonBuilder.create();
-        String jsonStr = gson.toJson(wxMenu);
-        LOGGER.debug("wxmenu json str: {}", jsonStr);
-        ResponseEntity<Map> resp = restTemplate.postForEntity(create_menu_url, jsonStr, Map.class);
-        LOGGER.debug("resp: {}", resp.getBody());
+    }
 
+    @Override
+    public WxMenu queryMenu() {
+        String respStr = WxMpApi.queryMenu(getAccessToken());
+
+        return null;
     }
 
     private void updateAccessToken() {
@@ -60,34 +55,25 @@ public class WxMpServiceImpl implements WxMpService {
             throw new RuntimeException("appid & appsecret 未配置 ");
         }
         LOGGER.debug("正在请求更新 access_token");
-        Map<String, Object> respMap = restTemplate.getForObject(String.format("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s", WxMpProperty.APP_ID, WxMpProperty.APP_SECRET), Map.class);
-        if (respMap.containsKey("access_token")) {
+        String respStr = WxMpApi.getAccessToken(WxMpProperty.APP_ID, WxMpProperty.APP_SECRET);
+        JsonObject json = WxGsonBuilder.create().fromJson(respStr, JsonObject.class);
+        if (json.has("access_token")) {
             WxAcessToken wxAcessToken = new WxAcessToken();
-            wxAcessToken.accessToken = (String) respMap.get("access_token");
-            wxAcessToken.expiresIn = (Integer) respMap.get("expires_in");
+            wxAcessToken.accessToken = json.get("access_token").getAsString();
+            wxAcessToken.expiresIn = json.get("expires_in").getAsInt();
             wxAcessToken.expiredTime = LocalDateTime.now().plusSeconds(wxAcessToken.expiresIn - 200);
             WX_ACCESS_TOKEN = wxAcessToken;
         } else {
-            LOGGER.error("请求更新 access_token 失败：{}", respMap.get("errmsg"));
+            LOGGER.error("请求更新 access_token 失败：{}", json.get("errmsg"));
         }
     }
 
     class WxAcessToken {
+
         String accessToken;
         Integer expiresIn;
         LocalDateTime expiredTime;
 
-        public void setAccessToken(String accessToken) {
-            this.accessToken = accessToken;
-        }
-
-        public void setExpiresIn(Integer expiresIn) {
-            this.expiresIn = expiresIn;
-        }
-
-        public void setExpiredTime(LocalDateTime expiredTime) {
-            this.expiredTime = expiredTime;
-        }
     }
 
 }

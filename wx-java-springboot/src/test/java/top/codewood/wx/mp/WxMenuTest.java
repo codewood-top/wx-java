@@ -1,27 +1,24 @@
 package top.codewood.wx.mp;
 
-import boostrap.WxJavaSpringBootApplication;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import top.codewood.wx.common.util.json.WxGsonBuilder;
+import top.codewood.wx.mp.api.WxMpApi;
 import top.codewood.wx.mp.bean.menu.WxMenu;
 import top.codewood.wx.mp.bean.menu.WxMenuButton;
-import top.codewood.wx.mp.service.WxMpService;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = WxJavaSpringBootApplication.class)
+//@RunWith(SpringRunner.class)
+//@SpringBootTest(classes = WxJavaSpringBootApplication.class)
 public class WxMenuTest {
 
     //@Autowired
-    private WxMpService wxMpService;
+    private WxMpApi wxMpService;
+
+    static String accessToken = "42_taVuNbmp2eYquQ6dx1DazYBBTy3OxMriH5eLLzeN83hBfBSTyKaeO5JS76bgcXMEpNAM2fz28hGB626oljKnIQOmFXgrksZMc_zZ5QkfZSYkIJqywwcQEp2YGZwGhMko5t7N-SIle3XtAslvRAWhADAGPL";
 
     @Test
     public void createMenu() {
@@ -53,8 +50,8 @@ public class WxMenuTest {
 
         WxMenuButton sub_button_view = new WxMenuButton();
         sub_button_view.setType("view");
-        sub_button_click.setName("百度");
-        sub_button_click.setKey("http://www.baidu.com");
+        sub_button_view.setName("百度");
+        sub_button_view.setUrl("http://www.baidu.com");
         button_menu.getSubButtons().add(sub_button_view);
 
         buttons.add(button_menu);
@@ -62,8 +59,23 @@ public class WxMenuTest {
 
         System.out.println(wxMenu.toJson());
 
-        //wxMpService.createMenu(wxMenu);
+        String respStr = wxMpService.createMenu(accessToken, wxMenu);
+        System.out.println("respStr: " + respStr);
 
     }
+
+    //@Test
+    public void queryWxMenu() {
+        String respStr = WxMpApi.queryMenu(accessToken);
+        Gson gson = WxGsonBuilder.create();
+        JsonObject json = gson.fromJson(respStr, JsonObject.class);
+        if (json.get("is_menu_open").getAsInt() == 0) {
+            // 微信公众号菜单未启用
+        } else {
+            WxMenu wxMenu = WxGsonBuilder.create().fromJson(json.get("selfmenu_info"), WxMenu.class);
+            System.out.println("wxMenu: " + wxMenu);
+        }
+    }
+
 
 }

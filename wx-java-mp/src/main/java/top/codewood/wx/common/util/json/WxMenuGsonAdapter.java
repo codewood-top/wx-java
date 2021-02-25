@@ -45,7 +45,7 @@ public class WxMenuGsonAdapter implements JsonSerializer<WxMenu>, JsonDeserializ
             for (WxMenuButton sub_button: button.getSubButtons()) {
                 buttonArr.add(convertToJson(sub_button));
             }
-            buttonJson.add("sub_button", buttonJson);
+            buttonJson.add("sub_button", buttonArr);
         }
 
         return buttonJson;
@@ -80,7 +80,7 @@ public class WxMenuGsonAdapter implements JsonSerializer<WxMenu>, JsonDeserializ
 
             if (buttonJson.get("sub_button") == null || buttonJson.get("sub_button").isJsonNull()) continue;
 
-            JsonArray subButtonArr = buttonJson.get("sub_button").getAsJsonArray();
+            JsonArray subButtonArr = buttonJson.get("sub_button").getAsJsonObject().get("list").getAsJsonArray();
             for (int j = 0; j < subButtonArr.size(); j++) {
                 JsonObject subButtonJson = subButtonArr.get(j).getAsJsonObject();
                 button.getSubButtons().add(convertFromJson(subButtonJson));
@@ -94,12 +94,24 @@ public class WxMenuGsonAdapter implements JsonSerializer<WxMenu>, JsonDeserializ
         WxMenuButton button = new WxMenuButton();
 
         button.setName(json.get("name").getAsString());
-        button.setKey(json.get("key").getAsString());
-        button.setUrl(json.get("url").getAsString());
-        button.setType(json.get("type").getAsString());
-        button.setMediaId(json.get("media_id").getAsString());
-        button.setAppid(json.get("appid").getAsString());
-        button.setPagePath(json.get("pathpath").getAsString());
+        if (json.has("type")) {
+            button.setType(json.get("type").getAsString());
+        }
+        if (json.has("key")) {
+            button.setKey(json.get("key").getAsString());
+        }
+        if (json.has("url")) {
+            button.setUrl(json.get("url").getAsString());
+        }
+        if (json.has("media_id")) {
+            button.setMediaId(json.get("media_id").getAsString());
+        }
+        if (json.has("appid")) {
+            button.setAppid(json.get("appid").getAsString());
+        }
+        if (json.has("pagepath")) {
+            button.setPagePath(json.get("pagepath").getAsString());
+        }
 
         return button;
     }

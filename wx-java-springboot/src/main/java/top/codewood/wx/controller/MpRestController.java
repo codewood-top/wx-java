@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.codewood.wx.common.api.WxConstants;
+import top.codewood.wx.mp.api.WxMpService;
+import top.codewood.wx.mp.bean.message.WxMpTextRespXmlMessage;
 import top.codewood.wx.mp.bean.message.WxMpXmlMessage;
 import top.codewood.wx.mp.util.XStreamConverter;
-import top.codewood.wx.mp.service.WxMpService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -46,7 +48,42 @@ public class MpRestController {
         } else {
             try {
                 WxMpXmlMessage mpXmlMessage = XStreamConverter.fromXml(WxMpXmlMessage.class, request.getInputStream());
-                LOGGER.info("receive msg: {}", mpXmlMessage.toString());
+
+                String msg = null;
+
+                switch (mpXmlMessage.getMsgType()) {
+                    case WxConstants.XmlMsgType.TEXT:
+                        msg = "文本_" + mpXmlMessage.getContent();
+                        break;
+                    case WxConstants.XmlMsgType.IMAGE:
+                        msg = "图片_" + mpXmlMessage.getMediaId() ;
+                        break;
+                    case WxConstants.XmlMsgType.VOICE:
+                        msg = "语音_" + mpXmlMessage.getMediaId();
+                        break;
+                    case WxConstants.XmlMsgType.VIDEO:
+                        msg = "视频_" + mpXmlMessage.getMediaId() + "_" + mpXmlMessage.getThumbMediaId();
+                        break;
+                    case WxConstants.XmlMsgType.SHORT_VIDEO:
+                        msg = "小视频_" + mpXmlMessage.getMediaId() + "_" + mpXmlMessage.getThumbMediaId();
+                        break;
+                    case WxConstants.XmlMsgType.LINK:
+                        msg = String.format("链接: <a href='%s'>%s</a>_%s", mpXmlMessage.getUrl(), mpXmlMessage.getTitle(), mpXmlMessage.getDescription());
+                        break;
+                    case WxConstants.XmlMsgType.LOCATION:
+                        msg = String.format("位置 [%s](%s): %s,%s", mpXmlMessage.getLabel(), mpXmlMessage.getScale(), mpXmlMessage.getLatitude(), mpXmlMessage.getLongitude());
+                        break;
+                    default:
+                        msg = "未识别内容：" + mpXmlMessage.getMsgType();
+                }
+
+                WxMpTextRespXmlMessage mpTextRespXmlMessage = new WxMpTextRespXmlMessage();
+                mpTextRespXmlMessage.setContent(msg);
+                mpTextRespXmlMessage.setFromUser(mpXmlMessage.getToUser());
+                mpTextRespXmlMessage.setToUser(mpXmlMessage.getFromUser());
+
+                return XStreamConverter.toXml(mpTextRespXmlMessage);
+
             } catch (IOException e) {
                 LOGGER.error("err: {}", e.getMessage());
             }
@@ -63,6 +100,5 @@ public class MpRestController {
         }
         return DigestUtils.sha1Hex(sb.toString());
     }
-
 
 }

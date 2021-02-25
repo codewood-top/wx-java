@@ -19,9 +19,26 @@ public class XStreamInitilizer {
             public HierarchicalStreamWriter createWriter(Writer out) {
                 return new PrettyPrintWriter(out) {
 
+                    private Class clazz = null;
+
+                    @Override
+                    public void startNode(String name, Class clazz) {
+                        this.clazz = clazz;
+                        super.startNode(name, clazz);
+                    }
+
                     @Override
                     protected void writeText(QuickWriter writer, String text) {
-                        writer.write(String.format("<![CDATA[%s]]", text));
+                        if (clazz == String.class) {
+                            writer.write(String.format("<![CDATA[%s]]>", text));
+                        } else {
+                            super.writeText(writer, text);
+                        }
+                    }
+
+                    @Override
+                    public String encodeNode(String name) {
+                        return name;// 防止将_转换成__
                     }
                 };
             }
