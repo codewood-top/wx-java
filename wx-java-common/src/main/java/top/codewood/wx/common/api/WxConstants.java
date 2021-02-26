@@ -17,4 +17,47 @@ public class WxConstants {
         String LINK = "link";
     }
 
+    public interface EventType {
+        String SUBSCRIBE = "subscribe";
+        String UNSUBSCRIBE = "unsubscribe";
+        String SCAN = "SCAN";
+        String LOCATION = "LOCATION";
+        /**
+         * 点击菜单拉取消息时的事件推送
+         */
+        String CLICK = "CLICK";
+        /**
+         * 点击菜单跳转链接时的事件推送
+         */
+        String VIEW = "VIEW";
+        /**
+         * 扫码推事件的事件推送
+         */
+        String SCANCODE_PUSH = "scancode_push";
+        /**
+         * 扫码推事件且弹出“消息接收中”提示框的事件推送
+         */
+        String SCANCODE_WAITMSG = "scancode_waitmsg";
+        /**
+         * pic_sysphoto：弹出系统拍照发图的事件推送
+         */
+        String PIC_SYSPHOTO = "pic_sysphoto";
+        /**
+         * pic_photo_or_album：弹出拍照或者相册发图的事件推送
+         */
+        String PIC_PHOTO_OR_ALBUM = "pic_photo_or_album";
+        /**
+         * pic_weixin：弹出微信相册发图器的事件推送
+         */
+        String PIC_WEIXIN = "pic_weixin";
+        /**
+         * location_select：弹出地理位置选择器的事件推送
+         */
+        String LOCATION_SELECT = "location_select";
+        /**
+         * 点击菜单跳转小程序的事件推送
+         */
+        String VIEW_MINIPROGRAM = "view_miniprogram";
+    }
+
 }
