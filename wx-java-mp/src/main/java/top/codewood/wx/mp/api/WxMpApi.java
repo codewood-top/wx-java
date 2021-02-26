@@ -1,11 +1,36 @@
 package top.codewood.wx.mp.api;
 
 import top.codewood.util.http.AppHttpClient;
-import top.codewood.wx.mp.bean.menu.WxMenu;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 public class WxMpApi {
+
+    protected static String get(String url) {
+        try {
+            return AppHttpClient.getInstance().get(url);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected static String post(String url, String postData) {
+        try {
+
+            return AppHttpClient.getInstance().post(url, postData);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected static InputStream getStream(String url) {
+        try {
+            return AppHttpClient.getInstance().getStream(url);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     /**
      *
@@ -18,43 +43,8 @@ public class WxMpApi {
     public static String getAccessToken(String appid, String appsecret) {
         assert appid != null && appsecret != null;
         String url = String.format("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s", appid, appsecret);
-        try {
-            return AppHttpClient.getInstance().get(url);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return get(url);
     }
 
-    public static String createMenu(String accessToken, WxMenu wxMenu) {
-        assert accessToken != null && wxMenu != null;
-        String url = String.format("https://api.weixin.qq.com/cgi-bin/menu/create?access_token=%s", accessToken);
-        try {
-            String menuJsonStr = wxMenu.toJson();
-            return AppHttpClient.getInstance().post(url, menuJsonStr);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static String queryMenu(String accessToken) {
-        assert accessToken != null;
-        String url = String.format("https://api.weixin.qq.com/cgi-bin/get_current_selfmenu_info?access_token=%s", accessToken);
-        try {
-            return AppHttpClient.getInstance().get(url);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static String deleteMenu(String accessToken) {
-        assert accessToken != null;
-        String url = String.format("https://api.weixin.qq.com/cgi-bin/menu/delete?access_token=%s", accessToken);
-
-        try {
-            return AppHttpClient.getInstance().get(url);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
 }

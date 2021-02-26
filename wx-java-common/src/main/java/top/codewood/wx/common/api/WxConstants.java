@@ -60,4 +60,23 @@ public class WxConstants {
         String VIEW_MINIPROGRAM = "view_miniprogram";
     }
 
+    public interface MediaType {
+        String IMAGE = "image";
+        String VOICE = "voice";
+        String VIDEO = "video";
+        String THUMB = "thumb";
+    }
+
+    public interface MediaFileType {
+        String IMAGE_PNG = "png";
+        String IMAGE_JPEG = "jpeg";
+        String IMAGE_JPG = "jpg";
+        String IMAGE_GIF = "gif";
+        String VOICE_AMR = "amr";
+        String VOICE_MP3 = "mp3";
+        String VIDEO_MP4 = "mp4";
+        String THUMB = "jpg";
+    }
+
+
 }

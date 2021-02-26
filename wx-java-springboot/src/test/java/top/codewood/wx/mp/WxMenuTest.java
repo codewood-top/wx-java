@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.junit.Test;
 import top.codewood.wx.common.util.json.WxGsonBuilder;
-import top.codewood.wx.mp.api.WxMpApi;
+import top.codewood.wx.mp.api.WxMpMenuApi;
 import top.codewood.wx.mp.bean.menu.WxMenu;
 import top.codewood.wx.mp.bean.menu.WxMenuButton;
 
@@ -14,9 +14,6 @@ import java.util.List;
 //@RunWith(SpringRunner.class)
 //@SpringBootTest(classes = WxJavaSpringBootApplication.class)
 public class WxMenuTest {
-
-    //@Autowired
-    private WxMpApi wxMpService;
 
     static String accessToken = "42_taVuNbmp2eYquQ6dx1DazYBBTy3OxMriH5eLLzeN83hBfBSTyKaeO5JS76bgcXMEpNAM2fz28hGB626oljKnIQOmFXgrksZMc_zZ5QkfZSYkIJqywwcQEp2YGZwGhMko5t7N-SIle3XtAslvRAWhADAGPL";
 
@@ -59,14 +56,14 @@ public class WxMenuTest {
 
         System.out.println(wxMenu.toJson());
 
-        String respStr = wxMpService.createMenu(accessToken, wxMenu);
+        String respStr = WxMpMenuApi.create(accessToken, wxMenu);
         System.out.println("respStr: " + respStr);
 
     }
 
     //@Test
     public void queryWxMenu() {
-        String respStr = WxMpApi.queryMenu(accessToken);
+        String respStr = WxMpMenuApi.query(accessToken);
         Gson gson = WxGsonBuilder.create();
         JsonObject json = gson.fromJson(respStr, JsonObject.class);
         if (json.get("is_menu_open").getAsInt() == 0) {

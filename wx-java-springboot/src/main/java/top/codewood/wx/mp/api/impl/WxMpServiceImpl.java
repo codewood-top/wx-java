@@ -8,6 +8,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import top.codewood.wx.common.util.json.WxGsonBuilder;
 import top.codewood.wx.mp.api.WxMpApi;
+import top.codewood.wx.mp.api.WxMpMenuApi;
 import top.codewood.wx.mp.api.WxMpService;
 import top.codewood.wx.mp.bean.menu.WxMenu;
 import top.codewood.wx.mp.property.WxMpProperty;
@@ -38,14 +39,14 @@ public class WxMpServiceImpl implements WxMpService {
     @Override
     public void createMenu(WxMenu wxMenu) {
         Assert.notNull(wxMenu, "菜单不能为空");
-        String respStr = WxMpApi.createMenu(getAccessToken(), wxMenu);
+        String respStr = WxMpMenuApi.create(getAccessToken(), wxMenu);
         LOGGER.debug("resp: {}", respStr);
 
     }
 
     @Override
     public WxMenu queryMenu() {
-        String respStr = WxMpApi.queryMenu(getAccessToken());
+        String respStr = WxMpMenuApi.query(getAccessToken());
 
         return null;
     }
