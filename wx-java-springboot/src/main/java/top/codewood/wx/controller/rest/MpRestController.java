@@ -1,4 +1,4 @@
-package top.codewood.wx.controller;
+package top.codewood.wx.controller.rest;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.codewood.wx.common.api.WxConstants;
 import top.codewood.wx.mp.api.WxMpService;
@@ -32,6 +33,13 @@ public class MpRestController {
     @RequestMapping("/access_token")
     public String accessToken() {
         return wxMpService.getAccessToken();
+    }
+
+    @RequestMapping("js_signature")
+    public String jsSignature(@RequestParam("nonceStr") String nonceStr,
+                              @RequestParam("timeStamp") Long timeStamp,
+                              @RequestParam("url") String url) {
+        return wxMpService.jsSignature(nonceStr, timeStamp, url);
     }
 
     @RequestMapping("/handle")

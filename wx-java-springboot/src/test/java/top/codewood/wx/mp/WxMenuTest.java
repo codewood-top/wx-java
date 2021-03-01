@@ -17,7 +17,7 @@ public class WxMenuTest {
 
     static String accessToken = "";
     
-    @Test
+    //@Test
     public void createMenu() {
 
         WxMenu wxMenu = new WxMenu();
