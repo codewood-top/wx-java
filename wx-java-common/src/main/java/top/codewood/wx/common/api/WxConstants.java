@@ -5,6 +5,9 @@ package top.codewood.wx.common.api;
  */
 public class WxConstants {
 
+    public static final String SUCCESS = "success";
+    public static final String FAILURE = "failure";
+
     public interface XmlMsgType {
         String TEXT = "text";
         String IMAGE = "image";
@@ -15,6 +18,8 @@ public class WxConstants {
         String SHORT_VIDEO = "shortvideo";
         String LOCATION = "location";
         String LINK = "link";
+        String EVENT = "event";
+        String TRANSFER_CUSTOMER_SERVICE = "transfer_customer_service";
     }
 
     public interface EventType {
@@ -78,5 +83,33 @@ public class WxConstants {
         String THUMB = "jpg";
     }
 
+    public interface KefuMsgType {
+        String TEXT = "text";
+        String IMAGE = "image";
+        String VOICE = "voice";
+        String VIDEO = "video";
+        String MUSIC = "music";
+        /**
+         * 发送图文消息（点击跳转到外链） 图文消息条数限制在1条以内，注意，如果图文数超过1，则将会返回错误码45008
+         */
+        String NEWS = "news";
+
+        /**
+         * 发送图文消息（点击跳转到图文消息页面） 图文消息条数限制在1条以内，注意，如果图文数超过1，则将会返回错误码45008。
+         */
+        String MPNEWS = "mpnews";
+
+        String MSGMENU = "msgmenu";
+
+        /**
+         * 发送卡券
+         */
+        String WXCARD = "wxcard";
+
+        /**
+         * 发送小程序卡片（要求小程序与公众号已关联）
+         */
+        String MINIPROGRAMPAGE = "miniprogrampage";
+    }
 
 }

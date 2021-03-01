@@ -1,7 +1,6 @@
 package top.codewood.wx.mp.bean.message;
 
-import org.junit.Test;
-import top.codewood.wx.mp.util.XStreamConverter;
+import top.codewood.wx.mp.util.xstream.XStreamConverter;
 
 public class MpXmlMessageConverterTest {
 

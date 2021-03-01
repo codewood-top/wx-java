@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-import top.codewood.wx.common.util.json.WxGsonBuilder;
+import top.codewood.wx.mp.util.json.WxGsonBuilder;
 import top.codewood.wx.mp.api.WxMpApi;
 import top.codewood.wx.mp.api.WxMpMenuApi;
 import top.codewood.wx.mp.api.WxMpService;

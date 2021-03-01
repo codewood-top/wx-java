@@ -1,6 +1,6 @@
 package top.codewood.wx.mp.bean.menu;
 
-import top.codewood.wx.common.util.json.WxGsonBuilder;
+import top.codewood.wx.mp.util.json.WxGsonBuilder;
 
 import java.io.Serializable;
 import java.util.ArrayList;

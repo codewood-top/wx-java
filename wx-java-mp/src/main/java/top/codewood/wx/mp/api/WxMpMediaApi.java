@@ -1,6 +1,5 @@
 package top.codewood.wx.mp.api;
 
-import top.codewood.util.http.AppHttpClient;
 import top.codewood.wx.common.util.file.FileUtils;
 
 import java.io.IOException;
@@ -17,10 +16,10 @@ public class WxMpMediaApi extends WxMpApi {
      * @param fileType 图片（image）: 10M，支持PNG\JPEG\JPG\GIF格式, 语音（voice）：2M，播放长度不超过60s，支持AMR\MP3格式, 视频（video）：10MB，支持MP4格式, 缩略图（thumb）：64KB，支持JPG格式
      * @return {"type":"TYPE","media_id":"MEDIA_ID","created_at":123456789}
      */
-    public static String upload(String acccessToken, String mediaType, String fileType, InputStream inputStream) throws IOException {
+    public static void upload(String acccessToken, String mediaType, String fileType, InputStream inputStream) throws IOException {
         assert acccessToken != null && mediaType != null && fileType != null;
         String url = String.format("https://api.weixin.qq.com/cgi-bin/media/upload?access_token=%s&type=%s", acccessToken, mediaType);
-        return AppHttpClient.getInstance().upload(url, FileUtils.createTmpFile(inputStream, UUID.randomUUID().toString(), fileType));
+        upload(url, FileUtils.createTmpFile(inputStream, UUID.randomUUID().toString(), fileType));
     }
 
     /**

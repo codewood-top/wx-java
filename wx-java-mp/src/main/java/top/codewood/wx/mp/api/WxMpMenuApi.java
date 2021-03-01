@@ -1,6 +1,9 @@
 package top.codewood.wx.mp.api;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import top.codewood.wx.mp.bean.menu.WxMenu;
+import top.codewood.wx.mp.util.json.WxGsonBuilder;
 
 public class WxMpMenuApi extends WxMpApi {
 
@@ -21,10 +24,20 @@ public class WxMpMenuApi extends WxMpApi {
      * @param accessToken
      * @return
      */
-    public static String query(String accessToken) {
+    public static WxMenu query(String accessToken) {
         assert accessToken != null;
         String url = String.format("https://api.weixin.qq.com/cgi-bin/get_current_selfmenu_info?access_token=%s", accessToken);
-        return get(url);
+        String respStr = get(url);
+
+        WxMenu wxMenu = null;
+        Gson gson = WxGsonBuilder.create();
+        JsonObject json = gson.fromJson(respStr, JsonObject.class);
+        if (json.get("is_menu_open").getAsInt() == 0) {
+            // 微信公众号菜单未启用
+        } else {
+            wxMenu = WxGsonBuilder.create().fromJson(json.get("selfmenu_info"), WxMenu.class);
+        }
+        return wxMenu;
     }
 
     /**

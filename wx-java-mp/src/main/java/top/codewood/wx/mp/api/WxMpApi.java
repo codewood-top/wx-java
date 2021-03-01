@@ -1,7 +1,11 @@
 package top.codewood.wx.mp.api;
 
 import top.codewood.util.http.AppHttpClient;
+import top.codewood.wx.common.bean.error.WxError;
+import top.codewood.wx.common.bean.error.WxErrorException;
+import top.codewood.wx.mp.util.json.WxGsonBuilder;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -9,7 +13,8 @@ public class WxMpApi {
 
     protected static String get(String url) {
         try {
-            return AppHttpClient.getInstance().get(url);
+            String respStr = AppHttpClient.getInstance().get(url);
+            return handleResponse(respStr);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -17,8 +22,17 @@ public class WxMpApi {
 
     protected static String post(String url, String postData) {
         try {
+            String respStr = AppHttpClient.getInstance().post(url, postData);
+            return handleResponse(respStr);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-            return AppHttpClient.getInstance().post(url, postData);
+    protected static String upload(String url, File file) {
+        try {
+            String respStr = AppHttpClient.getInstance().upload(url, file);
+            return handleResponse(respStr);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -30,6 +44,15 @@ public class WxMpApi {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static String handleResponse(String resp) {
+        WxError wxError = WxGsonBuilder.create().fromJson(resp, WxError.class);
+        if (wxError.getErrorCode() != 0) {
+            throw new WxErrorException(wxError);
+        }
+
+        return resp;
     }
 
     /**

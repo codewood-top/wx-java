@@ -1,4 +1,4 @@
-package top.codewood.wx.common.util.json;
+package top.codewood.wx.mp.util.json;
 
 import com.google.gson.*;
 import top.codewood.wx.mp.bean.menu.WxMenu;

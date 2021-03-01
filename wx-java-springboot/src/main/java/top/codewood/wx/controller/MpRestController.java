@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import top.codewood.wx.common.api.WxConstants;
 import top.codewood.wx.mp.api.WxMpService;
 import top.codewood.wx.mp.bean.message.WxMpTextRespXmlMessage;
+import top.codewood.wx.mp.bean.message.WxMpTransferKefuRespXMLMessage;
 import top.codewood.wx.mp.bean.message.WxMpXmlMessage;
-import top.codewood.wx.mp.util.XStreamConverter;
+import top.codewood.wx.mp.util.xstream.XStreamConverter;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -42,53 +43,73 @@ public class MpRestController {
                 nonce = request.getParameter("nonce");
             if (!signature.equals(generateSignature(timestamp, nonce, WX_MP_TOKEN))) {
                 LOGGER.debug("check signature failure, signature: {}, timestamp: {}, nonce: {}", signature, timestamp, nonce);
-                return "failure";
+                return WxConstants.FAILURE;
             }
             return echostr;
         } else {
             try {
                 WxMpXmlMessage mpXmlMessage = XStreamConverter.fromXml(WxMpXmlMessage.class, request.getInputStream());
-
                 String msg = null;
-
                 switch (mpXmlMessage.getMsgType()) {
                     case WxConstants.XmlMsgType.TEXT:
-                        msg = "文本_" + mpXmlMessage.getContent();
+                        if ("openid".equals(mpXmlMessage.getContent())) {
+                            msg = mpXmlMessage.getFromUser();
+                        }
+                        //msg = "文本_" + mpXmlMessage.getContent();
+                        break;
+                    case WxConstants.XmlMsgType.EVENT:
+                        switch (mpXmlMessage.getEvent()) {
+                            case WxConstants.EventType.SUBSCRIBE:
+                                msg = "欢迎关注 codewood.";
+                                break;
+                            case WxConstants.EventType.UNSUBSCRIBE:
+                                return WxConstants.SUCCESS;
+                            case WxConstants.EventType.SCAN:
+                                break;
+                            case WxConstants.EventType.CLICK:
+                                break;
+                        }
                         break;
                     case WxConstants.XmlMsgType.IMAGE:
-                        msg = "图片_" + mpXmlMessage.getMediaId() ;
+                        //msg = "图片_" + mpXmlMessage.getMediaId() ;
                         break;
                     case WxConstants.XmlMsgType.VOICE:
-                        msg = "语音_" + mpXmlMessage.getMediaId();
+                        //msg = "语音_" + mpXmlMessage.getMediaId();
                         break;
                     case WxConstants.XmlMsgType.VIDEO:
-                        msg = "视频_" + mpXmlMessage.getMediaId() + "_" + mpXmlMessage.getThumbMediaId();
+                        //msg = "视频_" + mpXmlMessage.getMediaId() + "_" + mpXmlMessage.getThumbMediaId();
                         break;
                     case WxConstants.XmlMsgType.SHORT_VIDEO:
-                        msg = "小视频_" + mpXmlMessage.getMediaId() + "_" + mpXmlMessage.getThumbMediaId();
+                        //msg = "小视频_" + mpXmlMessage.getMediaId() + "_" + mpXmlMessage.getThumbMediaId();
                         break;
                     case WxConstants.XmlMsgType.LINK:
-                        msg = String.format("链接: <a href='%s'>%s</a>_%s", mpXmlMessage.getUrl(), mpXmlMessage.getTitle(), mpXmlMessage.getDescription());
+                        //msg = String.format("链接: <a href='%s'>%s</a>_%s", mpXmlMessage.getUrl(), mpXmlMessage.getTitle(), mpXmlMessage.getDescription());
                         break;
                     case WxConstants.XmlMsgType.LOCATION:
-                        msg = String.format("位置 [%s](%s): %s,%s", mpXmlMessage.getLabel(), mpXmlMessage.getScale(), mpXmlMessage.getLatitude(), mpXmlMessage.getLongitude());
+                        //msg = String.format("位置 [%s](%s): %s,%s", mpXmlMessage.getLabel(), mpXmlMessage.getScale(), mpXmlMessage.getLatitude(), mpXmlMessage.getLongitude());
                         break;
                     default:
                         msg = "未识别内容：" + mpXmlMessage.getMsgType();
                 }
-
-                WxMpTextRespXmlMessage mpTextRespXmlMessage = new WxMpTextRespXmlMessage();
-                mpTextRespXmlMessage.setContent(msg);
-                mpTextRespXmlMessage.setFromUser(mpXmlMessage.getToUser());
-                mpTextRespXmlMessage.setToUser(mpXmlMessage.getFromUser());
-
-                return XStreamConverter.toXml(mpTextRespXmlMessage);
+                if (msg == null) {
+                    WxMpTransferKefuRespXMLMessage mpTransferKefuRespXMLMessage = new WxMpTransferKefuRespXMLMessage();
+                    mpTransferKefuRespXMLMessage.setFromUser(mpXmlMessage.getToUser());
+                    mpTransferKefuRespXMLMessage.setToUser(mpXmlMessage.getFromUser());
+                    //mpTransferKefuRespXMLMessage.setTransInfo(new WxMpTransferKefuRespXMLMessage.TransInfo(""));
+                    return XStreamConverter.toXml(mpTransferKefuRespXMLMessage);
+                } else {
+                    WxMpTextRespXmlMessage mpTextRespXmlMessage = new WxMpTextRespXmlMessage();
+                    mpTextRespXmlMessage.setContent(msg);
+                    mpTextRespXmlMessage.setFromUser(mpXmlMessage.getToUser());
+                    mpTextRespXmlMessage.setToUser(mpXmlMessage.getFromUser());
+                    return XStreamConverter.toXml(mpTextRespXmlMessage);
+                }
 
             } catch (IOException e) {
                 LOGGER.error("err: {}", e.getMessage());
             }
         }
-        return "success";
+        return WxConstants.SUCCESS;
     }
 
     private String generateSignature(String timestamp, String nonce, String token) {
