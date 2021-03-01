@@ -9,19 +9,20 @@ public class WxUtilTest {
 
     //@Test
     public void urlLong2ShortTest() {
-        String respStr = WxMpUtilApi.long2Short(accessToken, "http://www.codewood.top");
+        String respStr = WxMpUtilApi.getInstance().long2Short(accessToken, "http://www.codewood.top");
         System.out.println(respStr);
     }
 
     //@Test
     public void genShortenTest() {
-        String respStr = WxMpUtilApi.genShorten(accessToken, Strings.randomString(36), 60);
+        String respStr = WxMpUtilApi.getInstance().genShorten(accessToken, Strings.randomString(36), 60);
         System.out.println(respStr);
     }
 
     //@Test
     public void fetchShorten() {
-        String respStr = WxMpUtilApi.fetchShorten(accessToken, "");
+        String respStr = WxMpUtilApi.getInstance().fetchShorten(accessToken, "");
         System.out.println(respStr);
     }
+
 }

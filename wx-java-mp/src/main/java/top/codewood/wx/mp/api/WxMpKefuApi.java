@@ -18,6 +18,14 @@ import java.util.UUID;
 
 public class WxMpKefuApi extends WxMpApi {
 
+    private static class Holder {
+        private static final WxMpKefuApi INSTANCE = new WxMpKefuApi();
+    }
+
+    public static WxMpKefuApi getInstance() {
+        return Holder.INSTANCE;
+    }
+
     /**
      *  添加客服帐号
      * @param accessToken
@@ -26,7 +34,7 @@ public class WxMpKefuApi extends WxMpApi {
      * @param pswmd5 客服账号登录密码，格式为密码明文的32位加密MD5值。该密码仅用于在公众平台官网的多客服功能中使用，若不使用多客服功能，则不必设置密码
      * @return
      */
-    public static void add(String accessToken, String kfAccount, String nickname, String pswmd5) {
+    public void add(String accessToken, String kfAccount, String nickname, String pswmd5) {
         assert accessToken != null;
         assert kfAccount != null && nickname != null;
 
@@ -41,7 +49,7 @@ public class WxMpKefuApi extends WxMpApi {
      * @param nickname
      * @param pswmd5
      */
-    public static void update(String accessToken, String kfAccount, String nickname, String pswmd5) {
+    public void update(String accessToken, String kfAccount, String nickname, String pswmd5) {
         assert accessToken != null;
         assert kfAccount != null && nickname != null;
         String url = String.format("https://api.weixin.qq.com/customservice/kfaccount/update?access_token=%s", accessToken);
@@ -53,7 +61,7 @@ public class WxMpKefuApi extends WxMpApi {
      * @param accessToken
      * @param kfAccount
      */
-    public static void del(String accessToken, String kfAccount) {
+    public void del(String accessToken, String kfAccount) {
         assert accessToken != null && kfAccount != null;
         String kefuStr = String.format("{\"kf_account\":\"%s\"}", kfAccount);
         String url = String.format("https://api.weixin.qq.com/customservice/kfaccount/del?access_token=%s", accessToken);
@@ -69,7 +77,7 @@ public class WxMpKefuApi extends WxMpApi {
      * @return
      * @throws IOException
      */
-    public static void updateHeadimg(String accessToken, String kfAccount, InputStream inputStream) throws IOException {
+    public void updateHeadimg(String accessToken, String kfAccount, InputStream inputStream) throws IOException {
         assert accessToken != null && kfAccount != null;
         String url = String.format(" https://api.weixin.qq.com/customservice/kfaccount/uploadheadimg?access_token=%s&kf_account=%s", accessToken, kfAccount);
         upload(url, FileUtils.createTmpFile(inputStream, UUID.randomUUID().toString(), "jpg"));
@@ -82,7 +90,7 @@ public class WxMpKefuApi extends WxMpApi {
      * @param nickname
      * @return
      */
-    public static void updateNickname(String accessToken, String kfAccount, String nickname) {
+    public void updateNickname(String accessToken, String kfAccount, String nickname) {
         assert accessToken != null && kfAccount != null && nickname != null;
         String updateStr = String.format("{\"kf_account\":\"%s\", \"nickname\":\"%s\"}", kfAccount, nickname);
         String url = String.format("https://api.weixin.qq.com/customservice/kfaccount/update?access_token=%s", accessToken);
@@ -95,7 +103,7 @@ public class WxMpKefuApi extends WxMpApi {
      * @param accessToken
      * @return
      */
-    public static List<WxMpKfInfo> list(String accessToken) {
+    public List<WxMpKfInfo> list(String accessToken) {
         assert accessToken != null;
         String url = String.format("https://api.weixin.qq.com/cgi-bin/customservice/getkflist?access_token=%s", accessToken);
         String respStr = get(url);
@@ -111,7 +119,7 @@ public class WxMpKefuApi extends WxMpApi {
      * @param accessToken
      * @return
      */
-    public static List<WxMpKfInfo> onlineList(String accessToken) {
+    public List<WxMpKfInfo> onlineList(String accessToken) {
         assert accessToken != null;
         String url = String.format("https://api.weixin.qq.com/cgi-bin/customservice/getonlinekflist?access_token=%s", accessToken);
         String respStr = get(url);
@@ -128,7 +136,7 @@ public class WxMpKefuApi extends WxMpApi {
      * @param kfAccount 完整客服帐号，格式为：帐号前缀@公众号微信号
      * @param inviteWx  接收绑定邀请的客服微信号
      */
-    public static void inviteWorker(String accessToken, String kfAccount, String inviteWx) {
+    public void inviteWorker(String accessToken, String kfAccount, String inviteWx) {
         assert accessToken != null && kfAccount != null && inviteWx != null;
         String postStr = String.format("{\"kf_account\":\"%s\",\"invite_wx\":\"%s\"}", kfAccount, inviteWx);
         String url = String.format("https://api.weixin.qq.com/customservice/kfaccount/inviteworker?access_token=%s", accessToken);
@@ -141,7 +149,7 @@ public class WxMpKefuApi extends WxMpApi {
      * @param accessToken
      * @param wxMpKfMessage
      */
-    public static void sendMsg(String accessToken, WxMpKfMessage wxMpKfMessage) {
+    public void sendMsg(String accessToken, WxMpKfMessage wxMpKfMessage) {
         assert accessToken != null && wxMpKfMessage != null;
         String url = String.format("https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=%s", accessToken);
         post(url, WxGsonBuilder.create().toJson(wxMpKfMessage));
@@ -158,7 +166,7 @@ public class WxMpKefuApi extends WxMpApi {
      * @param toUser 用户openid
      * @param typing "Typing"：对用户下发“正在输入"状态 "CancelTyping"：取消对用户的”正在输入"状态
      */
-    public static void typing(String accessToken, String toUser, boolean typing) {
+    public void typing(String accessToken, String toUser, boolean typing) {
         assert accessToken != null && toUser != null;
         String url = String.format("https://api.weixin.qq.com/cgi-bin/message/custom/typing?access_token=%s", accessToken);
         String typingStr = String.format("{\"touser\": \"%s\", \"command\": \"%s\"}", toUser, typing?"Typing":"CancelTyping");
@@ -172,7 +180,7 @@ public class WxMpKefuApi extends WxMpApi {
      * @param kfAccount
      * @param openid
      */
-    public static void createSession(String accessToken, String kfAccount, String openid) {
+    public void createSession(String accessToken, String kfAccount, String openid) {
         assert accessToken != null && kfAccount != null && openid != null;
 
         String url = String.format("https://api.weixin.qq.com/customservice/kfsession/create?access_token=%s", accessToken);
@@ -186,7 +194,7 @@ public class WxMpKefuApi extends WxMpApi {
      * @param kfAccount
      * @param openid
      */
-    public static void closeSession(String accessToken, String kfAccount, String openid) {
+    public void closeSession(String accessToken, String kfAccount, String openid) {
         assert accessToken != null && kfAccount != null && openid != null;
 
         String url = String.format("https://api.weixin.qq.com/customservice/kfsession/close?access_token=%s", accessToken);
@@ -201,7 +209,7 @@ public class WxMpKefuApi extends WxMpApi {
      * @param openid
      * @return  { "createtime": 123456789, "kf_account": "test1@test" }
      */
-    public static WxMpKfSession getSession(String accessToken, String openid) {
+    public WxMpKfSession getSession(String accessToken, String openid) {
         assert accessToken != null && openid != null;
         String url = String.format("https://api.weixin.qq.com/customservice/kfsession/getsession?access_token=%s&openid=%s", accessToken, openid);
         String respStr = get(url);
@@ -214,7 +222,7 @@ public class WxMpKefuApi extends WxMpApi {
      * @param kfAccount
      * @return
      */
-    public static List<WxMpKfSession> getSessionList(String accessToken, String kfAccount) {
+    public List<WxMpKfSession> getSessionList(String accessToken, String kfAccount) {
         assert accessToken != null && kfAccount != null;
         String url = String.format("https://api.weixin.qq.com/customservice/kfsession/getsessionlist?access_token=%s&kf_account=%s", accessToken, kfAccount);
         String respStr = get(url);
@@ -226,7 +234,7 @@ public class WxMpKefuApi extends WxMpApi {
      * @param accessToken
      * @return
      */
-    public static WxMpKfSessionWaitCaseList getWaitCaseList(String accessToken) {
+    public WxMpKfSessionWaitCaseList getWaitCaseList(String accessToken) {
         assert accessToken != null;
         String url = String.format("https://api.weixin.qq.com/customservice/kfsession/getwaitcase?access_token=%s", accessToken);
         String respStr = get(url);
@@ -244,7 +252,7 @@ public class WxMpKefuApi extends WxMpApi {
      * @param number  每次获取条数，最多10000条
      * @return
      */
-    public static WxMpKfMsgList getKfMsgList(String accessToken, LocalDateTime startTime, LocalDateTime endTime, Long msgId, Integer number) {
+    public WxMpKfMsgList getKfMsgList(String accessToken, LocalDateTime startTime, LocalDateTime endTime, Long msgId, Integer number) {
         assert accessToken != null;
 
         if (number == null) number = 10000;
@@ -262,7 +270,7 @@ public class WxMpKefuApi extends WxMpApi {
         return WxGsonBuilder.create().fromJson(respStr, WxMpKfMsgList.class);
     }
 
-    public static WxMpKfMsgList getKfMsgList(String accessToken, LocalDateTime startTime, LocalDateTime endTime) {
+    public WxMpKfMsgList getKfMsgList(String accessToken, LocalDateTime startTime, LocalDateTime endTime) {
         return getKfMsgList(accessToken, startTime, endTime, null, null);
     }
 

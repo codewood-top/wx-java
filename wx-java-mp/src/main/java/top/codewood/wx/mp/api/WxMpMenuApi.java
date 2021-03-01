@@ -7,13 +7,21 @@ import top.codewood.wx.mp.util.json.WxGsonBuilder;
 
 public class WxMpMenuApi extends WxMpApi {
 
+    private static class Holder {
+        private static final WxMpMenuApi INSTANCE = new WxMpMenuApi();
+    }
+
+    public static WxMpMenuApi getInstance() {
+        return Holder.INSTANCE;
+    }
+
     /**
      * 微信公众号菜单更新
      * @param accessToken
      * @param wxMenu
      * @return
      */
-    public static String create(String accessToken, WxMenu wxMenu) {
+    public String create(String accessToken, WxMenu wxMenu) {
         assert accessToken != null && wxMenu != null;
         String url = String.format("https://api.weixin.qq.com/cgi-bin/menu/create?access_token=%s", accessToken);
         return post(url, wxMenu.toJson());
@@ -24,7 +32,7 @@ public class WxMpMenuApi extends WxMpApi {
      * @param accessToken
      * @return
      */
-    public static WxMenu query(String accessToken) {
+    public WxMenu query(String accessToken) {
         assert accessToken != null;
         String url = String.format("https://api.weixin.qq.com/cgi-bin/get_current_selfmenu_info?access_token=%s", accessToken);
         String respStr = get(url);
@@ -45,7 +53,7 @@ public class WxMpMenuApi extends WxMpApi {
      * @param accessToken
      * @return
      */
-    public static String delete(String accessToken) {
+    public String delete(String accessToken) {
         assert accessToken != null;
         String url = String.format("https://api.weixin.qq.com/cgi-bin/menu/delete?access_token=%s", accessToken);
         return get(url);

@@ -10,7 +10,7 @@ public class WxQrcodeTest {
 
     //@Test
     public void createTmpTicketTest() {
-        WxMpQrcodeTicket mpQrcodeTicket = WxMpQrcodeApi.createTmpTicket(accessToken, 1, 600);
+        WxMpQrcodeTicket mpQrcodeTicket = WxMpQrcodeApi.getInstance().createTmpTicket(accessToken, 1, 600);
         System.out.println(mpQrcodeTicket);
     }
 

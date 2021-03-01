@@ -8,13 +8,21 @@ import java.util.List;
 
 public class WxMpUserApi extends WxMpApi {
 
+    private static class Holder {
+        private static final WxMpUserApi INSTANCE = new WxMpUserApi();
+    }
+
+    public static WxMpUserApi getInstance() {
+        return Holder.INSTANCE;
+    }
+
     /**
      *  创建标签  一个公众号，最多可以创建100个标签。
      * @param accessToken
      * @param name 标签名
      * @return { "tag":{ "id":134,//标签id "name":"广东" } }
      */
-    public static String tagCreate(String accessToken, String name) {
+    public String tagCreate(String accessToken, String name) {
         assert accessToken != null && name != null;
         String tagStr = String.format("{\"tag\":{\"name\":\"%s\"}}", name);
         String url = String.format("https://api.weixin.qq.com/cgi-bin/tags/create?access_token=%s", accessToken);
@@ -28,7 +36,7 @@ public class WxMpUserApi extends WxMpApi {
      * @param name  标签名
      * @return
      */
-    public static String tagUpdate(String accessToken, Integer id, String name) {
+    public String tagUpdate(String accessToken, Integer id, String name) {
         assert accessToken != null && id != null && name != null;
         String tagStr = String.format("{\"tag\":{\"id\":%s, \"name\": \"%s\"}}", id, name);
         String url = String.format("https://api.weixin.qq.com/cgi-bin/tags/update?access_token=%s", accessToken);
@@ -41,7 +49,7 @@ public class WxMpUserApi extends WxMpApi {
      * @param id    标签id
      * @return
      */
-    public static String tagDelete(String accessToken, Integer id) {
+    public String tagDelete(String accessToken, Integer id) {
         assert accessToken != null && id != null;
         String tagStr = String.format("{\"tag\":{\"id\":%s}}", id);
         String url = String.format("https://api.weixin.qq.com/cgi-bin/tags/delete?access_token=%s", accessToken);
@@ -55,7 +63,7 @@ public class WxMpUserApi extends WxMpApi {
      * @param nextOpenid
      * @return  {"count":1,"data":{"openid":["o_OzS5uSJf1Br8H9gLQ66NjfwluM"]},"next_openid":"o_OzS5uSJf1Br8H9gLQ66NjfwluM"} // {"count": 0}
      */
-    public static String tagUsersGet(String accessToken, Integer id, String nextOpenid) {
+    public String tagUsersGet(String accessToken, Integer id, String nextOpenid) {
         assert accessToken != null;
         if (nextOpenid == null) nextOpenid = "";
         String tagStr = String.format("{\"tagid\": %s, \"next_openid\":\"%s\"}", id, nextOpenid);
@@ -70,7 +78,7 @@ public class WxMpUserApi extends WxMpApi {
      * @param openids 每次传入的openid列表个数不能超过50个
      * @return
      */
-    public static String tagUsers(String accessToken, Integer id, List<String> openids) {
+    public String tagUsers(String accessToken, Integer id, List<String> openids) {
         assert accessToken != null && id != null;
         assert openids != null && openids.size() > 0;
 
@@ -90,7 +98,7 @@ public class WxMpUserApi extends WxMpApi {
      * @param openids 每次传入的openid列表个数不能超过50个
      * @return
      */
-    public static String unTagUsers(String accessToken, Integer id, List<String> openids) {
+    public String unTagUsers(String accessToken, Integer id, List<String> openids) {
         assert accessToken != null && id != null;
         assert openids != null && openids.size() > 0;
 
@@ -109,7 +117,7 @@ public class WxMpUserApi extends WxMpApi {
      * @param openid
      * @return
      */
-    public static String userTags(String accessToken, String openid) {
+    public String userTags(String accessToken, String openid) {
         assert accessToken != null && openid != null;
 
         String tagStr = String.format("{\"openid\": \"%s\"}", openid);
@@ -129,7 +137,7 @@ public class WxMpUserApi extends WxMpApi {
      *      }
      *    ] }
      */
-    public static String tagsGet(String accessToken) {
+    public String tagsGet(String accessToken) {
         assert accessToken != null;
         String url = String.format("https://api.weixin.qq.com/cgi-bin/tags/get?access_token=%s", accessToken);
         return get(url);
@@ -142,7 +150,7 @@ public class WxMpUserApi extends WxMpApi {
      * @param remark 新的备注名，长度必须小于30字符
      * @return
      */
-    public static String remarkUser(String accessToken, String openid, String remark) {
+    public String remarkUser(String accessToken, String openid, String remark) {
         assert accessToken != null && openid != null && remark != null;
 
         String url = String.format("https://api.weixin.qq.com/cgi-bin/user/info/updateremark?access_token=%s", accessToken);
@@ -159,7 +167,7 @@ public class WxMpUserApi extends WxMpApi {
      * @param openid
      * @return
      */
-    public static String userInfo(String accessToken, String openid) {
+    public String userInfo(String accessToken, String openid) {
         assert accessToken != null && openid != null;
         String url = String.format("https://api.weixin.qq.com/cgi-bin/user/info?access_token=%s&openid=%s&lang=zh_CN", accessToken, openid);
         return get(url);
@@ -171,7 +179,7 @@ public class WxMpUserApi extends WxMpApi {
      * @param openids
      * @return
      */
-    public static String userInfoBatchGet(String accessToken, List<String> openids) {
+    public String userInfoBatchGet(String accessToken, List<String> openids) {
         assert accessToken != null;
         assert openids != null && openids.size() > 0;
 
@@ -201,7 +209,7 @@ public class WxMpUserApi extends WxMpApi {
      *     "next_openid":"NEXT_OPENID"
      * }
      */
-    public static String userOpenidList(String accessToken, String nextOpenid) {
+    public String userOpenidList(String accessToken, String nextOpenid) {
         assert accessToken != null;
         if (nextOpenid == null) nextOpenid = "";
         String url = String.format("https://api.weixin.qq.com/cgi-bin/user/get?access_token=%s&next_openid=%s", accessToken, nextOpenid);

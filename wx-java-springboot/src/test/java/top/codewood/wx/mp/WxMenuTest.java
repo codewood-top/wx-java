@@ -56,14 +56,14 @@ public class WxMenuTest {
 
         System.out.println(wxMenu.toJson());
 
-        String respStr = WxMpMenuApi.create(accessToken, wxMenu);
+        String respStr = WxMpMenuApi.getInstance().create(accessToken, wxMenu);
         System.out.println("respStr: " + respStr);
 
     }
 
     //@Test
     public void queryWxMenu() {
-        WxMenu wxMenu = WxMpMenuApi.query(accessToken);
+        WxMenu wxMenu = WxMpMenuApi.getInstance().query(accessToken);
         System.out.println("wxMenu: " + wxMenu);
 
     }

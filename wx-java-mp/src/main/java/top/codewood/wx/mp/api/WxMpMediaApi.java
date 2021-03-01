@@ -8,6 +8,13 @@ import java.util.UUID;
 
 public class WxMpMediaApi extends WxMpApi {
 
+    private static class Holder {
+        private static WxMpMediaApi INSTANCE = new WxMpMediaApi();
+    }
+
+    public static WxMpMediaApi getInstance() {
+        return Holder.INSTANCE;
+    }
 
     /**
      * 上传临时素材
@@ -16,7 +23,7 @@ public class WxMpMediaApi extends WxMpApi {
      * @param fileType 图片（image）: 10M，支持PNG\JPEG\JPG\GIF格式, 语音（voice）：2M，播放长度不超过60s，支持AMR\MP3格式, 视频（video）：10MB，支持MP4格式, 缩略图（thumb）：64KB，支持JPG格式
      * @return {"type":"TYPE","media_id":"MEDIA_ID","created_at":123456789}
      */
-    public static void upload(String acccessToken, String mediaType, String fileType, InputStream inputStream) throws IOException {
+    public void upload(String acccessToken, String mediaType, String fileType, InputStream inputStream) throws IOException {
         assert acccessToken != null && mediaType != null && fileType != null;
         String url = String.format("https://api.weixin.qq.com/cgi-bin/media/upload?access_token=%s&type=%s", acccessToken, mediaType);
         upload(url, FileUtils.createTmpFile(inputStream, UUID.randomUUID().toString(), fileType));
@@ -28,7 +35,7 @@ public class WxMpMediaApi extends WxMpApi {
      * @param mediaId
      * @return
      */
-    public static InputStream get(String accessToken, String mediaId) {
+    public InputStream get(String accessToken, String mediaId) {
         assert accessToken != null && mediaId != null;
         String url = String.format("https://api.weixin.qq.com/cgi-bin/media/get?access_token=%s&media_id=%s", accessToken, mediaId);
         return getStream(url);

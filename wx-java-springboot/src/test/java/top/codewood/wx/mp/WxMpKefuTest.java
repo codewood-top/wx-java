@@ -20,39 +20,39 @@ public class WxMpKefuTest {
 
     //@Test
     public void addAccountTest() {
-        WxMpKefuApi.add(accessToken, "", "", null);
+        WxMpKefuApi.getInstance().add(accessToken, "", "", null);
     }
 
     //@Test
     public void updateAccountTest() {
-        WxMpKefuApi.update(accessToken, "", "", null);
+        WxMpKefuApi.getInstance().update(accessToken, "", "", null);
     }
 
     //@Test
     public void delAccountTest() {
-        WxMpKefuApi.del(accessToken, "");
+        WxMpKefuApi.getInstance().del(accessToken, "");
     }
 
     //@Test
     public void updateHeadimg() throws IOException {
         InputStream is = AppHttpClient.getInstance().getStream("http://img1.codewood.top/developer/images/code-logo-large.png");
-        WxMpKefuApi.updateHeadimg(accessToken, "", is);
+        WxMpKefuApi.getInstance().updateHeadimg(accessToken, "", is);
     }
 
     //@Test
     public void updateNickname() {
-        WxMpKefuApi.updateNickname(accessToken, "", "");
+        WxMpKefuApi.getInstance().updateNickname(accessToken, "", "");
     }
 
     //@Test
     public void listTest() {
-        List<WxMpKfInfo> infoList = WxMpKefuApi.list(accessToken);
+        List<WxMpKfInfo> infoList = WxMpKefuApi.getInstance().list(accessToken);
         System.out.println(infoList);
     }
 
     //@Test
     public void onlineListTest() {
-        List<WxMpKfInfo> infoList = WxMpKefuApi.onlineList(accessToken);
+        List<WxMpKfInfo> infoList = WxMpKefuApi.getInstance().onlineList(accessToken);
         System.out.println(infoList);
     }
 
@@ -62,39 +62,39 @@ public class WxMpKefuTest {
                 .toUser("")
                 .content("Hi, 来自custom server msg")
                 .build();
-        WxMpKefuApi.sendMsg(accessToken, kfMessage);
+        WxMpKefuApi.getInstance().sendMsg(accessToken, kfMessage);
     }
 
     //@Test
     public void setTypingStatus() {
-        WxMpKefuApi.typing(accessToken, "", true);
+        WxMpKefuApi.getInstance().typing(accessToken, "", true);
     }
 
     //@Test
     public void createSessionTest() {
-        WxMpKefuApi.createSession(accessToken, "", "");
+        WxMpKefuApi.getInstance().createSession(accessToken, "", "");
     }
 
     //@Test
     public void closeSessionTest() {
-        WxMpKefuApi.closeSession(accessToken, "", "");
+        WxMpKefuApi.getInstance().closeSession(accessToken, "", "");
     }
 
     //@Test
     public void getSessionTest() {
-        WxMpKfSession kfSession = WxMpKefuApi.getSession(accessToken, "");
+        WxMpKfSession kfSession = WxMpKefuApi.getInstance().getSession(accessToken, "");
         System.out.println(kfSession);
     }
 
     //@Test
     public void getSessionList() {
-        List<WxMpKfSession> kfSessionList = WxMpKefuApi.getSessionList(accessToken, "");
+        List<WxMpKfSession> kfSessionList = WxMpKefuApi.getInstance().getSessionList(accessToken, "");
         kfSessionList.forEach(System.out::println);
     }
 
     //@Test
     public void getWaitCaseSessionList() {
-        WxMpKfSessionWaitCaseList waitCaseList = WxMpKefuApi.getWaitCaseList(accessToken);
+        WxMpKfSessionWaitCaseList waitCaseList = WxMpKefuApi.getInstance().getWaitCaseList(accessToken);
         System.out.println(waitCaseList);
     }
 
@@ -102,7 +102,7 @@ public class WxMpKefuTest {
     public void getKfMsgList() {
         LocalDateTime startTime = LocalDateTime.now().minusDays(1);
         LocalDateTime endTime = LocalDateTime.now();
-        WxMpKfMsgList wxMpKfMsgList = WxMpKefuApi.getKfMsgList(accessToken, startTime, endTime);
+        WxMpKfMsgList wxMpKfMsgList = WxMpKefuApi.getInstance().getKfMsgList(accessToken, startTime, endTime);
         System.out.println(wxMpKfMsgList);
     }
 

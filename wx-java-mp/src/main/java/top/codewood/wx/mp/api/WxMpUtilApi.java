@@ -8,7 +8,15 @@ import com.google.gson.JsonObject;
  */
 public class WxMpUtilApi extends WxMpApi {
 
-    public static String long2Short(String accessToken, String longUrl) {
+    private static class Holder {
+        private static final WxMpUtilApi INSTANCE = new WxMpUtilApi();
+    }
+
+    public static WxMpUtilApi getInstance() {
+        return Holder.INSTANCE;
+    }
+
+    public String long2Short(String accessToken, String longUrl) {
         assert accessToken != null && longUrl != null;
         JsonObject json = new JsonObject();
         json.addProperty("action", "long2short");
@@ -25,7 +33,7 @@ public class WxMpUtilApi extends WxMpApi {
      * @param expireSeconds 过期秒数，最大值为2592000（即30天），默认为2592000
      * @return
      */
-    public static String genShorten(String accessToken, String longData, Integer expireSeconds) {
+    public String genShorten(String accessToken, String longData, Integer expireSeconds) {
         assert accessToken != null && longData != null;
 
         JsonObject json = new JsonObject();
@@ -44,7 +52,7 @@ public class WxMpUtilApi extends WxMpApi {
      * @param shortKey  短key，15字节，base62编码(0-9/a-z/A-Z)
      * @return
      */
-    public static String fetchShorten(String accessToken, String shortKey) {
+    public String fetchShorten(String accessToken, String shortKey) {
         assert accessToken != null && shortKey != null;
 
         String shortKeyStr = String.format("{\"short_key\": \"%s\"}", shortKey);
