@@ -63,6 +63,12 @@ public class WxConstants {
          * 点击菜单跳转小程序的事件推送
          */
         String VIEW_MINIPROGRAM = "view_miniprogram";
+
+        /**
+         * 模板信息发送完成
+         */
+        String TEMPLATE_SEND_JOB_FINISH = "TEMPLATESENDJOBFINISH";
+
     }
 
     public interface MediaType {

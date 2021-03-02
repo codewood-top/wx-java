@@ -7,6 +7,7 @@ import top.codewood.wx.common.util.json.WxErrorGsonAdapter;
 import top.codewood.wx.mp.bean.kefu.message.WxMpKfMessage;
 import top.codewood.wx.mp.bean.menu.WxMenu;
 import top.codewood.wx.mp.bean.result.WxMpQrcodeTicket;
+import top.codewood.wx.mp.bean.template.WxMpTemplateMessage;
 
 public class WxGsonBuilder {
 
@@ -15,9 +16,10 @@ public class WxGsonBuilder {
     static {
         BUILDER.disableHtmlEscaping();
         BUILDER.registerTypeAdapter(WxError.class, new WxErrorGsonAdapter());
-        BUILDER.registerTypeAdapter(WxMenu.class, new WxMenuGsonAdapter());
+        BUILDER.registerTypeAdapter(WxMenu.class, new WxMpMenuGsonAdapter());
         BUILDER.registerTypeAdapter(WxMpQrcodeTicket.class, new WxMpQrcodeTicketAdapter());
         BUILDER.registerTypeAdapter(WxMpKfMessage.class, new WxMpKfMessageGsonAdapter());
+        BUILDER.registerTypeAdapter(WxMpTemplateMessage.class, new WxMpTemplateMessageGsonAdapter());
     }
 
     public static Gson create() {
