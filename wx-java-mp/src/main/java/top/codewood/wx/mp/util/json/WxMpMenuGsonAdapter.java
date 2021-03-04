@@ -7,7 +7,7 @@ import top.codewood.wx.mp.bean.menu.WxMenuRule;
 
 import java.lang.reflect.Type;
 
-public class WxMenuGsonAdapter implements JsonSerializer<WxMenu>, JsonDeserializer<WxMenu> {
+public class WxMpMenuGsonAdapter implements JsonSerializer<WxMenu>, JsonDeserializer<WxMenu> {
 
     @Override
     public JsonElement serialize(WxMenu wxMenu, Type type, JsonSerializationContext jsonSerializationContext) {
