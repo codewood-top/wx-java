@@ -39,6 +39,12 @@ public class AppHttpClient {
     }
 
     public String get(String url, Map<String, String> headers) throws IOException {
+
+        Response response = getWithResponse(url, headers);
+        return response.body().string();
+    }
+
+    public Response getWithResponse(String url, Map<String, String> headers) throws IOException {
         Request.Builder requestBuilder = new Request.Builder();
 
         if (headers != null) {
@@ -46,7 +52,7 @@ public class AppHttpClient {
         }
         Request request = requestBuilder.url(url).build();
         Response response = client.newCall(request).execute();
-        return response.body().string();
+        return response;
     }
 
     public String post(String url, Map<String, String> params) throws IOException {
@@ -76,6 +82,24 @@ public class AppHttpClient {
         Request request = new Request.Builder().url(url).post(requestBody).build();
         Response response = client.newCall(request).execute();
         return response.body().string();
+    }
+
+    public String post(String url, String jsonData, Map<String, String> headers) throws IOException {
+        Response response = postWithResponse(url, jsonData, headers);
+        return response.body().string();
+    }
+
+    public Response postWithResponse(String url, String jsonData, Map<String, String> headers) throws IOException {
+        Request.Builder requestBuilder = new Request.Builder();
+
+        if (headers != null) {
+            headers.entrySet().forEach(kv -> requestBuilder.addHeader(kv.getKey(), kv.getValue()));
+        }
+        RequestBody requestBody = RequestBody.create(MEDIA_TYPE_JSON, jsonData);
+
+        Request request = requestBuilder.url(url).post(requestBody).build();
+        Response response = client.newCall(request).execute();
+        return response;
     }
 
     public String upload(String url, File file) throws IOException {

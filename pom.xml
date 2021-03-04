@@ -12,6 +12,7 @@
         <module>wx-java-mp</module>
         <module>wx-java-springboot</module>
         <module>wx-java-common</module>
+        <module>wx-java-pay</module>
     </modules>
 
     <properties>

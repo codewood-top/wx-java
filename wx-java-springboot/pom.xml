@@ -42,6 +42,11 @@
             <artifactId>wx-java-mp</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>top.codewood.wx</groupId>
+            <artifactId>wx-java-pay</artifactId>
+            <version>1.0.0</version>
+        </dependency>
 
 <!--        <dependency>-->
 <!--            <groupId>org.apache.httpcomponents</groupId>-->
@@ -56,6 +61,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.wechatpay-apiv3</groupId>
+            <artifactId>wechatpay-apache-httpclient</artifactId>
+            <version>0.2.1</version>
         </dependency>
     </dependencies>
 
