@@ -1,18 +1,19 @@
 package top.codewood.wx.mp.api.impl;
 
-import com.google.gson.JsonObject;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import top.codewood.wx.common.bean.error.WxErrorException;
 import top.codewood.wx.mp.api.WxMpApi;
 import top.codewood.wx.mp.api.WxMpMenuApi;
 import top.codewood.wx.mp.api.WxMpService;
+import top.codewood.wx.mp.bean.WxAccessToken;
+import top.codewood.wx.mp.bean.WxMpJsapiTicket;
 import top.codewood.wx.mp.bean.menu.WxMenu;
 import top.codewood.wx.mp.property.WxMpProperty;
-import top.codewood.wx.mp.util.json.WxGsonBuilder;
 import top.codewood.wx.util.Strings;
 
 import java.time.LocalDateTime;
@@ -22,8 +23,8 @@ public class WxMpServiceImpl implements WxMpService {
 
     static final Logger LOGGER = LoggerFactory.getLogger(WxMpServiceImpl.class);
 
-    private static WxAcessToken WX_ACCESS_TOKEN = null;
-    private static WxJsapiTicket WX_JSAPI_TICKET = null;
+    private static WxAccessToken2 WX_ACCESS_TOKEN = null;
+    private static WxJsapiTicket2 WX_JSAPI_TICKET = null;
 
     @Override
     public String getAccessToken() {
@@ -63,13 +64,13 @@ public class WxMpServiceImpl implements WxMpService {
                 if (WX_JSAPI_TICKET != null && WX_JSAPI_TICKET.expiredTime.isAfter(LocalDateTime.now())) {
                     return WX_JSAPI_TICKET.ticket;
                 }
-                String jsapiTicket = WxMpApi.getJsapiTicket(accessToken);
+                WxMpJsapiTicket jsapiTicket = WxMpApi.getJsapiTicket(accessToken);
                 LOGGER.debug("正在更新jsapi_ticket: {}", jsapiTicket);
-                WxJsapiTicket wxJsapiTicket = new WxJsapiTicket();
-                wxJsapiTicket.ticket = jsapiTicket;
-                wxJsapiTicket.expiresIn = 7200;
-                wxJsapiTicket.expiredTime = LocalDateTime.now().plusSeconds(wxJsapiTicket.expiresIn - 200);
-                WX_JSAPI_TICKET = wxJsapiTicket;
+                WxJsapiTicket2 wxJsapiTicket2 = new WxJsapiTicket2();
+                wxJsapiTicket2.ticket = jsapiTicket.getTicket();
+                wxJsapiTicket2.expiresIn = jsapiTicket.getExpiresIn();
+                wxJsapiTicket2.expiredTime = LocalDateTime.now().plusSeconds(wxJsapiTicket2.expiresIn - 200);
+                WX_JSAPI_TICKET = wxJsapiTicket2;
             }
         }
         return WX_JSAPI_TICKET != null ? WX_JSAPI_TICKET.ticket : Strings.EMPTY;
@@ -80,20 +81,20 @@ public class WxMpServiceImpl implements WxMpService {
             throw new RuntimeException("appid & appsecret 未配置 ");
         }
         LOGGER.debug("正在请求更新 access_token");
-        String respStr = WxMpApi.getAccessToken(WxMpProperty.APP_ID, WxMpProperty.APP_SECRET);
-        JsonObject json = WxGsonBuilder.create().fromJson(respStr, JsonObject.class);
-        if (json.has("access_token")) {
-            WxAcessToken wxAcessToken = new WxAcessToken();
-            wxAcessToken.accessToken = json.get("access_token").getAsString();
-            wxAcessToken.expiresIn = json.get("expires_in").getAsInt();
-            wxAcessToken.expiredTime = LocalDateTime.now().plusSeconds(wxAcessToken.expiresIn - 200);
-            WX_ACCESS_TOKEN = wxAcessToken;
-        } else {
-            LOGGER.error("请求更新 access_token 失败：{}", json.get("errmsg"));
+        try {
+            WxAccessToken wxAccessToken = WxMpApi.getAccessToken(WxMpProperty.APP_ID, WxMpProperty.APP_SECRET);
+            WxAccessToken2 wxAccessToken2 = new WxAccessToken2();
+            wxAccessToken2.accessToken = wxAccessToken.getAccessToken();
+            wxAccessToken2.expiresIn = wxAccessToken.getExpiresIn();
+            wxAccessToken2.expiredTime = LocalDateTime.now().plusSeconds(wxAccessToken2.expiresIn - 200);
+            WX_ACCESS_TOKEN = wxAccessToken2;
+        } catch (WxErrorException e) {
+            LOGGER.error("请求更新 access_token 失败：{}", e.getMessage());
         }
+
     }
 
-    class WxAcessToken {
+    class WxAccessToken2 {
 
         String accessToken;
         Integer expiresIn;
@@ -101,7 +102,7 @@ public class WxMpServiceImpl implements WxMpService {
 
     }
 
-    class WxJsapiTicket {
+    class WxJsapiTicket2 {
         String ticket;
         Integer expiresIn;
         LocalDateTime expiredTime;

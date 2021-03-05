@@ -214,7 +214,6 @@ public class WxMpUserApi extends WxMpApi {
         if (nextOpenid == null) nextOpenid = "";
         String url = String.format("https://api.weixin.qq.com/cgi-bin/user/get?access_token=%s&next_openid=%s", accessToken, nextOpenid);
         return get(url);
-
     }
 
 }

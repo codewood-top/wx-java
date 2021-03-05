@@ -2,6 +2,8 @@ package top.codewood.wx.pay.v3.api;
 
 import com.google.gson.Gson;
 import okhttp3.Response;
+import okio.Buffer;
+import okio.BufferedSource;
 import top.codewood.util.http.AppHttpClient;
 import top.codewood.wx.common.bean.error.WxError;
 import top.codewood.wx.common.bean.error.WxErrorException;
@@ -23,7 +25,7 @@ import java.util.*;
 
 public class WxPayApi {
 
-    private static PrivateKey PRIVATE_KEY = null;
+    private static final Map<String, PrivateKey> PRIVATE_KEY_MAP = new HashMap<>();
 
     private static final Map<String, Certificate> CERTIFICATE_MAP = new HashMap<>();
 
@@ -67,19 +69,19 @@ public class WxPayApi {
             headers.put("Content-Type", "application/json");
             headers.put("Accept", "application/json");
             headers.put("Authorization", token);
-            String respStr = AppHttpClient.getInstance().post(url, postData, headers);
-            return handleResponse(respStr);
+            Response response = AppHttpClient.getInstance().postWithResponse(url, postData, headers);
+            handleResponse(response);
+            return handleResponse(response.body().string());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-
     public static String getToken(String mchid, String serialNo, String method, String reqUrl, String body) throws MalformedURLException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
         long timeStamp = System.currentTimeMillis() / 1000;
         String nonceStr = UUID.randomUUID().toString().replace("-", "");
         String message = buildMessage(method, reqUrl, timeStamp, nonceStr, body);
-        String signature = sign(message.getBytes(StandardCharsets.UTF_8));
+        String signature = sign(mchid, message.getBytes(StandardCharsets.UTF_8));
 
         return String.format("WECHATPAY2-SHA256-RSA2048 mchid=\"%s\",nonce_str=\"%s\",timestamp=\"%s\",signature=\"%s\",serial_no=\"%s\"",
                 mchid, nonceStr, timeStamp, signature, serialNo);
@@ -94,15 +96,18 @@ public class WxPayApi {
         return method + "\n" + signUrl + "\n" + timeStamp + "\n" + nonceStr + "\n" + body + "\n";
     }
 
-    public static String sign(byte[] message) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
-        if (PRIVATE_KEY == null) throw new RuntimeException("私钥未初始化");
+    public static String sign(String mchid, byte[] message) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+        PrivateKey privateKey = PRIVATE_KEY_MAP.get(mchid);
+        if (privateKey == null) throw new RuntimeException("私钥未初始化");
         Signature sign = Signature.getInstance("SHA256withRSA");
-        sign.initSign(PRIVATE_KEY);
+        sign.initSign(privateKey);
         sign.update(message);
         return Base64.getEncoder().encodeToString(sign.sign());
     }
 
     /**
+     *
+     * 这个api没有做签名校验
      *
      * @param mchid 发起请求的商户（包括直连商户、服务商或渠道商）的商户号 mchid
      * @param serialNo <a href="https://pay.weixin.qq.com/wiki/doc/apiv3/wechatpay/wechatpay3_1.shtml"></a>商户API证书</a>serial_no，用于声明所使用的证书
@@ -115,8 +120,7 @@ public class WxPayApi {
             String token = getToken(mchid, serialNo, "GET", url, "");
             Response response = getWithReponse(url, token);
 
-            handleResponse(response);
-
+            //handleResponse(response);
             Gson gson = WxGsonBuilder.create();
             CertificateList certificateList = gson.fromJson(response.body().string(), CertificateList.class);
             return certificateList.getCerts();
@@ -141,8 +145,10 @@ public class WxPayApi {
      * 加载私钥
      * @param inputStream
      */
-    public static void loadPrivateKey(InputStream inputStream) {
-        PRIVATE_KEY = PemUtil.loadPrivateKey(inputStream);
+    public static PrivateKey loadPrivateKey(String mchid, InputStream inputStream) {
+        PrivateKey privateKey = PemUtil.loadPrivateKey(inputStream);
+        PRIVATE_KEY_MAP.put(mchid, privateKey);
+        return privateKey;
     }
 
     public static void loadCertificates(String apiV3Key, List<CertificateItem> certificateItems) {
@@ -170,16 +176,28 @@ public class WxPayApi {
         String requestId = response.header("Request-ID");
         String wechatPayNonce = response.header("Wechatpay-Nonce");
         String wechatPaySignature = response.header("Wechatpay-Signature");
-        String wechatTimeStamp = response.header("Wechatpay-Timestamp");
-        String wechatSerial = response.header("Wechatpay-Serial");
+        String wechatPayTimeStamp = response.header("Wechatpay-Timestamp");
+        String wechatPaySerial = response.header("Wechatpay-Serial");
 
-        InputStream inputStream = response.body().byteStream();
-        byte[] bytes = new byte[inputStream.available()];
-        inputStream.read(bytes);
-        String body = new String(bytes);
+        BufferedSource source = response.body().source();
+        source.request(response.body().contentLength());
+        Buffer buffer = source.getBuffer();
+        String body = buffer.clone().readString(StandardCharsets.UTF_8);
 
-        System.out.println(String.format("requestId: %s\nwechatPayNonce: %s\n wechatPaySignature: %s\n wechatTimeStamp: %s\nwechatSerial: %s\nbody: %s\n",
-                requestId, wechatPayNonce, wechatPaySignature, wechatTimeStamp, wechatSerial, body));
+        try {
+            boolean vertify = vertify(wechatPaySerial, wechatPayTimeStamp, wechatPayNonce, body, wechatPaySignature);
+            if (!vertify) {
+                throw new RuntimeException(String.format("请求数据签名校验失败, request-id: %s", requestId));
+            }
+        } catch (NoSuchAlgorithmException e) {
+            //e.printStackTrace();
+            throw new RuntimeException("校验算法错误！");
+        } catch (InvalidKeyException e) {
+            throw new RuntimeException("invalid key!");
+        } catch (SignatureException e) {
+            //e.printStackTrace();
+            throw new RuntimeException("签名错误！");
+        }
 
         return response;
 

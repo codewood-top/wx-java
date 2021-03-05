@@ -58,6 +58,7 @@ public class WxPayRequest implements Serializable {
      * 通知URL必须为直接可访问的URL，不允许携带查询串。
      * 格式：URL
      */
+    @SerializedName("notify_url")
     private String notifyUrl;
 
     /**

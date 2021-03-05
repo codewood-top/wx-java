@@ -21,9 +21,9 @@ import java.util.Arrays;
 
 @RestController
 @RequestMapping("/wx/mp/rest")
-public class MpRestController {
+public class WxMpRestController {
 
-    static final Logger LOGGER = LoggerFactory.getLogger(MpRestController.class);
+    static final Logger LOGGER = LoggerFactory.getLogger(WxMpRestController.class);
 
     private static final String WX_MP_TOKEN = "codewoodtoken";
 
@@ -35,7 +35,7 @@ public class MpRestController {
         return wxMpService.getAccessToken();
     }
 
-    @RequestMapping("js_signature")
+    @RequestMapping("/js_signature")
     public String jsSignature(@RequestParam("nonceStr") String nonceStr,
                               @RequestParam("timeStamp") Long timeStamp,
                               @RequestParam("url") String url) {

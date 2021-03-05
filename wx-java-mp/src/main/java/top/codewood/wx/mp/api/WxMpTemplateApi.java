@@ -3,7 +3,6 @@ package top.codewood.wx.mp.api;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import jdk.internal.org.objectweb.asm.TypeReference;
 import top.codewood.wx.mp.bean.template.WxMpTemplate;
 import top.codewood.wx.mp.bean.template.WxMpTemplateIndustry;
 import top.codewood.wx.mp.bean.template.WxMpTemplateMessage;

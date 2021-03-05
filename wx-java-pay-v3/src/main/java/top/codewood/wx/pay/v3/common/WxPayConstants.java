@@ -2,6 +2,12 @@ package top.codewood.wx.pay.v3.common;
 
 public class WxPayConstants {
 
+    public interface HttpMethod {
+        String POST = "POST";
+        String GET = "GET";
+        String PUT = "PUT";
+    }
+
     public enum PayType {
         /**
          * JSAPI/小程序下单

@@ -1,5 +1,7 @@
 package top.codewood.wx.util;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Random;
 
 public class Strings {
@@ -16,6 +18,14 @@ public class Strings {
             sb.append(RANDOM_STR.charAt(r.nextInt(RANDOM_STR.length())));
         }
         return sb.toString();
+    }
+
+    public static String urlEncode(String url) {
+        try {
+            return URLEncoder.encode(url, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            return url;
+        }
     }
 
 }

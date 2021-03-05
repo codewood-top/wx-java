@@ -1,15 +1,15 @@
 package top.codewood.wx.mp.api;
 
-import com.google.gson.JsonObject;
 import top.codewood.util.http.AppHttpClient;
 import top.codewood.wx.common.bean.error.WxError;
 import top.codewood.wx.common.bean.error.WxErrorException;
+import top.codewood.wx.mp.bean.WxAccessToken;
+import top.codewood.wx.mp.bean.WxMpJsapiTicket;
 import top.codewood.wx.mp.util.json.WxGsonBuilder;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Map;
 
 public class WxMpApi {
 
@@ -65,10 +65,11 @@ public class WxMpApi {
      *  success: {"access_token":"ACCESS_TOKEN","expires_in":7200}
      *  failure: {"errcode":40013,"errmsg":"invalid appid"}
      */
-    public static String getAccessToken(String appid, String appsecret) {
+    public static WxAccessToken getAccessToken(String appid, String appsecret) {
         assert appid != null && appsecret != null;
         String url = String.format("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s", appid, appsecret);
-        return get(url);
+        String respStr = get(url);
+        return WxGsonBuilder.create().fromJson(respStr, WxAccessToken.class);
     }
 
     /**
@@ -76,12 +77,11 @@ public class WxMpApi {
      * @param accessToken
      * @return
      */
-    public static String getJsapiTicket(String accessToken) {
+    public static WxMpJsapiTicket getJsapiTicket(String accessToken) {
         assert accessToken != null;
         String url = String.format("https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=%s&type=jsapi", accessToken);
         String respStr = get(url);
-        JsonObject json = WxGsonBuilder.create().fromJson(respStr, JsonObject.class);
-        return json.get("ticket").getAsString();
+        return WxGsonBuilder.create().fromJson(respStr, WxMpJsapiTicket.class);
     }
 
 
