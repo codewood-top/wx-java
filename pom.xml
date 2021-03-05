@@ -12,7 +12,8 @@
         <module>wx-java-mp</module>
         <module>wx-java-springboot</module>
         <module>wx-java-common</module>
-        <module>wx-java-pay</module>
+        <module>wx-java-top.codewood.wx.pay</module>
+        <module>wx-java-top.codewood.wx.pay-v3</module>
     </modules>
 
     <properties>

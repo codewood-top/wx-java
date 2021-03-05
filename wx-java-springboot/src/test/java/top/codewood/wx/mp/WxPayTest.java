@@ -2,14 +2,13 @@ package top.codewood.wx.mp;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.wechat.pay.contrib.apache.httpclient.util.PemUtil;
 import org.junit.Test;
-import top.codewood.wx.pay.api.WxPayApi;
-import top.codewood.wx.pay.common.WxPayConstants;
-import top.codewood.wx.pay.request.WxPayRequest;
-import top.codewood.wx.pay.response.cert.CertificateItem;
-import top.codewood.wx.pay.response.cert.CertificateList;
-import top.codewood.wx.pay.util.json.WxGsonBuilder;
+import top.codewood.wx.pay.v3.api.WxPayApi;
+import top.codewood.wx.pay.v3.common.WxPayConstants;
+import top.codewood.wx.pay.v3.request.WxPayRequest;
+import top.codewood.wx.pay.v3.cert.CertificateItem;
+import top.codewood.wx.pay.v3.cert.CertificateList;
+import top.codewood.wx.pay.v3.util.json.WxGsonBuilder;
 import top.codewood.wx.util.Strings;
 
 import java.io.*;
