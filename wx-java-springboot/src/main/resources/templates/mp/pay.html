@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>微信支付页</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <link rel="icon" href="http://img1.codewood.top/developer/images/code-logo-large.png">
+
+    <style>
+        .form-cell + .form-cell {
+            margin-top: 10px;
+        }
+        input {
+            width: 80%;
+        }
+    </style>
+
+</head>
+<body>
+
+<div>
+    <div class="form-cell">
+        <label>订单号</label>
+        <div>
+            <input type="text" id="orderNumber" name="orderNumber" th:value="${orderNumber}">
+        </div>
+    </div>
+    <div class="form-cell">
+        <label>订单内容</label>
+        <div>
+            <input type="text" id="description" name="description" th:value="${description}">
+        </div>
+    </div>
+    <div class="form-cell">
+        <label>订单金额(元)</label>
+        <div>
+            <input type="text" id="amount" name="amount" th:value="${amount}">
+        </div>
+    </div>
+    <div class="form-cell">
+        <label>appid</label>
+        <div>
+            <input type="text" id="appid" name="appid" disabled th:value="${appid}">
+        </div>
+    </div>
+    <div class="form-cell">
+        <label>mchid</label>
+        <div>
+            <input type="text" id="mchid" name="mchid" disabled th:value="${mchid}">
+        </div>
+    </div>
+    <div class="form-cell">
+        <label>openid</label>
+        <div>
+            <input type="text" id="openid" name="openid" placeholder="输入openid" th:value="${openid}">
+        </div>
+    </div>
+    <div class="form-cell">
+        <button id="btn_submit">提交支付</button>
+    </div>
+</div>
+
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+<script th:inline="javascript">
+
+    function callWechatPay(appid, timeStamp, nonceStr, package, paySign) {
+        WeixinJSBridge.invoke('getBrandWCPayRequest', {
+            "appId": appid,     //公众号ID，由商户传入
+            "timeStamp": timeStamp,     //时间戳，自1970年以来的秒数
+            "nonceStr": nonceStr,      //随机串
+            "package": package,
+            "signType": "RSA",     //微信签名方式：
+            "paySign": paySign //微信签名
+        },
+        function(res) {
+            if (res.err_msg == "get_brand_wcpay_request:ok") {
+                // 使用以上方式判断前端返回,微信团队郑重提示：
+                //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+            }
+            alert(JSON.stringify(res))
+        });
+    }
+
+    $(function() {
+
+        document.querySelector('#btn_submit').addEventListener('click', function() {
+            let orderNumber = document.querySelector('#orderNumber').value,
+                description = document.querySelector('#description').value,
+                amount = document.querySelector('#amount').value,
+                openid = document.querySelector('#openid').value
+
+            console.log(`${orderNumber}, ${description}, ${amount}, ${openid}`)
+
+           let nonceStr = Math.random().toString(36).substr(2),
+                timeStamp = parseInt(new Date().getTime() / 1000)
+
+            $.ajax({
+                url: '/wx/pay/rest/getPayInfo',
+                method: 'POST',
+                data: {
+                    payType: 'jsapi',
+                    tradeNo: orderNumber,
+                    description: description,
+                    amount: amount,
+                    openid: openid,
+                    nonceStr: nonceStr,
+                    timeStamp: timeStamp
+                },
+                success: function(res) {
+                    if (res.code || res.message) {
+                        alert(res.message)
+                    } else {
+                        if (typeof WeixinJSBridge == "undefined") {
+                            if (document.addEventListener) {
+                                document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+                            } else if (document.attachEvent) {
+                                document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+                                document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+                            }
+                        } else {
+                            callWechatPay(res.appid, res.timeStamp, res.nonceStr, res.package, res.paySign)
+                        }
+                    }
+                }
+            })
+
+        })
+
+
+    })
+
+</script>
+
+</body>
+</html>

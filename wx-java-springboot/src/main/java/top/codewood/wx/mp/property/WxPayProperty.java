@@ -7,13 +7,14 @@ import javax.annotation.PostConstruct;
 @ConfigurationProperties(prefix = "weixin.pay.property")
 public class WxPayProperty {
 
-    public static String MCHID = null, SERIAL_NO = null, API_V3_KEY = null, CERT_PATH = null, NOTIFY_URL = null;
+    public static String MCHID = null, SERIAL_NO = null, API_V3_KEY = null, CERT_PATH = null, NOTIFY_URL = null, REFUND_NOTIFY_URL = null;
 
     private String mchid;
     private String serialno;
     private String apiv3key;
     private String certpath;
     private String notifyurl;
+    private String refundnotifyurl;
 
     @PostConstruct
     void postConstruct() {
@@ -22,6 +23,7 @@ public class WxPayProperty {
         API_V3_KEY = apiv3key;
         CERT_PATH = certpath;
         NOTIFY_URL = notifyurl;
+        REFUND_NOTIFY_URL = refundnotifyurl;
     }
 
     public void setMchid(String mchid) {
@@ -42,5 +44,9 @@ public class WxPayProperty {
 
     public void setNotifyurl(String notifyurl) {
         this.notifyurl = notifyurl;
+    }
+
+    public void setRefundnotifyurl(String refundnotifyurl) {
+        this.refundnotifyurl = refundnotifyurl;
     }
 }

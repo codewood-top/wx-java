@@ -8,4 +8,5 @@ import top.codewood.wx.mp.property.WxPayProperty;
 @Configuration
 @EnableConfigurationProperties({WxMpProperty.class, WxPayProperty.class})
 public class WxConfig {
+
 }

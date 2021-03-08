@@ -2,6 +2,7 @@ package top.codewood.wx.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -10,10 +11,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import top.codewood.wx.common.api.WxConstants;
+import top.codewood.wx.mp.api.OrderService;
 import top.codewood.wx.mp.api.WxMpOAuth2Api;
 import top.codewood.wx.mp.bean.oauth2.WxOAuth2AccessToken;
 import top.codewood.wx.mp.bean.oauth2.WxOAuth2UserInfo;
 import top.codewood.wx.mp.property.WxMpProperty;
+import top.codewood.wx.mp.property.WxPayProperty;
 import top.codewood.wx.util.Strings;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +26,9 @@ import javax.servlet.http.HttpServletRequest;
 public class WxMpController {
 
     static final Logger LOGGER = LoggerFactory.getLogger(WxMpController.class);
+
+    @Autowired
+    private OrderService orderService;
 
     @GetMapping("/js_sdk")
     public String jsSdk(@RequestParam(value = "debug", required = false, defaultValue = "false") boolean debug, Model model) {
@@ -83,6 +89,19 @@ public class WxMpController {
         model.addAttribute("scope", scope);
         model.addAttribute("appid", WxMpProperty.APP_ID);
         return "mp/authorize";
+    }
+
+    @GetMapping("/pay")
+    public String pay(
+            @RequestParam(value = "openid", required = false, defaultValue = "") String openid,
+            Model model) {
+        model.addAttribute("orderNumber", orderService.generateOrderNumber());
+        model.addAttribute("description", "代码坞-素材小店-大好河山");
+        model.addAttribute("amount", 0.01);
+        model.addAttribute("appid", WxMpProperty.APP_ID);
+        model.addAttribute("mchid", WxPayProperty.MCHID);
+        model.addAttribute("openid", openid);
+        return "mp/pay";
     }
 
     private String getCurrentUrl(HttpServletRequest request) {

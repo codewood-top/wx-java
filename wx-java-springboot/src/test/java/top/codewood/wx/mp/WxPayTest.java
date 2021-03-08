@@ -2,16 +2,22 @@ package top.codewood.wx.mp;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import okhttp3.Response;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.codewood.wx.pay.v3.api.WxPayApi;
+import top.codewood.wx.pay.v3.bean.request.WxPayRequest;
+import top.codewood.wx.pay.v3.bean.result.WxPayBillDownloadResult;
 import top.codewood.wx.pay.v3.cert.CertificateItem;
 import top.codewood.wx.pay.v3.common.WxPayConstants;
-import top.codewood.wx.pay.v3.request.WxPayRequest;
 
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -19,6 +25,7 @@ import java.security.SignatureException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -47,6 +54,17 @@ public class WxPayTest {
         List<CertificateItem> certificates = WxPayApi.certificates(mchid, serialNo);
         WxPayApi.loadCertificates(apiV3Key, certificates);
         LOGGER.info("已加载证书");
+    }
+
+    @Test
+    public void generateOrderNumberTest() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(DateTimeFormatter.ofPattern("yyyyMMddHHMM").format(LocalDateTime.now()));
+        for (int i = 0; i < 5; i++) {
+            sb.append(Double.valueOf(Math.random() * 10).intValue());
+        }
+        sb.append("000001");
+        System.out.println(sb.toString());
     }
 
 
@@ -85,10 +103,23 @@ public class WxPayTest {
         String body = "";
 
         String message = wechatTimeStamp + "\n" + wechatPayNonce + "\n" + body + "\n";
-        boolean vertify = WxPayApi.vertify(wechatSerial, wechatTimeStamp, wechatPayNonce, body, wechatPaySignature);
+        boolean vertify = WxPayApi.verify(wechatSerial, wechatTimeStamp, wechatPayNonce, body, wechatPaySignature);
 
         System.out.println("vertify: " + vertify);
+    }
 
+
+    //@Test
+    public void wxPayFundFlowBillTest() throws IOException {
+        WxPayBillDownloadResult wxPayBillDownloadResult = WxPayApi.fundFlowBill(mchid, serialNo, "2021-03-07", null, null);
+        String url = wxPayBillDownloadResult.getDownloadUrl();
+        String token = WxPayApi.getToken(mchid, serialNo, WxPayConstants.HttpMethod.GET, url, WxPayApi.EMPTY_STR);
+        Response response = WxPayApi.getWithReponse(url, token);
+        InputStream inputStream = response.body().byteStream();
+        FileOutputStream fileOutputStream = new FileOutputStream("your file path");
+        IOUtils.copy(inputStream, fileOutputStream);
+        inputStream.close();
+        fileOutputStream.close();
     }
 
 }

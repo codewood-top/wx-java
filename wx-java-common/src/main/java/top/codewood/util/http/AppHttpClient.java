@@ -84,6 +84,13 @@ public class AppHttpClient {
         return response.body().string();
     }
 
+    public Response postWithResponse(String url, String jsonData) throws IOException {
+        RequestBody requestBody = RequestBody.create(MEDIA_TYPE_JSON, jsonData);
+        Request request = new Request.Builder().url(url).post(requestBody).build();
+        Response response = client.newCall(request).execute();
+        return response;
+    }
+
     public String post(String url, String jsonData, Map<String, String> headers) throws IOException {
         Response response = postWithResponse(url, jsonData, headers);
         return response.body().string();

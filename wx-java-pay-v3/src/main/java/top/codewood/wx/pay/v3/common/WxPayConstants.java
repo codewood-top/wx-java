@@ -55,6 +55,11 @@ public class WxPayConstants {
         String WX_PAY_APP_URL = "https://api.mch.weixin.qq.com/v3/pay/transactions/app";
         String WX_PAY_NATIVE_URL = "https://api.mch.weixin.qq.com/v3/pay/transactions/native";
         String WX_PAY_H5_URL = "https://api.mch.weixin.qq.com/v3/pay/transactions/h5";
+
+        /**
+         * 退款URL
+         */
+        String REFUND_URL = "https://api.mch.weixin.qq.com/v3/refund/domestic/refunds";
     }
 
 }
