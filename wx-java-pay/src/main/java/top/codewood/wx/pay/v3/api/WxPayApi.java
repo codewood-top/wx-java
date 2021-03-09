@@ -428,6 +428,43 @@ public class WxPayApi {
     }
 
     /**
+     * 申请交易账单API
+     * 微信支付按天提供交易账单文件，商户可以通过该接口获取账单文件的下载地址。文件内包含交易相关的金额、时间、营销等信息，供商户核对订单、退款、银行到账等情况。
+     *
+     * 注意：
+     * • 微信侧未成功下单的交易不会出现在对账单中。支付成功后撤销的交易会出现在对账单中，跟原支付单订单号一致；
+     * • 对账单中涉及金额的字段单位为“元”；
+     * • 对账单接口只能下载三个月以内的账单。
+     *
+     * <a href="https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_6.shtml">申请交易账单API</a>
+     * @param mchid
+     * @param serialNo
+     * @param billDate 账单日期：格式YYYY-MM-DD
+     *                 仅支持三个月内的账单下载申请。
+     *                 示例值：2019-06-11
+     * @param billType 账单类型： 不填则默认是ALL
+     *                  枚举值：
+     *                  ALL：返回当日所有订单信息（不含充值退款订单）
+     *                  SUCCESS：返回当日成功支付的订单（不含充值退款订单）
+     *                  REFUND：返回当日退款订单（不含充值退款订单）
+     *                  示例值：ALL
+     * @param tarType  不填则默认是数据流
+     *                  枚举值：
+     *                  GZIP：返回格式为.gzip的压缩包账单
+     *                  示例值：GZIP
+     */
+    public static InputStream downloadTradeBill(String mchid, String serialNo, String billDate, String billType, String tarType) {
+        WxPayBillDownloadResult wxPayBillDownloadResult = tradeBill(mchid, serialNo, billDate, billType, tarType);
+
+        String url = wxPayBillDownloadResult.getDownloadUrl();
+        String token = WxPayApi.getToken(mchid, serialNo, WxPayConstants.HttpMethod.GET, url, WxPayApi.EMPTY_STR);
+        Response response = WxPayApi.getWithReponse(url, token);
+        InputStream inputStream = response.body().byteStream();
+        return inputStream;
+    }
+
+
+    /**
      *
      * @param mchid
      * @param serialNo
@@ -466,6 +503,37 @@ public class WxPayApi {
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    /**
+     *
+     * @param mchid
+     * @param serialNo
+     * @param mchid
+     * @param serialNo
+     * @param billDate 账单日期：格式YYYY-MM-DD
+     *                 仅支持三个月内的账单下载申请。
+     *                 示例值：2019-06-11
+     * @param accountType 不填则默认是BASIC
+     *                      枚举值：
+     *                      BASIC：基本账户
+     *                      OPERATION：运营账户
+     *                      FEES：手续费账户
+     *                      示例值：BASIC
+     * @param tarType  不填则默认是数据流
+     *                  枚举值：
+     *                  GZIP：返回格式为.gzip的压缩包账单
+     *                  示例值：GZIP
+     * @return
+     */
+    public static InputStream downloadFundFlowBill(String mchid, String serialNo, String billDate, String accountType, String tarType) {
+        WxPayBillDownloadResult wxPayBillDownloadResult = fundFlowBill(mchid, serialNo, billDate, accountType, tarType);
+
+        String url = wxPayBillDownloadResult.getDownloadUrl();
+        String token = WxPayApi.getToken(mchid, serialNo, WxPayConstants.HttpMethod.GET, url, WxPayApi.EMPTY_STR);
+        Response response = WxPayApi.getWithReponse(url, token);
+        InputStream inputStream = response.body().byteStream();
+        return inputStream;
     }
 
 }

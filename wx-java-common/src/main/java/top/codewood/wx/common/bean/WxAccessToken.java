@@ -1,4 +1,4 @@
-package top.codewood.wx.mp.bean;
+package top.codewood.wx.common.bean;
 
 import com.google.gson.annotations.SerializedName;
 

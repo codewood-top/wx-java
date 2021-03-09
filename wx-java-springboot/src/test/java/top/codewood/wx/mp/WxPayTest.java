@@ -56,7 +56,7 @@ public class WxPayTest {
         LOGGER.info("已加载证书");
     }
 
-    @Test
+    //@Test
     public void generateOrderNumberTest() {
         StringBuilder sb = new StringBuilder();
         sb.append(DateTimeFormatter.ofPattern("yyyyMMddHHMM").format(LocalDateTime.now()));

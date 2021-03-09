@@ -10,7 +10,7 @@ import top.codewood.wx.common.bean.error.WxErrorException;
 import top.codewood.wx.mp.api.WxMpApi;
 import top.codewood.wx.mp.api.WxMpMenuApi;
 import top.codewood.wx.mp.api.WxMpService;
-import top.codewood.wx.mp.bean.WxAccessToken;
+import top.codewood.wx.common.bean.error.WxAccessToken;
 import top.codewood.wx.mp.bean.WxMpJsapiTicket;
 import top.codewood.wx.mp.bean.menu.WxMenu;
 import top.codewood.wx.mp.property.WxMpProperty;
