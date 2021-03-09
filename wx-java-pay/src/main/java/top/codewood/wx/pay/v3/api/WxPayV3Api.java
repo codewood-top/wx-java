@@ -15,7 +15,7 @@ import top.codewood.wx.pay.v3.bean.result.WxPayBillDownloadResult;
 import top.codewood.wx.pay.v3.bean.result.WxRefundResult;
 import top.codewood.wx.pay.v3.cert.CertificateItem;
 import top.codewood.wx.pay.v3.cert.CertificateList;
-import top.codewood.wx.pay.v3.common.WxPayConstants;
+import top.codewood.wx.pay.common.WxPayConstants;
 import top.codewood.wx.pay.v3.util.cert.AesUtil;
 import top.codewood.wx.pay.v3.util.cert.PemUtil;
 import top.codewood.wx.pay.v3.util.json.WxGsonBuilder;
@@ -30,7 +30,7 @@ import java.security.*;
 import java.security.cert.Certificate;
 import java.util.*;
 
-public class WxPayApi {
+public class WxPayV3Api {
 
     public static final String EMPTY_STR = "";
 
@@ -274,9 +274,9 @@ public class WxPayApi {
             Gson gson = WxGsonBuilder.create();
             JsonObject json = gson.toJsonTree(wxPayRequest).getAsJsonObject();
 
-            String token = getToken(mchid, serialNo, WxPayConstants.HttpMethod.POST, WxPayConstants.PayUrl.WX_PAY_JSAPI_URL, json.toString());
+            String token = getToken(mchid, serialNo, WxPayConstants.HttpMethod.POST, WxPayConstants.V3PayUrl.WX_PAY_JSAPI_URL, json.toString());
 
-            String respStr = post(WxPayConstants.PayUrl.WX_PAY_JSAPI_URL, json.toString(), token);
+            String respStr = post(WxPayConstants.V3PayUrl.WX_PAY_JSAPI_URL, json.toString(), token);
             return gson.fromJson(respStr, Map.class);
         } else {
             throw new RuntimeException("无效的支付方式：" + payType);
@@ -297,8 +297,8 @@ public class WxPayApi {
         assert wxRefundRequest != null;
         Gson gson = WxGsonBuilder.create();
         JsonObject json = gson.toJsonTree(wxRefundRequest).getAsJsonObject();
-        String token = getToken(mchid, serialNo, WxPayConstants.HttpMethod.POST, WxPayConstants.PayUrl.REFUND_URL, json.toString());
-        String respStr = post(WxPayConstants.PayUrl.REFUND_URL, json.toString(), token);
+        String token = getToken(mchid, serialNo, WxPayConstants.HttpMethod.POST, WxPayConstants.V3PayUrl.REFUND_URL, json.toString());
+        String respStr = post(WxPayConstants.V3PayUrl.REFUND_URL, json.toString(), token);
         return gson.fromJson(respStr, WxRefundResult.class);
 
     }
@@ -457,8 +457,8 @@ public class WxPayApi {
         WxPayBillDownloadResult wxPayBillDownloadResult = tradeBill(mchid, serialNo, billDate, billType, tarType);
 
         String url = wxPayBillDownloadResult.getDownloadUrl();
-        String token = WxPayApi.getToken(mchid, serialNo, WxPayConstants.HttpMethod.GET, url, WxPayApi.EMPTY_STR);
-        Response response = WxPayApi.getWithReponse(url, token);
+        String token = WxPayV3Api.getToken(mchid, serialNo, WxPayConstants.HttpMethod.GET, url, WxPayV3Api.EMPTY_STR);
+        Response response = WxPayV3Api.getWithReponse(url, token);
         InputStream inputStream = response.body().byteStream();
         return inputStream;
     }
@@ -530,8 +530,8 @@ public class WxPayApi {
         WxPayBillDownloadResult wxPayBillDownloadResult = fundFlowBill(mchid, serialNo, billDate, accountType, tarType);
 
         String url = wxPayBillDownloadResult.getDownloadUrl();
-        String token = WxPayApi.getToken(mchid, serialNo, WxPayConstants.HttpMethod.GET, url, WxPayApi.EMPTY_STR);
-        Response response = WxPayApi.getWithReponse(url, token);
+        String token = WxPayV3Api.getToken(mchid, serialNo, WxPayConstants.HttpMethod.GET, url, WxPayV3Api.EMPTY_STR);
+        Response response = WxPayV3Api.getWithReponse(url, token);
         InputStream inputStream = response.body().byteStream();
         return inputStream;
     }

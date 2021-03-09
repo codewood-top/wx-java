@@ -1,4 +1,4 @@
-package top.codewood.wx.pay.v3.common;
+package top.codewood.wx.pay.common;
 
 public class WxPayConstants {
 
@@ -12,13 +12,13 @@ public class WxPayConstants {
         /**
          * JSAPI/小程序下单
          */
-        JSAPI("jsapi", PayUrl.WX_PAY_JSAPI_URL),
+        JSAPI("jsapi", V3PayUrl.WX_PAY_JSAPI_URL),
 
-        APP("app", PayUrl.WX_PAY_APP_URL),
+        APP("app", V3PayUrl.WX_PAY_APP_URL),
 
-        NATIVE("native", PayUrl.WX_PAY_NATIVE_URL),
+        NATIVE("native", V3PayUrl.WX_PAY_NATIVE_URL),
 
-        H5("h5", PayUrl.WX_PAY_H5_URL);
+        H5("h5", V3PayUrl.WX_PAY_H5_URL);
 
         private String type;
         private String payUrl;
@@ -46,14 +46,23 @@ public class WxPayConstants {
     }
 
 
-    public interface PayUrl {
+    public interface V3PayUrl {
 
         /**
          * JSAPI/小程序下单API
          */
         String WX_PAY_JSAPI_URL = "https://api.mch.weixin.qq.com/v3/pay/transactions/jsapi";
+        /**
+         * APP支付
+         */
         String WX_PAY_APP_URL = "https://api.mch.weixin.qq.com/v3/pay/transactions/app";
+        /**
+         *  Native支付
+         */
         String WX_PAY_NATIVE_URL = "https://api.mch.weixin.qq.com/v3/pay/transactions/native";
+        /**
+         * 小程序支付
+         */
         String WX_PAY_H5_URL = "https://api.mch.weixin.qq.com/v3/pay/transactions/h5";
 
         /**

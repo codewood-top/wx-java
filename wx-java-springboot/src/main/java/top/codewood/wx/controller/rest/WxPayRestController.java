@@ -12,7 +12,7 @@ import top.codewood.wx.common.api.WxConstants;
 import top.codewood.wx.mp.api.WxPayService;
 import top.codewood.wx.mp.property.WxMpProperty;
 import top.codewood.wx.mp.property.WxPayProperty;
-import top.codewood.wx.pay.v3.api.WxPayApi;
+import top.codewood.wx.pay.v3.api.WxPayV3Api;
 import top.codewood.wx.pay.v3.bean.notify.WxRefundTransaction;
 import top.codewood.wx.pay.v3.bean.request.WxPayRequest;
 import top.codewood.wx.pay.v3.bean.request.WxRefundRequest;
@@ -73,7 +73,7 @@ public class WxPayRestController {
         map.put("nonceStr", nonceStr);
         map.put("package", "prepay_id=" + map.get("prepay_id"));
         String message = WxMpProperty.APP_ID + "\n" + timeStamp + "\n" + nonceStr + "\nprepay_id=" + map.get("prepay_id") + "\n";
-        String sign = WxPayApi.sign(WxPayProperty.MCHID, message.getBytes(StandardCharsets.UTF_8));
+        String sign = WxPayV3Api.sign(WxPayProperty.MCHID, message.getBytes(StandardCharsets.UTF_8));
         map.put("paySign", sign);
         return map;
     }
