@@ -1,9 +1,9 @@
 package top.codewood.wx.mp.api;
 
 import top.codewood.util.http.AppHttpClient;
+import top.codewood.wx.common.bean.WxAccessToken;
 import top.codewood.wx.common.bean.error.WxError;
 import top.codewood.wx.common.bean.error.WxErrorException;
-import top.codewood.wx.common.bean.error.WxAccessToken;
 import top.codewood.wx.mp.bean.WxMpJsapiTicket;
 import top.codewood.wx.mp.util.json.WxGsonBuilder;
 

@@ -1,4 +1,4 @@
-package top.codewood.wx.mp.util.xstream;
+package top.codewood.wx.common.util.xml;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -55,7 +55,6 @@ public class XStreamConverter {
             if (inInnerClasses == null) continue;
             classes.addAll(Arrays.asList(inInnerClasses));
         }
-
         return innerClasses;
     }
 

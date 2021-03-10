@@ -28,10 +28,10 @@ import java.util.Date;
 import java.util.List;
 
 
-public class WxPayTest {
+public class WxPayV3Test {
 
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(WxPayTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WxPayV3Test.class);
 
     String mchid = "";
     String serialNo = "";
@@ -119,5 +119,7 @@ public class WxPayTest {
         inputStream.close();
         fileOutputStream.close();
     }
+
+
 
 }

@@ -11,7 +11,16 @@ weixin:
     property:
       appid:
       appsecret:
-
+  pay:
+    property:
+      mchid:
+      serial-no:
+      api-v2-key:
+      api-v3-key:
+      cert-file-path:
+      key-file-path:
+      notify-url:
+      refund-notify-url:
 logging:
   level:
     top.codewood.wx: debug

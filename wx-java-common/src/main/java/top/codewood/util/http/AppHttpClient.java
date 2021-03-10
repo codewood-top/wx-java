@@ -126,10 +126,14 @@ public class AppHttpClient {
     }
 
     public String sslPost(String url, String jsonData, String filePath, String password) throws Exception {
-        KeyStore keyStore = KeyStore.getInstance("PKCS12");
         InputStream instream = this.getClass().getResourceAsStream(filePath);// 加载本地的证书进行https加密传输
-        keyStore.load(instream, password.toCharArray());
-        instream.close();
+        return sslPost(url, jsonData, password, instream);
+    }
+
+    public String sslPost(String url, String jsonData, String password, InputStream certFileInputStream) throws Exception {
+        KeyStore keyStore = KeyStore.getInstance("PKCS12");
+        keyStore.load(certFileInputStream, password.toCharArray());
+        certFileInputStream.close();
         SSLContext sslContext = SSLContexts.custom().loadKeyMaterial(keyStore, password.toCharArray()).build();
         SSLConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(sslContext, new String[]{"TLSv1"}, null, SSLConnectionSocketFactory.getDefaultHostnameVerifier());
         CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(sslSocketFactory)

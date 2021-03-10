@@ -26,5 +26,4 @@ public class WxGsonBuilder {
         return BUILDER.create();
     }
 
-
 }

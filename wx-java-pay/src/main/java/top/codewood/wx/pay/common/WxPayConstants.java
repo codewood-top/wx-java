@@ -45,6 +45,28 @@ public class WxPayConstants {
         }
     }
 
+    public interface V2PayUrl {
+
+        /**
+         * 发放红包接口
+         * 需要证书
+         */
+        String SEND_REDPACK_URL = "https://api.mch.weixin.qq.com/mmpaymkttransfers/sendredpack";
+
+        /**
+         * 发放裂变红包
+         * 需要证书
+         */
+        String SEND_GROUP_REDPACK_URL = "https://api.mch.weixin.qq.com/mmpaymkttransfers/sendgroupredpack";
+
+        /**
+         * 查询红包记录
+         * 需要证书
+         */
+        String QUERY_REDPACK_INFO_URL = "https://api.mch.weixin.qq.com/mmpaymkttransfers/gethbinfo";
+
+    }
+
 
     public interface V3PayUrl {
 

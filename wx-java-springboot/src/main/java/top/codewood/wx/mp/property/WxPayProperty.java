@@ -7,23 +7,33 @@ import javax.annotation.PostConstruct;
 @ConfigurationProperties(prefix = "weixin.pay.property")
 public class WxPayProperty {
 
-    public static String MCHID = null, SERIAL_NO = null, API_V3_KEY = null, CERT_PATH = null, NOTIFY_URL = null, REFUND_NOTIFY_URL = null;
+    public static String MCHID = null, SERIAL_NO = null,
+            API_V2_KEY = null,
+            API_V3_KEY = null,
+            KEY_FILE_PATH = null,
+            CERT_FILE_PATH = null,
+            NOTIFY_URL = null,
+            REFUND_NOTIFY_URL = null;
 
     private String mchid;
     private String serialno;
-    private String apiv3key;
-    private String certpath;
-    private String notifyurl;
-    private String refundnotifyurl;
+    private String apiV2Key;
+    private String apiV3Key;
+    private String keyFilePath;
+    private String certFilePath;
+    private String notifyUrl;
+    private String refundNotifyUrl;
 
     @PostConstruct
     void postConstruct() {
         MCHID = mchid;
         SERIAL_NO = serialno;
-        API_V3_KEY = apiv3key;
-        CERT_PATH = certpath;
-        NOTIFY_URL = notifyurl;
-        REFUND_NOTIFY_URL = refundnotifyurl;
+        API_V2_KEY = apiV2Key;
+        API_V3_KEY = apiV3Key;
+        KEY_FILE_PATH = keyFilePath;
+        CERT_FILE_PATH = certFilePath;
+        NOTIFY_URL = notifyUrl;
+        REFUND_NOTIFY_URL = refundNotifyUrl;
     }
 
     public void setMchid(String mchid) {
@@ -34,19 +44,27 @@ public class WxPayProperty {
         this.serialno = serialno;
     }
 
-    public void setApiv3key(String apiv3key) {
-        this.apiv3key = apiv3key;
+    public void setApiV2Key(String apiV2Key) {
+        this.apiV2Key = apiV2Key;
     }
 
-    public void setCertpath(String certpath) {
-        this.certpath = certpath;
+    public void setApiV3Key(String apiV3Key) {
+        this.apiV3Key = apiV3Key;
     }
 
-    public void setNotifyurl(String notifyurl) {
-        this.notifyurl = notifyurl;
+    public void setKeyFilePath(String keyFilePath) {
+        this.keyFilePath = keyFilePath;
     }
 
-    public void setRefundnotifyurl(String refundnotifyurl) {
-        this.refundnotifyurl = refundnotifyurl;
+    public void setCertFilePath(String certFilePath) {
+        this.certFilePath = certFilePath;
+    }
+
+    public void setNotifyUrl(String notifyUrl) {
+        this.notifyUrl = notifyUrl;
+    }
+
+    public void setRefundNotifyUrl(String refundNotifyUrl) {
+        this.refundNotifyUrl = refundNotifyUrl;
     }
 }

@@ -19,8 +19,8 @@ public class ApplicationStartedListener implements ApplicationListener<Applicati
     @Override
     public void onApplicationEvent(ApplicationStartedEvent applicationStartedEvent) {
         if (WxPayProperty.MCHID != null && WxPayProperty.SERIAL_NO != null
-                && WxPayProperty.CERT_PATH != null && WxPayProperty.API_V3_KEY != null) {
-            WxPayV3Api.loadPrivateKey(WxPayProperty.MCHID, this.getClass().getResourceAsStream(WxPayProperty.CERT_PATH));
+                && WxPayProperty.KEY_FILE_PATH != null && WxPayProperty.API_V3_KEY != null) {
+            WxPayV3Api.loadPrivateKey(WxPayProperty.MCHID, this.getClass().getResourceAsStream(WxPayProperty.KEY_FILE_PATH));
             LOGGER.info("已加载私钥");
 
             List<CertificateItem> certificates = WxPayV3Api.certificates(WxPayProperty.MCHID, WxPayProperty.SERIAL_NO);

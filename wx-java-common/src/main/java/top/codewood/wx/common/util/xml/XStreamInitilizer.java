@@ -1,4 +1,4 @@
-package top.codewood.wx.mp.util.xstream;
+package top.codewood.wx.common.util.xml;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.core.util.QuickWriter;

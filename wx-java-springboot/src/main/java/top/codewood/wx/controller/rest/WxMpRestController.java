@@ -13,7 +13,7 @@ import top.codewood.wx.mp.api.WxMpService;
 import top.codewood.wx.mp.bean.message.WxMpTextRespXmlMessage;
 import top.codewood.wx.mp.bean.message.WxMpTransferKefuRespXMLMessage;
 import top.codewood.wx.mp.bean.message.WxMpXmlMessage;
-import top.codewood.wx.mp.util.xstream.XStreamConverter;
+import top.codewood.wx.common.util.xml.XStreamConverter;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -44,8 +44,8 @@ public class WxMpRestController {
 
     @RequestMapping("/handle")
     public String handle(HttpServletRequest request) {
-        String echostr = request.getParameter("echostr");
-        if (StringUtils.hasText(echostr)) {
+        String echoStr = request.getParameter("echostr");
+        if (StringUtils.hasText(echoStr)) {
             String signature = request.getParameter("signature"),
                 timestamp = request.getParameter("timestamp"),
                 nonce = request.getParameter("nonce");
@@ -53,7 +53,7 @@ public class WxMpRestController {
                 LOGGER.debug("check signature failure, signature: {}, timestamp: {}, nonce: {}", signature, timestamp, nonce);
                 return WxConstants.FAILURE;
             }
-            return echostr;
+            return echoStr;
         } else {
             try {
                 WxMpXmlMessage mpXmlMessage = XStreamConverter.fromXml(WxMpXmlMessage.class, request.getInputStream());
