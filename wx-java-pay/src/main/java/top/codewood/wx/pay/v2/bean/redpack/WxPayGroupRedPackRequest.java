@@ -35,7 +35,7 @@ public class WxPayGroupRedPackRequest extends WxPayRedPackRequest {
         public WxPayGroupRedPackRequest build() {
             WxPayGroupRedPackRequest groupRedPackRequest = new WxPayGroupRedPackRequest();
             groupRedPackRequest.setWxAppid(this.wxAppid);
-            groupRedPackRequest.setMchId(this.mchId);
+            groupRedPackRequest.setMchid(this.mchId);
             groupRedPackRequest.setNonceStr(this.nonceStr);
             groupRedPackRequest.setSign(this.sign);
             groupRedPackRequest.setMchBillNo(this.mchBillNo);

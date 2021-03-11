@@ -1,9 +1,12 @@
 package top.codewood.wx.mp;
 
+import top.codewood.wx.pay.v2.api.EntPayApi;
 import top.codewood.wx.pay.v2.api.WxPayV2Api;
 import top.codewood.wx.pay.v2.bean.redpack.WxPayRedPackQueryRequest;
 import top.codewood.wx.pay.v2.bean.redpack.WxPayRedPackQueryResult;
 import top.codewood.wx.util.Strings;
+
+import java.io.InputStream;
 
 public class WxPayV2Test {
 
@@ -13,11 +16,13 @@ public class WxPayV2Test {
         WxPayRedPackQueryRequest redPackQueryRequest = new WxPayRedPackQueryRequest();
         redPackQueryRequest.setAppid(appid);
         redPackQueryRequest.setMchBillNo(tradeNo);
-        redPackQueryRequest.setMchId(mchid);
+        redPackQueryRequest.setMchid(mchid);
         redPackQueryRequest.setNonceStr(Strings.randomString(32));
         redPackQueryRequest.setSign(WxPayV2Api.sign(redPackQueryRequest, key));
-        WxPayRedPackQueryResult redPackQueryResult = WxPayV2Api.queryRedPack(redPackQueryRequest, certFilePath, mchid);
+        InputStream certFileInputStream = this.getClass().getResourceAsStream(certFilePath);
+        WxPayRedPackQueryResult redPackQueryResult = EntPayApi.getInstance().queryRedPack(redPackQueryRequest, mchid, certFileInputStream);
         System.out.println(redPackQueryResult);
     }
+
 
 }

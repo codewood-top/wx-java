@@ -75,6 +75,7 @@ public class WxPayTransaction implements Serializable {
      * <a href="https://pay.weixin.qq.com/wiki/doc/apiv3/terms_definition/chapter1_1_3.shtml#part-6">《银行类型对照表》</a>
      * 示例值：CMC
      */
+    @SerializedName("bank_type")
     private String bankType;
 
     /**

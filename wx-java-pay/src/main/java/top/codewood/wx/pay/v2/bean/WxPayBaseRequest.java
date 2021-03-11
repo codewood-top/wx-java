@@ -2,6 +2,7 @@ package top.codewood.wx.pay.v2.bean;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import top.codewood.wx.annotation.Required;
+import top.codewood.wx.common.util.bean.BeanUtils;
 
 import java.io.Serializable;
 
@@ -18,7 +19,7 @@ public class WxPayBaseRequest implements Serializable {
      */
     @Required
     @XStreamAlias("mch_id")
-    protected String mchId;
+    protected String mchid;
 
     /**
      * 随机字符串
@@ -32,8 +33,8 @@ public class WxPayBaseRequest implements Serializable {
      * 签名
      * 详见<a href="https://pay.weixin.qq.com/wiki/doc/api/tools/cash_coupon.php?chapter=4_3">签名生成算法</a>
      */
-    @Required
     protected String sign;
+
 
     public String getAppid() {
         return appid;
@@ -43,12 +44,12 @@ public class WxPayBaseRequest implements Serializable {
         this.appid = appid;
     }
 
-    public String getMchId() {
-        return mchId;
+    public String getMchid() {
+        return mchid;
     }
 
-    public void setMchId(String mchId) {
-        this.mchId = mchId;
+    public void setMchid(String mchid) {
+        this.mchid = mchid;
     }
 
     public String getNonceStr() {
@@ -66,4 +67,38 @@ public class WxPayBaseRequest implements Serializable {
     public void setSign(String sign) {
         this.sign = sign;
     }
+
+    /**
+     * 自检测字段缺失
+     */
+    public void checkRequiredFields() {
+        BeanUtils.checkRequiredFields(this);
+    }
+
+    /**
+     * sign 字段需要生成具体对象后再传入
+     */
+    public static abstract class Builder<T extends Builder> {
+
+        protected String appid;
+        protected String mchid;
+        protected String nonceStr;
+
+        public T appid(String appid) {
+            this.appid = appid;
+            return (T) this;
+        }
+
+        public T mchid(String mchid) {
+            this.mchid = mchid;
+            return (T) this;
+        }
+
+        public T nonceStr(String nonceStr) {
+            this.nonceStr = nonceStr;
+            return (T) this;
+        }
+
+    }
+
 }

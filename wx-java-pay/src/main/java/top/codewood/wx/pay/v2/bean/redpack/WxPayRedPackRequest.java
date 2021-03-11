@@ -310,7 +310,7 @@ public class WxPayRedPackRequest extends WxPayBaseRequest {
         public WxPayRedPackRequest build() {
             WxPayRedPackRequest redPackRequest = new WxPayRedPackRequest();
             redPackRequest.setWxAppid(this.wxAppid);
-            redPackRequest.setMchId(this.mchId);
+            redPackRequest.setMchid(this.mchId);
             redPackRequest.setNonceStr(this.nonceStr);
             redPackRequest.setSign(sign);
             redPackRequest.setMchBillNo(this.mchBillNo);

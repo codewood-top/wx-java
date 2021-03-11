@@ -6,4 +6,8 @@ public class WxErrorException extends RuntimeException {
         super(wxError.toString());
     }
 
+    public WxErrorException(String errMsg) {
+        super(errMsg);
+    }
+
 }

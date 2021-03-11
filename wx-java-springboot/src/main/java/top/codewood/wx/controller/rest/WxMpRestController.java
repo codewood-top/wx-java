@@ -71,7 +71,7 @@ public class WxMpRestController {
                                 msg = "欢迎关注 codewood.";
                                 break;
                             case WxConstants.EventType.UNSUBSCRIBE:
-                                return WxConstants.SUCCESS;
+                                return WxConstants.SUCCESS.toLowerCase();
                             case WxConstants.EventType.SCAN:
                                 break;
                             case WxConstants.EventType.CLICK:
@@ -117,7 +117,7 @@ public class WxMpRestController {
                 LOGGER.error("err: {}", e.getMessage());
             }
         }
-        return WxConstants.SUCCESS;
+        return WxConstants.SUCCESS.toLowerCase();
     }
 
     private String generateSignature(String timestamp, String nonce, String token) {

@@ -5,8 +5,9 @@ package top.codewood.wx.common.api;
  */
 public class WxConstants {
 
-    public static final String SUCCESS = "success";
-    public static final String FAILURE = "failure";
+    public static final String SUCCESS = "SUCCESS";
+    public static final String FAILURE = "FAILURE";
+    public static final String FAIL = "FAIL";
 
     public interface XmlMsgType {
         String TEXT = "text";
