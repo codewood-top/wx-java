@@ -29,6 +29,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class WxPayV3Api {
 
@@ -275,7 +276,6 @@ public class WxPayV3Api {
             JsonObject json = gson.toJsonTree(wxPayRequest).getAsJsonObject();
 
             String token = getToken(mchid, serialNo, WxPayConstants.HttpMethod.POST, WxPayConstants.V3PayUrl.WX_PAY_JSAPI_URL, json.toString());
-
             String respStr = post(WxPayConstants.V3PayUrl.WX_PAY_JSAPI_URL, json.toString(), token);
             return gson.fromJson(respStr, Map.class);
         } else {

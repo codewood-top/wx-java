@@ -56,6 +56,11 @@
         </div>
     </div>
     <div class="form-cell">
+        <div>
+            <input type="checkbox" style="width:auto;" id="profitSharing" name="profitSharing">是否分账
+        </div>
+    </div>
+    <div class="form-cell">
         <button id="btn_submit">提交支付</button>
     </div>
 </div>
@@ -88,7 +93,8 @@
             let orderNumber = document.querySelector('#orderNumber').value,
                 description = document.querySelector('#description').value,
                 amount = document.querySelector('#amount').value,
-                openid = document.querySelector('#openid').value
+                openid = document.querySelector('#openid').value,
+                profitSharing = document.querySelector('#profitSharing').checked
 
             console.log(`${orderNumber}, ${description}, ${amount}, ${openid}`)
 
@@ -104,6 +110,7 @@
                     description: description,
                     amount: amount,
                     openid: openid,
+                    profitSharing: profitSharing,
                     nonceStr: nonceStr,
                     timeStamp: timeStamp
                 },

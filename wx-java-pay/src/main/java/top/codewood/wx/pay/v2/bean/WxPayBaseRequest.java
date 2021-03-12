@@ -3,6 +3,7 @@ package top.codewood.wx.pay.v2.bean;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import top.codewood.wx.annotation.Required;
 import top.codewood.wx.common.util.bean.BeanUtils;
+import top.codewood.wx.common.util.xml.XStreamConverter;
 
 import java.io.Serializable;
 
@@ -73,6 +74,10 @@ public class WxPayBaseRequest implements Serializable {
      */
     public void checkRequiredFields() {
         BeanUtils.checkRequiredFields(this);
+    }
+
+    public String toXml() {
+        return XStreamConverter.toXml(this);
     }
 
     /**

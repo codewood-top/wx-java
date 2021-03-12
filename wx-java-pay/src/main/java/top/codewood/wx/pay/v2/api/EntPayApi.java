@@ -36,16 +36,16 @@ public class EntPayApi extends WxPayV2Api {
      * 3.场景金额限制------默认红包金额为1-200元，如有需要，可前往商户平台进行设置和申请
      * 4.其他限制------商户单日出资金额上限--100万元；单用户单日收款金额上限--1000元；单用户单日可领取红包个数上限--10个
      * @param redPackRequest
-     * @param mchid
+     * @param certPassword -> mchid
      * @param certFileInputStream
      * @return
      */
-    public WxPayRedPackResult sendRedPack(WxPayRedPackRequest redPackRequest, String mchid, InputStream certFileInputStream) {
+    public WxPayRedPackResult sendRedPack(WxPayRedPackRequest redPackRequest, String certPassword, InputStream certFileInputStream) {
         assert redPackRequest != null;
 
         redPackRequest.checkRequiredFields();
         String xml = XStreamConverter.toXml(redPackRequest);
-        String respStr = sslPost(WxPayConstants.EntPayUrl.REDPACK_SEND_URL, xml, mchid, certFileInputStream);
+        String respStr = sslPost(WxPayConstants.EntPayUrl.REDPACK_SEND_URL, xml, certPassword, certFileInputStream);
 
         WxPayRedPackResult wxPayRedPackResult = XStreamConverter.fromXml(WxPayRedPackResult.class, respStr);
         checkResult(wxPayRedPackResult);
@@ -57,16 +57,16 @@ public class EntPayApi extends WxPayV2Api {
      * 裂变红包：一次可以发放一组红包。首先领取的用户为种子用户，种子用户领取一组红包当中的一个，并可以通过社交分享将剩下的红包给其他用户。裂变红包充分利用了人际传播的优势。
      *
      * @param redPackRequest
-     * @param password -> mchid
+     * @param certPassword -> mchid
      * @param certFileInputStream
      * @return
      */
-    public WxPayRedPackResult sendGroupRedPack(WxPayGroupRedPackRequest redPackRequest, String password, InputStream certFileInputStream) {
+    public WxPayRedPackResult sendGroupRedPack(WxPayGroupRedPackRequest redPackRequest, String certPassword, InputStream certFileInputStream) {
         assert redPackRequest != null;
 
         redPackRequest.checkRequiredFields();
         String xml = XStreamConverter.toXml(redPackRequest);
-        String respStr = sslPost(WxPayConstants.EntPayUrl.REDPACK_SEND_URL, xml, password, certFileInputStream);
+        String respStr = sslPost(WxPayConstants.EntPayUrl.REDPACK_SEND_URL, xml, certPassword, certFileInputStream);
 
         WxPayRedPackResult redPackResult = XStreamConverter.fromXml(WxPayRedPackResult.class, respStr);
         checkResult(redPackResult);
@@ -85,16 +85,16 @@ public class EntPayApi extends WxPayV2Api {
      * ◆ 错误代码描述字段err_code_des只供人工定位问题时做参考，系统实现时请不要依赖这个字段来做自动化处理。
      *
      * @param redPackQueryRequest
-     * @param password -> mchid
+     * @param certPassword -> mchid
      * @param certFileInputStream
      * @return
      */
-    public WxPayRedPackQueryResult queryRedPack(WxPayRedPackQueryRequest redPackQueryRequest, String password, InputStream certFileInputStream) {
+    public WxPayRedPackQueryResult queryRedPack(WxPayRedPackQueryRequest redPackQueryRequest, String certPassword, InputStream certFileInputStream) {
         assert redPackQueryRequest != null;
 
         redPackQueryRequest.checkRequiredFields();
         String xml = XStreamConverter.toXml(redPackQueryRequest);
-        String respStr = sslPost(WxPayConstants.EntPayUrl.REDPACK_QUERY_URL, xml, password, certFileInputStream);
+        String respStr = sslPost(WxPayConstants.EntPayUrl.REDPACK_QUERY_URL, xml, certPassword, certFileInputStream);
 
         WxPayRedPackQueryResult redPackQueryResult = XStreamConverter.fromXml(WxPayRedPackQueryResult.class, respStr);
         checkResult(redPackQueryResult);
@@ -107,16 +107,16 @@ public class EntPayApi extends WxPayV2Api {
      * 目前支持向指定微信用户的openid付款。
      *
      * @param entPayRequest
-     * @param password -> mchid
+     * @param certPassword -> mchid
      * @param certFileInputStream
      * @return
      */
-    public EntPayResult entPay(EntPayRequest entPayRequest, String password, InputStream certFileInputStream) {
+    public EntPayResult entPay(EntPayRequest entPayRequest, String certPassword, InputStream certFileInputStream) {
         assert entPayRequest != null;
 
         BeanUtils.checkRequiredFields(entPayRequest);
         String xml = XStreamConverter.toXml(entPayRequest);
-        String respStr = sslPost(WxPayConstants.EntPayUrl.ENTPAY_URL, xml, password, certFileInputStream);
+        String respStr = sslPost(WxPayConstants.EntPayUrl.ENTPAY_URL, xml, certPassword, certFileInputStream);
 
         EntPayResult entPayResult = XStreamConverter.fromXml(EntPayResult.class, respStr);
         checkResult(entPayResult);
@@ -130,16 +130,16 @@ public class EntPayApi extends WxPayV2Api {
      * 查询企业付款API只支持查询30天内的订单，30天之前的订单请登录商户平台查询。
      *
      * @param entPayQueryRequest
-     * @param password -> mchid
+     * @param certPassword -> mchid
      * @param certFileInputStream
      * @return
      */
-    public EntPayQueryResult entPayQuery(EntPayQueryRequest entPayQueryRequest, String password, InputStream certFileInputStream) {
+    public EntPayQueryResult entPayQuery(EntPayQueryRequest entPayQueryRequest, String certPassword, InputStream certFileInputStream) {
         assert entPayQueryRequest != null;
         entPayQueryRequest.checkRequiredFields();
 
         String xml = XStreamConverter.toXml(entPayQueryRequest);
-        String respStr = sslPost(WxPayConstants.EntPayUrl.ENTPAY_QUERY_URL, xml, password, certFileInputStream);
+        String respStr = sslPost(WxPayConstants.EntPayUrl.ENTPAY_QUERY_URL, xml, certPassword, certFileInputStream);
 
         EntPayQueryResult entPayQueryResult = XStreamConverter.fromXml(EntPayQueryResult.class, respStr);
         checkResult(entPayQueryResult);
@@ -153,20 +153,20 @@ public class EntPayApi extends WxPayV2Api {
      * <a href="https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=24_2">参考文档</a>
      *
      * @param entPayBankRequest
-     * @param password  -> mchid
+     * @param certPassword  -> mchid
      * @param certFileInputStream
      * @return
      */
-    public EntPayBankResult entPayBank(EntPayBankRequest entPayBankRequest, String signKey, String password, InputStream certFileInputStream) {
+    public EntPayBankResult entPayBank(EntPayBankRequest entPayBankRequest, String signKey, String certPassword, InputStream certFileInputStream) {
         assert entPayBankRequest != null;
         entPayBankRequest.checkRequiredFields();
-        String publicKey = getPublicKey(entPayBankRequest.getMchid(), signKey, password, certFileInputStream);
+        String publicKey = getPublicKey(entPayBankRequest.getMchid(), signKey, certPassword, certFileInputStream);
         entPayBankRequest.setEncBankNo(this.encryptRSA(entPayBankRequest.getEncBankNo().replace(" ", ""), publicKey));
         entPayBankRequest.setEncTrueName(this.encryptRSA(entPayBankRequest.getEncTrueName(), publicKey));
         entPayBankRequest.setSign(sign(entPayBankRequest, signKey));
 
         String xml = XStreamConverter.toXml(entPayBankRequest);
-        String respStr = sslPost(WxPayConstants.EntPayUrl.ENTPAY_PAY_BANK_URL, xml, password, certFileInputStream);
+        String respStr = sslPost(WxPayConstants.EntPayUrl.ENTPAY_PAY_BANK_URL, xml, certPassword, certFileInputStream);
 
         EntPayBankResult entPayBankResult = XStreamConverter.fromXml(EntPayBankResult.class, respStr);
         checkResult(entPayBankResult);
@@ -179,15 +179,15 @@ public class EntPayApi extends WxPayV2Api {
      *
      * <a href="https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=24_3">参考文档</a>
      * @param entPayQueryRequest
-     * @param password
+     * @param certPassword -> mchid
      * @param certFileInputStream
      * @return
      */
-    public EntPayBankQueryResult entPayBankQuery(EntPayQueryRequest entPayQueryRequest, String password, InputStream certFileInputStream) {
+    public EntPayBankQueryResult entPayBankQuery(EntPayQueryRequest entPayQueryRequest, String certPassword, InputStream certFileInputStream) {
         assert entPayQueryRequest != null;
         entPayQueryRequest.checkRequiredFields();
         String xml = XStreamConverter.toXml(entPayQueryRequest);
-        String respStr = sslPost(WxPayConstants.EntPayUrl.ENTPAY_PAY_BANK_QUERY_URL, xml, password, certFileInputStream);
+        String respStr = sslPost(WxPayConstants.EntPayUrl.ENTPAY_PAY_BANK_QUERY_URL, xml, certPassword, certFileInputStream);
         EntPayBankQueryResult entPayBankQueryResult = XStreamConverter.fromXml(EntPayBankQueryResult.class, respStr);
         checkResult(entPayBankQueryResult);
         return entPayBankQueryResult;
@@ -207,16 +207,16 @@ public class EntPayApi extends WxPayV2Api {
      * <a href="https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=24_7">参考文档</a>
      *
      * @param getPublicKeyRequest
-     * @param password -> mchid
+     * @param certPassword -> mchid
      * @param certFileInputStream
      * @return
      */
-    public String getPublicKey(GetPublicKeyRequest getPublicKeyRequest, String password, InputStream certFileInputStream) {
+    public String getPublicKey(GetPublicKeyRequest getPublicKeyRequest, String certPassword, InputStream certFileInputStream) {
         assert getPublicKeyRequest != null;
 
         BeanUtils.checkRequiredFields(getPublicKeyRequest);
         String xml = XStreamConverter.toXml(getPublicKeyRequest);
-        String respStr = sslPost(WxPayConstants.EntPayUrl.ENTPAY_RSA_PUBLIC_KEY_URL, xml, password, certFileInputStream);
+        String respStr = sslPost(WxPayConstants.EntPayUrl.ENTPAY_RSA_PUBLIC_KEY_URL, xml, certPassword, certFileInputStream);
 
         GetPublicKeyResult getPublicKeyResult = XStreamConverter.fromXml(GetPublicKeyResult.class, respStr);
         checkResult(getPublicKeyResult);
@@ -238,11 +238,11 @@ public class EntPayApi extends WxPayV2Api {
      *
      * @param mchid
      * @param signKey
-     * @param password -> mchid
+     * @param certPassword -> mchid
      * @param certFileInputStream
      * @return
      */
-    public String getPublicKey(String mchid, String signKey, String password, InputStream certFileInputStream) {
+    public String getPublicKey(String mchid, String signKey, String certPassword, InputStream certFileInputStream) {
         GetPublicKeyRequest getPublicKeyRequest = new GetPublicKeyRequest.Builder()
                 .mchid(mchid)
                 .nonceStr(UUID.randomUUID().toString().replace("-", ""))
@@ -250,7 +250,7 @@ public class EntPayApi extends WxPayV2Api {
 
         getPublicKeyRequest.setSign(sign(getPublicKeyRequest, signKey));
 
-        return getPublicKey(getPublicKeyRequest, password, certFileInputStream);
+        return getPublicKey(getPublicKeyRequest, certPassword, certFileInputStream);
     }
 
     /**
@@ -271,15 +271,6 @@ public class EntPayApi extends WxPayV2Api {
             return Base64.getEncoder().encodeToString(cipher.doFinal(message.getBytes(StandardCharsets.UTF_8)));
         } catch (Exception e) {
             throw new RuntimeException("RSA加密失败, err: " + e.getMessage());
-        }
-    }
-
-    private <T extends WxPayBaseResult> void  checkResult(T t) {
-        if (!WxConstants.SUCCESS.equals(t.getReturnCode())) {
-            throw new WxErrorException(t.getReturnMsg());
-        }
-        if (!WxConstants.SUCCESS.equals(t.getResultCode())) {
-            throw new WxErrorException(t.getErrCodeDes());
         }
     }
 

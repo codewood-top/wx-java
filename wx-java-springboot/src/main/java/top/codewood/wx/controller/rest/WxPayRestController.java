@@ -48,7 +48,8 @@ public class WxPayRestController {
                                           @RequestParam("amount") double amount,
                                           @RequestParam(value = "openid", required = false) String openid,
                                           @RequestParam("timeStamp") String timeStamp,
-                                          @RequestParam("nonceStr") String nonceStr
+                                          @RequestParam("nonceStr") String nonceStr,
+                                          @RequestParam(value = "profitSharing", required = false, defaultValue = "false") boolean profitSharing
                            ) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
 
         Double total = amount * 100;
@@ -65,6 +66,10 @@ public class WxPayRestController {
         payRequest.setNotifyUrl(WxPayProperty.NOTIFY_URL);
         payRequest.setAmount(total.intValue());
         payRequest.setPayer(openid);
+
+        if (profitSharing) {
+            payRequest.setSettleInfo(profitSharing);
+        }
 
         Map<String, String> map = wxPayService.getPayInfo(payType, payRequest);
 

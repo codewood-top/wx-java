@@ -83,4 +83,5 @@ public class WxPayBaseResult implements Serializable {
     public void setErrCodeDes(String errCodeDes) {
         this.errCodeDes = errCodeDes;
     }
+
 }

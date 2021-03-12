@@ -202,7 +202,7 @@ public class WxPayRequest implements Serializable {
         this.settleInfo = settleInfo;
     }
 
-    public void setSeetleInfo(boolean profitSharing) {
+    public void setSettleInfo(boolean profitSharing) {
         this.settleInfo = new SettleInfo(profitSharing);
     }
 
@@ -537,6 +537,7 @@ public class WxPayRequest implements Serializable {
         /**
          *  是否指定分账
          */
+        @SerializedName("profit_sharing")
         private boolean profitSharing;
 
         public SettleInfo() {}

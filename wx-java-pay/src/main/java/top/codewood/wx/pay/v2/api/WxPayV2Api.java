@@ -2,9 +2,12 @@ package top.codewood.wx.pay.v2.api;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import top.codewood.util.http.AppHttpClient;
+import top.codewood.wx.common.api.WxConstants;
+import top.codewood.wx.common.bean.error.WxErrorException;
 import top.codewood.wx.common.util.SignUtils;
 import top.codewood.wx.common.util.bean.BeanUtils;
 import top.codewood.wx.pay.common.WxPayConstants;
+import top.codewood.wx.pay.v2.bean.WxPayBaseResult;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,9 +33,9 @@ public class WxPayV2Api {
         }
     }
 
-    public static String sslPost(String url, String postData, String password, InputStream certFileInputStream) {
+    public static String sslPost(String url, String postData, String certPassword, InputStream certFileInputStream) {
         try {
-            return AppHttpClient.getInstance().sslPost(url, postData, password, certFileInputStream);
+            return AppHttpClient.getInstance().sslPost(url, postData, certPassword, certFileInputStream);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -74,5 +77,14 @@ public class WxPayV2Api {
         return sign(bean, signKey, "MD5");
     }
 
+
+    public static  <T extends WxPayBaseResult> void  checkResult(T t) {
+        if (!WxConstants.SUCCESS.equals(t.getReturnCode())) {
+            throw new WxErrorException(t.getReturnMsg());
+        }
+        if (!WxConstants.SUCCESS.equals(t.getResultCode())) {
+            throw new WxErrorException(t.getErrCodeDes());
+        }
+    }
 
 }

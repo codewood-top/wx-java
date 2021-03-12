@@ -129,6 +129,55 @@ public class WxPayConstants {
         String ENTPAY_RSA_PUBLIC_KEY_URL = "https://fraud.mch.weixin.qq.com/risk/getpublickey";
     }
 
+    public interface ProfitSharingUrl {
+
+        /**
+         * 请求单次分账
+         */
+        String PROFIT_SHARING_URL = "https://api.mch.weixin.qq.com/secapi/pay/profitsharing";
+
+        /**
+         * 请求多次分账
+         */
+        String PROFIT_SHARING_MULTI_URL = "https://api.mch.weixin.qq.com/secapi/pay/multiprofitsharing";
+
+        /**
+         * 查询分账结果
+         */
+        String PROFIT_SHARING_QUERY_URL = "https://api.mch.weixin.qq.com/pay/profitsharingquery";
+
+        /**
+         * 添加分账接收方
+         */
+        String PROFIT_SHARING_ADD_RECEIVER_URL = "https://api.mch.weixin.qq.com/pay/profitsharingaddreceiver";
+
+        /**
+         * 删除分账接收方
+         */
+        String PROFIT_SHARING_REMOVE_RECEIVER_URL = "https://api.mch.weixin.qq.com/pay/profitsharingremovereceiver";
+
+        /**
+         * 完结分账
+         */
+        String PROFIT_SHARING_FINISH_URL = "https://api.mch.weixin.qq.com/secapi/pay/profitsharingfinish";
+
+        /**
+         * 查询订单待分账金额
+         */
+        String PROFIT_SHARING_ORDER_AMOUNT_QUERY_URL = "https://api.mch.weixin.qq.com/pay/profitsharingorderamountquery";
+
+        /**
+         * 分账回退
+         */
+        String PROFIT_SHARING_RETURN_URL = "https://api.mch.weixin.qq.com/secapi/pay/profitsharingreturn";
+
+        /**
+         * 回退结果查询
+         */
+        String PROFIT_SHARING_RETURN_QUERY_URL = "https://api.mch.weixin.qq.com/pay/profitsharingreturnquery";
+
+    }
+
     public interface SignType {
 
         String HMAC_SHA256 = "HMAC-SHA256";
