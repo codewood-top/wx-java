@@ -46,4 +46,14 @@ public class GetPublicKeyRequest extends WxPayBaseRequest {
 
     }
 
+    @Override
+    public String toString() {
+        return "GetPublicKeyRequest{" +
+                "appid='" + appid + '\'' +
+                ", mchid='" + mchid + '\'' +
+                ", nonceStr='" + nonceStr + '\'' +
+                ", sign='" + sign + '\'' +
+                ", signType='" + signType + '\'' +
+                '}';
+    }
 }

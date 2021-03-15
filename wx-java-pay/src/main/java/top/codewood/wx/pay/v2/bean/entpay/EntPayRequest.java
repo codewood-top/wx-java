@@ -204,4 +204,22 @@ public class EntPayRequest implements Serializable {
     public void setSpbillCreateIp(String spbillCreateIp) {
         this.spbillCreateIp = spbillCreateIp;
     }
+
+    @Override
+    public String toString() {
+        return "EntPayRequest{" +
+                "mchAppid='" + mchAppid + '\'' +
+                ", mchid='" + mchid + '\'' +
+                ", deviceInfo='" + deviceInfo + '\'' +
+                ", nonceStr='" + nonceStr + '\'' +
+                ", sign='" + sign + '\'' +
+                ", partnerTradeNo='" + partnerTradeNo + '\'' +
+                ", openid='" + openid + '\'' +
+                ", checkName='" + checkName + '\'' +
+                ", reUserName='" + reUserName + '\'' +
+                ", amount=" + amount +
+                ", desc='" + desc + '\'' +
+                ", spbillCreateIp='" + spbillCreateIp + '\'' +
+                '}';
+    }
 }

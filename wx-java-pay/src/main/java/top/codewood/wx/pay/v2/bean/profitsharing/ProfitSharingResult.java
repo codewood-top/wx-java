@@ -38,8 +38,8 @@ public class ProfitSharingResult extends WxPayBaseResult {
      * 商户分账单号
      * 调用接口提供的商户系统内部的分账单号
      */
-    @XStreamAlias("out_trade_no")
-    private String outTradeNo;
+    @XStreamAlias("out_order_no")
+    private String outOrderNo;
 
     /**
      * 微信分账单号，微信系统返回的唯一标识
@@ -87,12 +87,12 @@ public class ProfitSharingResult extends WxPayBaseResult {
         this.transactionId = transactionId;
     }
 
-    public String getOutTradeNo() {
-        return outTradeNo;
+    public String getOutOrderNo() {
+        return outOrderNo;
     }
 
-    public void setOutTradeNo(String outTradeNo) {
-        this.outTradeNo = outTradeNo;
+    public void setOutOrderNo(String outOrderNo) {
+        this.outOrderNo = outOrderNo;
     }
 
     public String getOrderId() {
@@ -103,4 +103,21 @@ public class ProfitSharingResult extends WxPayBaseResult {
         this.orderId = orderId;
     }
 
+    @Override
+    public String toString() {
+        return "ProfitSharingResult{" +
+                "returnCode='" + returnCode + '\'' +
+                ", returnMsg='" + returnMsg + '\'' +
+                ", resultCode='" + resultCode + '\'' +
+                ", errCode='" + errCode + '\'' +
+                ", errCodeDes='" + errCodeDes + '\'' +
+                ", mchid='" + mchid + '\'' +
+                ", appid='" + appid + '\'' +
+                ", nonceStr='" + nonceStr + '\'' +
+                ", sign='" + sign + '\'' +
+                ", transactionId='" + transactionId + '\'' +
+                ", outOrderNo='" + outOrderNo + '\'' +
+                ", orderId='" + orderId + '\'' +
+                '}';
+    }
 }

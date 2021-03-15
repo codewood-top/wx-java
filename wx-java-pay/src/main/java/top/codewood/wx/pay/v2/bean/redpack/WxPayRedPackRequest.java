@@ -307,7 +307,7 @@ public class WxPayRedPackRequest extends WxPayBaseRequest {
             return (T) this;
         }
 
-        public WxPayRedPackRequest build() {
+        public <T extends WxPayRedPackRequest> T build() {
             WxPayRedPackRequest redPackRequest = new WxPayRedPackRequest();
             redPackRequest.setWxAppid(this.wxAppid);
             redPackRequest.setMchid(this.mchId);
@@ -325,9 +325,30 @@ public class WxPayRedPackRequest extends WxPayBaseRequest {
             redPackRequest.setRemark(this.remark);
             redPackRequest.setSceneId(this.sceneId);
             redPackRequest.setRiskInfo(this.riskInfo);
-            return redPackRequest;
+            return (T) redPackRequest;
         }
 
     }
 
+    @Override
+    public String toString() {
+        return "WxPayRedPackRequest{" +
+                "appid='" + appid + '\'' +
+                ", mchid='" + mchid + '\'' +
+                ", nonceStr='" + nonceStr + '\'' +
+                ", sign='" + sign + '\'' +
+                ", wxAppid='" + wxAppid + '\'' +
+                ", mchBillNo='" + mchBillNo + '\'' +
+                ", sendName='" + sendName + '\'' +
+                ", reOpenid='" + reOpenid + '\'' +
+                ", totalAmount=" + totalAmount +
+                ", totalNum=" + totalNum +
+                ", wishing='" + wishing + '\'' +
+                ", clientIp='" + clientIp + '\'' +
+                ", actName='" + actName + '\'' +
+                ", remark='" + remark + '\'' +
+                ", sceneId='" + sceneId + '\'' +
+                ", riskInfo='" + riskInfo + '\'' +
+                '}';
+    }
 }

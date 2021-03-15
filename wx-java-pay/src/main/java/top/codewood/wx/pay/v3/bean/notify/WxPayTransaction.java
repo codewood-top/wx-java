@@ -1,6 +1,7 @@
 package top.codewood.wx.pay.v3.bean.notify;
 
 import com.google.gson.annotations.SerializedName;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
@@ -17,6 +18,7 @@ public class WxPayTransaction implements Serializable {
      * 商户号
      * 商户的商户号，由微信支付生成并下发。
      */
+    @XStreamAlias("mch_id")
     private String mchid;
 
     /**

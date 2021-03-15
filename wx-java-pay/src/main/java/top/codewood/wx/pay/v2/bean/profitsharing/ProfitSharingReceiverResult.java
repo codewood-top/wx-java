@@ -73,4 +73,19 @@ public class ProfitSharingReceiverResult extends WxPayBaseResult {
         this.sign = sign;
     }
 
+    @Override
+    public String toString() {
+        return "ProfitSharingReceiverResult{" +
+                "returnCode='" + returnCode + '\'' +
+                ", returnMsg='" + returnMsg + '\'' +
+                ", resultCode='" + resultCode + '\'' +
+                ", errCode='" + errCode + '\'' +
+                ", errCodeDes='" + errCodeDes + '\'' +
+                ", appid='" + appid + '\'' +
+                ", mchid='" + mchid + '\'' +
+                ", receiver='" + receiver + '\'' +
+                ", nonceStr='" + nonceStr + '\'' +
+                ", sign='" + sign + '\'' +
+                '}';
+    }
 }

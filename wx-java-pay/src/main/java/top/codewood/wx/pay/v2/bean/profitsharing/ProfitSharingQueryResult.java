@@ -3,6 +3,7 @@ package top.codewood.wx.pay.v2.bean.profitsharing;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import top.codewood.wx.pay.v2.bean.WxPayBaseResult;
 
+@XStreamAlias("xml")
 public class ProfitSharingQueryResult extends WxPayBaseResult {
 
     /**
@@ -32,8 +33,8 @@ public class ProfitSharingQueryResult extends WxPayBaseResult {
      * 商户分账单号
      * 商户系统内部的分账单号，商户系统内部唯一，只能是数字、大小写字母_-|*@ ，同一分账单号多次请求等同一次。
      */
-    @XStreamAlias("out_trade_no")
-    private String outTradeNo;
+    @XStreamAlias("out_order_no")
+    private String outOrderNo;
 
     /**
      * 微信分账单号
@@ -106,12 +107,12 @@ public class ProfitSharingQueryResult extends WxPayBaseResult {
         this.transactionId = transactionId;
     }
 
-    public String getOutTradeNo() {
-        return outTradeNo;
+    public String getOutOrderNo() {
+        return outOrderNo;
     }
 
-    public void setOutTradeNo(String outTradeNo) {
-        this.outTradeNo = outTradeNo;
+    public void setOutOrderNo(String outOrderNo) {
+        this.outOrderNo = outOrderNo;
     }
 
     public String getOrderId() {
@@ -160,5 +161,27 @@ public class ProfitSharingQueryResult extends WxPayBaseResult {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "ProfitSharingQueryResult{" +
+                "returnCode='" + returnCode + '\'' +
+                ", returnMsg='" + returnMsg + '\'' +
+                ", resultCode='" + resultCode + '\'' +
+                ", errCode='" + errCode + '\'' +
+                ", errCodeDes='" + errCodeDes + '\'' +
+                ", mchid='" + mchid + '\'' +
+                ", nonceStr='" + nonceStr + '\'' +
+                ", sign='" + sign + '\'' +
+                ", transactionId='" + transactionId + '\'' +
+                ", outOrderNo='" + outOrderNo + '\'' +
+                ", orderId='" + orderId + '\'' +
+                ", status='" + status + '\'' +
+                ", closeReason='" + closeReason + '\'' +
+                ", receivers='" + receivers + '\'' +
+                ", amount=" + amount +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

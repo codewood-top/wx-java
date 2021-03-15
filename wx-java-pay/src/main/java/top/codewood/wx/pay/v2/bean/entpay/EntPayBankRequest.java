@@ -98,4 +98,19 @@ public class EntPayBankRequest extends WxPayBaseRequest {
         this.desc = desc;
     }
 
+    @Override
+    public String toString() {
+        return "EntPayBankRequest{" +
+                "appid='" + appid + '\'' +
+                ", mchid='" + mchid + '\'' +
+                ", nonceStr='" + nonceStr + '\'' +
+                ", sign='" + sign + '\'' +
+                ", partnerTradeNo='" + partnerTradeNo + '\'' +
+                ", encBankNo='" + encBankNo + '\'' +
+                ", encTrueName='" + encTrueName + '\'' +
+                ", bankCode='" + bankCode + '\'' +
+                ", amount=" + amount +
+                ", desc='" + desc + '\'' +
+                '}';
+    }
 }

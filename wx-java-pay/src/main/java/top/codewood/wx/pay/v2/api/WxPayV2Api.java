@@ -52,9 +52,7 @@ public class WxPayV2Api {
     public static String sign(Object bean, String signKey, String signType) {
         assert bean != null && signKey != null && signType != null;
         SortedMap<String, Object> sortedMap = new TreeMap<>(BeanUtils.xmlBean2Map(bean));
-
         StringBuilder signBuilder = new StringBuilder();
-
         for (Map.Entry<String, Object> entry : sortedMap.entrySet()) {
             signBuilder.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
         }

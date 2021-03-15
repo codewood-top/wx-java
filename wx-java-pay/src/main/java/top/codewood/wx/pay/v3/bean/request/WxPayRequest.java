@@ -493,7 +493,6 @@ public class WxPayRequest implements Serializable {
          * 详细地址
          * 详细的商户门店地址
          */
-        @SerializedName("address")
         private String address;
 
         public String getId() {

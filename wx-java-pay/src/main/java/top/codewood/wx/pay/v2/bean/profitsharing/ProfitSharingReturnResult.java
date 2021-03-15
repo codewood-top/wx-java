@@ -283,4 +283,28 @@ public class ProfitSharingReturnResult implements Serializable {
     public void setFinishTime(String finishTime) {
         this.finishTime = finishTime;
     }
+
+    @Override
+    public String toString() {
+        return "ProfitSharingReturnResult{" +
+                "returnCode='" + returnCode + '\'' +
+                ", errorCode='" + errorCode + '\'' +
+                ", errorMsg='" + errorMsg + '\'' +
+                ", mchid='" + mchid + '\'' +
+                ", appid='" + appid + '\'' +
+                ", nonceStr='" + nonceStr + '\'' +
+                ", sign='" + sign + '\'' +
+                ", orderId='" + orderId + '\'' +
+                ", outOrderNo='" + outOrderNo + '\'' +
+                ", outReturnNo='" + outReturnNo + '\'' +
+                ", returnNo='" + returnNo + '\'' +
+                ", returnAccountType='" + returnAccountType + '\'' +
+                ", returnAccount='" + returnAccount + '\'' +
+                ", returnAmount=" + returnAmount +
+                ", description='" + description + '\'' +
+                ", result='" + result + '\'' +
+                ", failReason='" + failReason + '\'' +
+                ", finishTime='" + finishTime + '\'' +
+                '}';
+    }
 }

@@ -38,4 +38,33 @@ public class WxPayRedPackQueryRequest extends WxPayBaseRequest {
     public void setBillType(String billType) {
         this.billType = billType;
     }
+
+    public static class Builder extends WxPayBaseRequest.Builder<Builder> {
+
+        private String mchBillNo;
+        private String billType;
+
+        public WxPayRedPackQueryRequest build() {
+            WxPayRedPackQueryRequest queryRequest = new WxPayRedPackQueryRequest();
+            queryRequest.setAppid(this.appid);
+            queryRequest.setMchid(this.mchid);
+            queryRequest.setNonceStr(this.nonceStr);
+            queryRequest.setMchBillNo(this.mchBillNo);
+            queryRequest.setBillType(this.billType);
+            return queryRequest;
+        }
+
+    }
+
+    @Override
+    public String toString() {
+        return "WxPayRedPackQueryRequest{" +
+                "appid='" + appid + '\'' +
+                ", mchid='" + mchid + '\'' +
+                ", nonceStr='" + nonceStr + '\'' +
+                ", sign='" + sign + '\'' +
+                ", mchBillNo='" + mchBillNo + '\'' +
+                ", billType='" + billType + '\'' +
+                '}';
+    }
 }

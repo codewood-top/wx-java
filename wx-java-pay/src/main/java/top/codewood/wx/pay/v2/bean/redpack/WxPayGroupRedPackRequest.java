@@ -59,4 +59,14 @@ public class WxPayGroupRedPackRequest extends WxPayRedPackRequest {
         }
     }
 
+    @Override
+    public String toString() {
+        return "WxPayGroupRedPackRequest{" +
+                "appid='" + appid + '\'' +
+                ", mchid='" + mchid + '\'' +
+                ", nonceStr='" + nonceStr + '\'' +
+                ", sign='" + sign + '\'' +
+                ", amtType='" + amtType + '\'' +
+                '}';
+    }
 }

@@ -19,12 +19,22 @@ public class EntPayQueryRequest extends WxPayBaseRequest {
     @XStreamAlias("partner_trade_no")
     private String partnerTradeNo;
 
-
     public String getPartnerTradeNo() {
         return partnerTradeNo;
     }
 
     public void setPartnerTradeNo(String partnerTradeNo) {
         this.partnerTradeNo = partnerTradeNo;
+    }
+
+    @Override
+    public String toString() {
+        return "EntPayQueryRequest{" +
+                "appid='" + appid + '\'' +
+                ", mchid='" + mchid + '\'' +
+                ", nonceStr='" + nonceStr + '\'' +
+                ", sign='" + sign + '\'' +
+                ", partnerTradeNo='" + partnerTradeNo + '\'' +
+                '}';
     }
 }

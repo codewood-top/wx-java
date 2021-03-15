@@ -103,4 +103,22 @@ public class EntPayBankResult extends WxPayBaseResult {
     public void setCmmsAmt(String cmmsAmt) {
         this.cmmsAmt = cmmsAmt;
     }
+
+    @Override
+    public String toString() {
+        return "EntPayBankResult{" +
+                "returnCode='" + returnCode + '\'' +
+                ", returnMsg='" + returnMsg + '\'' +
+                ", resultCode='" + resultCode + '\'' +
+                ", errCode='" + errCode + '\'' +
+                ", errCodeDes='" + errCodeDes + '\'' +
+                ", mchId='" + mchId + '\'' +
+                ", partnerTradeNo='" + partnerTradeNo + '\'' +
+                ", amount=" + amount +
+                ", nonceStr='" + nonceStr + '\'' +
+                ", sign='" + sign + '\'' +
+                ", paymentNo='" + paymentNo + '\'' +
+                ", cmmsAmt='" + cmmsAmt + '\'' +
+                '}';
+    }
 }

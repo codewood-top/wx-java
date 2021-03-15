@@ -172,4 +172,26 @@ public class EntPayBankQueryResult extends WxPayBaseResult {
     public void setReason(String reason) {
         this.reason = reason;
     }
+
+    @Override
+    public String toString() {
+        return "EntPayBankQueryResult{" +
+                "returnCode='" + returnCode + '\'' +
+                ", returnMsg='" + returnMsg + '\'' +
+                ", resultCode='" + resultCode + '\'' +
+                ", errCode='" + errCode + '\'' +
+                ", errCodeDes='" + errCodeDes + '\'' +
+                ", mchid='" + mchid + '\'' +
+                ", partnerTradeNo='" + partnerTradeNo + '\'' +
+                ", paymentNo='" + paymentNo + '\'' +
+                ", bankNoMd5='" + bankNoMd5 + '\'' +
+                ", trueNameMd5='" + trueNameMd5 + '\'' +
+                ", amount=" + amount +
+                ", status='" + status + '\'' +
+                ", cmmsAmt=" + cmmsAmt +
+                ", createTime='" + createTime + '\'' +
+                ", paySuccessTime='" + paySuccessTime + '\'' +
+                ", reason='" + reason + '\'' +
+                '}';
+    }
 }

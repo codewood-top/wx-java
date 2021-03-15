@@ -22,7 +22,7 @@ public class SignUtils {
             SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
             sha256.init(secretKeySpec);
             byte[] bytes = sha256.doFinal(message.getBytes(StandardCharsets.UTF_8));
-            return Hex.encodeHexString(bytes).toString();
+            return Hex.encodeHexString(bytes).toUpperCase();
         } catch (NoSuchAlgorithmException | InvalidKeyException e) {
             e.printStackTrace();
         }

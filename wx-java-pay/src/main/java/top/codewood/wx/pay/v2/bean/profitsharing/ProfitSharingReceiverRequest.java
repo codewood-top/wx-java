@@ -35,4 +35,46 @@ public class ProfitSharingReceiverRequest extends WxPayBaseRequest {
     public void setReceiver(String receiver) {
         this.receiver = receiver;
     }
+
+    public static class Builder extends WxPayBaseRequest.Builder<Builder> {
+
+        private String signType;
+        private String receiver;
+
+        public Builder signType(String signType) {
+            this.signType = signType;
+            return this;
+        }
+
+        public Builder receiver(String receiver) {
+            this.receiver = receiver;
+            return this;
+        }
+
+        public ProfitSharingReceiverRequest build() {
+            ProfitSharingReceiverRequest receiverRequest = new ProfitSharingReceiverRequest();
+            receiverRequest.setNonceStr(this.nonceStr);
+            receiverRequest.setMchid(this.mchid);
+            receiverRequest.setAppid(this.appid);
+            receiverRequest.setReceiver(this.receiver);
+
+            if (this.signType != null) {
+                receiverRequest.setSignType(this.signType);
+            }
+
+            return receiverRequest;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "ProfitSharingReceiverRequest{" +
+                "appid='" + appid + '\'' +
+                ", mchid='" + mchid + '\'' +
+                ", nonceStr='" + nonceStr + '\'' +
+                ", sign='" + sign + '\'' +
+                ", signType='" + signType + '\'' +
+                ", receiver='" + receiver + '\'' +
+                '}';
+    }
 }

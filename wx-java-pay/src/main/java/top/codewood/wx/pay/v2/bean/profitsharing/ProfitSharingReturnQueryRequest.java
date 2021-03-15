@@ -72,4 +72,63 @@ public class ProfitSharingReturnQueryRequest extends WxPayBaseRequest {
     public void setOutReturnNo(String outReturnNo) {
         this.outReturnNo = outReturnNo;
     }
+
+    public static class Builder extends WxPayBaseRequest.Builder<Builder> {
+
+        private String signType;
+        private String orderId;
+        private String outOrderNo;
+        private String outReturnNo;
+
+        public Builder signType(String signType) {
+            this.signType = signType;
+            return this;
+        }
+
+        public Builder orderId(String orderId) {
+            this.orderId = orderId;
+            return this;
+        }
+
+        public Builder outOrderNo(String outOrderNo) {
+            this.outOrderNo = outOrderNo;
+            return this;
+        }
+
+        public Builder outReturnNo(String outReturnNo) {
+            this.outReturnNo = outReturnNo;
+            return this;
+        }
+
+        public ProfitSharingReturnQueryRequest build() {
+            ProfitSharingReturnQueryRequest returnQueryRequest = new ProfitSharingReturnQueryRequest();
+            returnQueryRequest.setAppid(this.appid);
+            returnQueryRequest.setMchid(this.mchid);
+            returnQueryRequest.setNonceStr(this.nonceStr);
+
+            returnQueryRequest.setOrderId(this.orderId);
+            returnQueryRequest.setOutOrderNo(this.outOrderNo);
+            returnQueryRequest.setOutReturnNo(this.outReturnNo);
+
+            if (this.signType != null) {
+                returnQueryRequest.setSignType(this.signType);
+            }
+            return returnQueryRequest;
+        }
+
+    }
+
+    @Override
+    public String toString() {
+        return "ProfitSharingReturnQueryRequest{" +
+                "appid='" + appid + '\'' +
+                ", mchid='" + mchid + '\'' +
+                ", nonceStr='" + nonceStr + '\'' +
+                ", sign='" + sign + '\'' +
+                ", signType='" + signType + '\'' +
+                ", orderId='" + orderId + '\'' +
+                ", outOrderNo='" + outOrderNo + '\'' +
+                ", outReturnNo='" + outReturnNo + '\'' +
+                '}';
+    }
 }

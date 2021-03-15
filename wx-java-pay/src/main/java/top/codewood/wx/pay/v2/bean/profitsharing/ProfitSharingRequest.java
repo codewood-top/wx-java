@@ -31,8 +31,8 @@ public class ProfitSharingRequest extends WxPayBaseRequest {
      * 商户系统内部的分账单号，在商户系统内部唯一（单次分账、多次分账、完结分账应使用不同的商户分账单号），同一分账单号多次请求等同一次。只能是数字、大小写字母_-|*@
      */
     @Required
-    @XStreamAlias("out_trade_no")
-    private String outTradeNo;
+    @XStreamAlias("out_order_no")
+    private String outOrderNo;
 
     /**
      * 分账接收方列表
@@ -74,12 +74,12 @@ public class ProfitSharingRequest extends WxPayBaseRequest {
         this.transactionId = transactionId;
     }
 
-    public String getOutTradeNo() {
-        return outTradeNo;
+    public String getOutOrderNo() {
+        return outOrderNo;
     }
 
-    public void setOutTradeNo(String outTradeNo) {
-        this.outTradeNo = outTradeNo;
+    public void setOutOrderNo(String outOrderNo) {
+        this.outOrderNo = outOrderNo;
     }
 
     public String getReceivers() {
@@ -90,4 +90,61 @@ public class ProfitSharingRequest extends WxPayBaseRequest {
         this.receivers = receivers;
     }
 
+
+    public static class Builder extends WxPayBaseRequest.Builder<Builder> {
+
+        private String signType;
+        private String transactionId;
+        private String outOrderNo;
+        private String receivers;
+
+        public Builder signType(String signType) {
+            this.signType = signType;
+            return this;
+        }
+
+        public Builder transactionId(String transactionId) {
+            this.transactionId = transactionId;
+            return this;
+        }
+
+        public Builder outOrderNo(String outOrderNo) {
+            this.outOrderNo = outOrderNo;
+            return this;
+        }
+
+        public Builder receivers(String receivers) {
+            this.receivers = receivers;
+            return this;
+        }
+
+        public ProfitSharingRequest build() {
+            ProfitSharingRequest request = new ProfitSharingRequest();
+            request.setMchid(this.mchid);
+            request.setAppid(this.appid);
+            request.setNonceStr(this.nonceStr);
+            request.setTransactionId(this.transactionId);
+            request.setOutOrderNo(this.outOrderNo);
+            request.setReceivers(this.receivers);
+            if (this.signType != null) {
+                request.setSignType(this.signType);
+            }
+            return request;
+        }
+
+    }
+
+    @Override
+    public String toString() {
+        return "ProfitSharingRequest{" +
+                "appid='" + appid + '\'' +
+                ", mchid='" + mchid + '\'' +
+                ", nonceStr='" + nonceStr + '\'' +
+                ", sign='" + sign + '\'' +
+                ", signType='" + signType + '\'' +
+                ", transactionId='" + transactionId + '\'' +
+                ", outOrderNo='" + outOrderNo + '\'' +
+                ", receivers='" + receivers + '\'' +
+                '}';
+    }
 }

@@ -42,4 +42,46 @@ public class ProfitSharingAmountQueryRequest extends WxPayBaseRequest {
     public void setSignType(String signType) {
         this.signType = signType;
     }
+
+    public static class Builder extends WxPayBaseRequest.Builder<Builder> {
+
+        private String transactionId;
+
+        private String signType;
+
+        public Builder transactionId(String transactionId) {
+            this.transactionId = transactionId;
+            return this;
+        }
+
+        public Builder signType(String signType) {
+            this.signType = signType;
+            return this;
+        }
+
+        public ProfitSharingAmountQueryRequest build() {
+            ProfitSharingAmountQueryRequest amountQueryRequest = new ProfitSharingAmountQueryRequest();
+
+            amountQueryRequest.setNonceStr(this.nonceStr);
+            amountQueryRequest.setMchid(this.mchid);
+            amountQueryRequest.setTransactionId(this.transactionId);
+            if (this.signType != null) {
+                amountQueryRequest.setSignType(this.signType);
+            }
+            return amountQueryRequest;
+        }
+
+    }
+
+    @Override
+    public String toString() {
+        return "ProfitSharingAmountQueryRequest{" +
+                "appid='" + appid + '\'' +
+                ", mchid='" + mchid + '\'' +
+                ", nonceStr='" + nonceStr + '\'' +
+                ", sign='" + sign + '\'' +
+                ", transactionId='" + transactionId + '\'' +
+                ", signType='" + signType + '\'' +
+                '}';
+    }
 }

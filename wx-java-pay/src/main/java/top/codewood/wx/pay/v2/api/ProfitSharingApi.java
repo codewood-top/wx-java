@@ -1,5 +1,6 @@
 package top.codewood.wx.pay.v2.api;
 
+import top.codewood.util.http.AppHttpClient;
 import top.codewood.wx.common.util.xml.XStreamConverter;
 import top.codewood.wx.pay.common.WxPayConstants;
 import top.codewood.wx.pay.v2.bean.profitsharing.*;

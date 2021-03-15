@@ -134,4 +134,89 @@ public class ProfitSharingReturnRequest extends WxPayBaseRequest {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public static class Builder extends WxPayBaseRequest.Builder<Builder> {
+        private String signType;
+        private String orderId;
+        private String outOrderNo;
+        private String outReturnNo;
+        private String returnAccountType;
+        private int returnAmount;
+        private String description;
+
+        public Builder signType(String signType) {
+            this.signType = signType;
+            return this;
+        }
+
+        public Builder orderId(String orderId) {
+            this.orderId = orderId;
+            return this;
+        }
+
+        public Builder outOrderNo(String outOrderNo) {
+            this.outOrderNo = outOrderNo;
+            return this;
+        }
+
+        public Builder outReturnNo(String outReturnNo) {
+            this.outReturnNo = outReturnNo;
+            return this;
+        }
+
+        public Builder returnAccountType(String returnAccountType) {
+            this.returnAccountType = returnAccountType;
+            return this;
+        }
+
+        public Builder returnAmount(int returnAmount) {
+            this.returnAmount = returnAmount;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public ProfitSharingReturnRequest build() {
+            ProfitSharingReturnRequest returnRequest = new ProfitSharingReturnRequest();
+
+            returnRequest.setAppid(this.appid);
+            returnRequest.setMchid(this.mchid);
+            returnRequest.setNonceStr(this.nonceStr);
+
+            returnRequest.setOrderId(this.orderId);
+            returnRequest.setOutOrderNo(this.outOrderNo);
+            returnRequest.setOutReturnNo(this.outReturnNo);
+            returnRequest.setReturnAccountType(this.returnAccountType);
+            returnRequest.setReturnAmount(this.returnAmount);
+            returnRequest.setDescription(this.description);
+
+            if (this.signType != null) {
+                returnRequest.setSignType(this.signType);
+            }
+
+            return returnRequest;
+        }
+
+    }
+
+    @Override
+    public String toString() {
+        return "ProfitSharingReturnRequest{" +
+                "appid='" + appid + '\'' +
+                ", mchid='" + mchid + '\'' +
+                ", nonceStr='" + nonceStr + '\'' +
+                ", sign='" + sign + '\'' +
+                ", signType='" + signType + '\'' +
+                ", orderId='" + orderId + '\'' +
+                ", outOrderNo='" + outOrderNo + '\'' +
+                ", outReturnNo='" + outReturnNo + '\'' +
+                ", returnAccountType='" + returnAccountType + '\'' +
+                ", returnAccount='" + returnAccount + '\'' +
+                ", returnAmount=" + returnAmount +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

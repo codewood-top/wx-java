@@ -54,7 +54,7 @@ public class ProfitSharingAmountQueryResult implements Serializable {
     /**
      * 订单剩余待分金额，整数，单位为分
      */
-    @XStreamAlias("un_split_amount")
+    @XStreamAlias("unsplit_amount")
     private int unSplitAmount;
 
     /**
@@ -131,5 +131,19 @@ public class ProfitSharingAmountQueryResult implements Serializable {
 
     public void setSign(String sign) {
         this.sign = sign;
+    }
+
+    @Override
+    public String toString() {
+        return "ProfitSharingAmountQueryResult{" +
+                "returnCode='" + returnCode + '\'' +
+                ", errorCode='" + errorCode + '\'' +
+                ", errorMsg='" + errorMsg + '\'' +
+                ", mchid='" + mchid + '\'' +
+                ", transactionId='" + transactionId + '\'' +
+                ", unSplitAmount=" + unSplitAmount +
+                ", nonceStr='" + nonceStr + '\'' +
+                ", sign='" + sign + '\'' +
+                '}';
     }
 }

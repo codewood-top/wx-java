@@ -28,8 +28,8 @@ public class ProfitSharingFinishRequest extends WxPayBaseRequest {
      * 查询分账结果，输入申请分账时的商户分账单号； 查询分账完结执行的结果，输入发起分账完结时的商户分账单号
      */
     @Required
-    @XStreamAlias("out_trade_no")
-    private String outTradeNo;
+    @XStreamAlias("out_order_no")
+    private String outOrderNo;
 
     /**
      * 分账完结的原因描述
@@ -53,12 +53,12 @@ public class ProfitSharingFinishRequest extends WxPayBaseRequest {
         this.transactionId = transactionId;
     }
 
-    public String getOutTradeNo() {
-        return outTradeNo;
+    public String getOutOrderNo() {
+        return outOrderNo;
     }
 
-    public void setOutTradeNo(String outTradeNo) {
-        this.outTradeNo = outTradeNo;
+    public void setOutOrderNo(String outOrderNo) {
+        this.outOrderNo = outOrderNo;
     }
 
     public String getDescription() {
@@ -67,5 +67,61 @@ public class ProfitSharingFinishRequest extends WxPayBaseRequest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public static class Builder extends WxPayBaseRequest.Builder<Builder> {
+
+        private String signType;
+        private String transactionId;
+        private String outOrderNo;
+        private String description;
+
+        public Builder signType(String signType) {
+            this.signType = signType;
+            return this;
+        }
+
+        public Builder transactionId(String transactionId) {
+            this.transactionId = transactionId;
+            return this;
+        }
+
+        public Builder outOrderNo(String outOrderNo) {
+            this.outOrderNo = outOrderNo;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public ProfitSharingFinishRequest build() {
+            ProfitSharingFinishRequest finishRequest = new ProfitSharingFinishRequest();
+
+            if (signType != null) {
+                finishRequest.setSignType(this.signType);
+            }
+            finishRequest.setTransactionId(this.transactionId);
+            finishRequest.setOutOrderNo(this.outOrderNo);
+            finishRequest.setDescription(this.description);
+
+            return finishRequest;
+        }
+
+    }
+
+    @Override
+    public String toString() {
+        return "ProfitSharingFinishRequest{" +
+                "appid='" + appid + '\'' +
+                ", mchid='" + mchid + '\'' +
+                ", nonceStr='" + nonceStr + '\'' +
+                ", sign='" + sign + '\'' +
+                ", signType='" + signType + '\'' +
+                ", transactionId='" + transactionId + '\'' +
+                ", outOrderNo='" + outOrderNo + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 }
