@@ -8,9 +8,13 @@ import org.junit.Test;
 import top.codewood.wx.common.util.xml.XStreamConverter;
 import top.codewood.wx.pay.v2.api.EntPayApi;
 import top.codewood.wx.pay.v2.api.WxPayV2Api;
-import top.codewood.wx.pay.v2.bean.notify.WxPayNotify;
+import top.codewood.wx.pay.v2.bean.notify.WxPayV2Notify;
 import top.codewood.wx.pay.v2.bean.redpack.WxPayRedPackQueryRequest;
 import top.codewood.wx.pay.v2.bean.redpack.WxPayRedPackQueryResult;
+import top.codewood.wx.pay.v2.bean.request.WxPayOrderCloseV2Request;
+import top.codewood.wx.pay.v2.bean.request.WxPayOrderQueryV2Request;
+import top.codewood.wx.pay.v2.bean.result.WxPayOrderCloseV2Result;
+import top.codewood.wx.pay.v2.bean.result.WxPayOrderQueryV2Result;
 import top.codewood.wx.util.Strings;
 
 import java.io.InputStream;
@@ -31,7 +35,8 @@ public class WxPayV2Test {
         System.out.println(redPackQueryResult);
     }
 
-    @Test
+
+    //@Test
     public void xmlPathValueTest() throws DocumentException {
         String xml = "<xml>\n" +
                 "    <coupon_type_0><![CDATA[CASH]]></coupon_type_0>\n" +
@@ -49,7 +54,7 @@ public class WxPayV2Test {
 
     }
 
-    @Test
+    //@Test
     public void xmlToResultTest() {
         String xml = "<xml>\n" +
                 "  <appid><![CDATA[wx2421b1c4370ec43b]]></appid>\n" +
@@ -74,8 +79,8 @@ public class WxPayV2Test {
                 "  <transaction_id><![CDATA[1004400740201409030005092168]]></transaction_id>\n" +
                 "</xml>";
 
-        WxPayNotify wxPayNotify = XStreamConverter.fromXml(WxPayNotify.class, xml);
-        System.out.println(wxPayNotify);
+        WxPayV2Notify wxPayV2Notify = XStreamConverter.fromXml(WxPayV2Notify.class, xml);
+        System.out.println(wxPayV2Notify);
 
     }
 

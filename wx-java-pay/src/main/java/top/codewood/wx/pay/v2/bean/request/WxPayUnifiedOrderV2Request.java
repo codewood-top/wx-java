@@ -8,7 +8,7 @@ import top.codewood.wx.pay.v2.bean.WxPayBaseRequest;
 import java.io.Serializable;
 
 @XStreamAlias("xml")
-public class WxPayRequest extends WxPayBaseRequest {
+public class WxPayUnifiedOrderV2Request extends WxPayBaseRequest {
 
     /**
      * 签名类型，默认为MD5，支持HMAC-SHA256和MD5。
@@ -514,8 +514,8 @@ public class WxPayRequest extends WxPayBaseRequest {
             return this;
         }
 
-        public WxPayRequest build() {
-            WxPayRequest wxPayRequest = new WxPayRequest();
+        public WxPayUnifiedOrderV2Request build() {
+            WxPayUnifiedOrderV2Request wxPayRequest = new WxPayUnifiedOrderV2Request();
             wxPayRequest.setAppid(appid);
             wxPayRequest.setMchid(this.mchid);
             wxPayRequest.setNonceStr(this.nonceStr);
@@ -538,6 +538,7 @@ public class WxPayRequest extends WxPayBaseRequest {
             wxPayRequest.setOpenid(this.openid);
             wxPayRequest.setReceipt(this.receipt);
             wxPayRequest.setSceneInfo(this.sceneInfo);
+            wxPayRequest.setProfitSharing(this.profitSharing);
 
             if (signType != null) {
                 wxPayRequest.setSignType(this.signType);

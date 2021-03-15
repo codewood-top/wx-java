@@ -4,23 +4,29 @@ import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import top.codewood.wx.annotation.Required;
 import top.codewood.wx.common.api.WxConstants;
+import top.codewood.wx.common.util.net.NetUtils;
+import top.codewood.wx.common.util.xml.XStreamConverter;
 import top.codewood.wx.mp.api.WxPayService;
 import top.codewood.wx.mp.property.WxMpProperty;
 import top.codewood.wx.mp.property.WxPayProperty;
+import top.codewood.wx.pay.common.WxPayConstants;
+import top.codewood.wx.pay.v2.api.WxPayV2Api;
+import top.codewood.wx.pay.v2.bean.notify.WxPayV2Notify;
+import top.codewood.wx.pay.v2.bean.request.WxPayUnifiedOrderV2Request;
+import top.codewood.wx.pay.v2.bean.result.WxPayUnifiedOrderV2Result;
 import top.codewood.wx.pay.v3.api.WxPayV3Api;
+import top.codewood.wx.pay.v3.bean.notify.WxPayNotify;
+import top.codewood.wx.pay.v3.bean.notify.WxPayTransaction;
 import top.codewood.wx.pay.v3.bean.notify.WxRefundTransaction;
 import top.codewood.wx.pay.v3.bean.request.WxPayRequest;
 import top.codewood.wx.pay.v3.bean.request.WxRefundRequest;
-import top.codewood.wx.pay.v3.bean.notify.WxPayNotify;
-import top.codewood.wx.pay.v3.bean.notify.WxPayTransaction;
 import top.codewood.wx.pay.v3.bean.result.WxRefundResult;
 import top.codewood.wx.pay.v3.util.cert.AesUtil;
 import top.codewood.wx.pay.v3.util.json.WxGsonBuilder;
+import top.codewood.wx.util.Strings;
 
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
@@ -30,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -41,7 +48,44 @@ public class WxPayRestController {
     @Autowired
     private WxPayService wxPayService;
 
-    @RequestMapping("/getPayInfo")
+
+    @RequestMapping("/getPayInfoV2")
+    public Map<String, String> getV2PayInfo(@RequestParam("payType") String payType,
+                                            @RequestParam("tradeNo") String tradeNo,
+                                            @RequestParam("description") String description,
+                                            @RequestParam("amount") double amount,
+                                            @RequestParam(value = "openid", required = false) String openid,
+                                            @RequestParam("timeStamp") String timeStamp,
+                                            @RequestParam("nonceStr") String nonceStr,
+                                            @RequestParam(value = "profitSharing", required = false, defaultValue = "false") boolean profitSharing) {
+
+        Double total = amount * 100;
+        WxPayUnifiedOrderV2Request.Builder builder = new WxPayUnifiedOrderV2Request.Builder();
+        builder.appid(WxMpProperty.APP_ID)
+                .mchid(WxPayProperty.MCHID)
+                .nonceStr(nonceStr)
+                .body(description)
+                .outTradeNo(tradeNo)
+                .totalFee(total.intValue())
+                .spbillCreateIp(NetUtils.localAddress())
+                .openid(openid)
+                .notifyUrl(WxPayProperty.NOTIFY_URL + "/v2")
+                .tradeType(payType)
+                .profitSharing(profitSharing?"Y":"N");
+        WxPayUnifiedOrderV2Request unifiedOrderV2Request = builder.build();
+        unifiedOrderV2Request.setSign(WxPayV2Api.sign(unifiedOrderV2Request, WxPayProperty.API_V2_KEY));
+        WxPayUnifiedOrderV2Result unifiedOrderV2Result = wxPayService.unifiedOrder(unifiedOrderV2Request);
+        Map<String, String> map = new HashMap<>();
+        map.put("appId", WxMpProperty.APP_ID);
+        map.put("timeStamp", timeStamp);
+        map.put("nonceStr", nonceStr);
+        map.put("signType", WxPayConstants.SignType.MD5);
+        map.put("package", "prepay_id=" + unifiedOrderV2Result.getPrepayId());
+        map.put("paySign", WxPayV2Api.sign(map, WxPayProperty.API_V2_KEY));
+        return map;
+    }
+
+    @RequestMapping("/getPayInfoV3")
     public Map<String, String> getPayInfo(@RequestParam("payType") String payType,
                                           @RequestParam("tradeNo") String tradeNo,
                                           @RequestParam("description") String description,
@@ -76,6 +120,7 @@ public class WxPayRestController {
         map.put("appid", WxMpProperty.APP_ID);
         map.put("timeStamp", timeStamp);
         map.put("nonceStr", nonceStr);
+        map.put("signType", "RSA");
         map.put("package", "prepay_id=" + map.get("prepay_id"));
         String message = WxMpProperty.APP_ID + "\n" + timeStamp + "\n" + nonceStr + "\nprepay_id=" + map.get("prepay_id") + "\n";
         String sign = WxPayV3Api.sign(WxPayProperty.MCHID, message.getBytes(StandardCharsets.UTF_8));
@@ -106,6 +151,34 @@ public class WxPayRestController {
         return WxConstants.SUCCESS;
     }
 
+    @RequestMapping("/notify/{version}")
+    public String notifyVersion(
+            @PathVariable("version") String version,
+            @RequestBody String notifyBody) {
+
+        try {
+            if ("v2".equals(version)) {
+                WxPayV2Notify wxPayNotify = XStreamConverter.fromXml(WxPayV2Notify.class, notifyBody);
+                LOGGER.debug("wxPayNotify: {}", wxPayNotify);
+            } else if ("v3".equals(version)) {
+                if (WxPayProperty.API_V3_KEY == null) {
+                    throw new RuntimeException("api-v3-key未配置");
+                }
+                Gson gson = WxGsonBuilder.create();
+                WxPayNotify wxPayNotify = gson.fromJson(notifyBody, WxPayNotify.class);
+                AesUtil aesUtil = new AesUtil(WxPayProperty.API_V3_KEY.getBytes(StandardCharsets.UTF_8));
+                String result = aesUtil.decryptToString(wxPayNotify.getResource().getAssociatedData().getBytes(StandardCharsets.UTF_8), wxPayNotify.getResource().getNonce().getBytes(StandardCharsets.UTF_8), wxPayNotify.getResource().getCipherText());
+                WxPayTransaction wxPayTransaction = gson.fromJson(result, WxPayTransaction.class);
+                LOGGER.debug("wxPayTransaction: {}", wxPayTransaction.toString());
+            }
+        } catch (Exception e) {
+            LOGGER.info("微信支付 {} 通知结果：{}", version, notifyBody);
+            e.printStackTrace();
+        }
+
+        return notifyCallbackStr(version, WxConstants.SUCCESS.toUpperCase(), "成功");
+    }
+
     @RequestMapping("/notify")
     public String notify(@RequestBody String notifyBody) {
 
@@ -124,7 +197,7 @@ public class WxPayRestController {
             e.printStackTrace();
         }
 
-        return notifyCallbackStr(WxConstants.SUCCESS.toUpperCase(), "成功");
+        return notifyCallbackStr("V3", WxConstants.SUCCESS.toUpperCase(), "成功");
     }
 
     @RequestMapping("/refundNotify")
@@ -145,7 +218,7 @@ public class WxPayRestController {
             e.printStackTrace();
         }
 
-        return notifyCallbackStr(WxConstants.SUCCESS.toUpperCase(), "成功");
+        return notifyCallbackStr("V3", WxConstants.SUCCESS.toUpperCase(), "成功");
     }
 
     @RequestMapping("/query")
@@ -172,7 +245,13 @@ public class WxPayRestController {
         return WxConstants.SUCCESS;
     }
 
-    private String notifyCallbackStr(String code, String message) {
+    private String notifyCallbackStr(String version, String code, String message) {
+        if ("V2".equals(version.toUpperCase())) {
+            return String.format("<xml>\n" +
+                    "  <return_code><![CDATA[%s]]></return_code>\n" +
+                    "  <return_msg><![CDATA[%s]]></return_msg>\n" +
+                    "</xml>", code, message);
+        }
         return String.format("{\"code\": \"%s\", \"message\": \"%s\"}", code, message);
     }
 

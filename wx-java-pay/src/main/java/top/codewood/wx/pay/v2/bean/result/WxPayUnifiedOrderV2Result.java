@@ -4,7 +4,7 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import top.codewood.wx.pay.v2.bean.WxPayBaseResult;
 
 @XStreamAlias("xml")
-public class WxPayResult extends WxPayBaseResult {
+public class WxPayUnifiedOrderV2Result extends WxPayBaseResult {
 
     /**
      * 调用接口提交的公众账号ID
@@ -47,8 +47,8 @@ public class WxPayResult extends WxPayBaseResult {
      * 预支付交易会话标识
      * 微信生成的预支付会话标识，用于后续接口调用中使用，该值有效期为2小时
      */
-    @XStreamAlias("prepare_id")
-    public String prepareId;
+    @XStreamAlias("prepay_id")
+    private String prepayId;
 
     /**
      * 二维码链接
@@ -106,12 +106,12 @@ public class WxPayResult extends WxPayBaseResult {
         this.tradeType = tradeType;
     }
 
-    public String getPrepareId() {
-        return prepareId;
+    public String getPrepayId() {
+        return prepayId;
     }
 
-    public void setPrepareId(String prepareId) {
-        this.prepareId = prepareId;
+    public void setPrepayId(String prepayId) {
+        this.prepayId = prepayId;
     }
 
     public String getCodeUrl() {
@@ -136,7 +136,7 @@ public class WxPayResult extends WxPayBaseResult {
                 ", nonceStr='" + nonceStr + '\'' +
                 ", sign='" + sign + '\'' +
                 ", tradeType='" + tradeType + '\'' +
-                ", prepareId='" + prepareId + '\'' +
+                ", prepayId='" + prepayId + '\'' +
                 ", codeUrl='" + codeUrl + '\'' +
                 '}';
     }

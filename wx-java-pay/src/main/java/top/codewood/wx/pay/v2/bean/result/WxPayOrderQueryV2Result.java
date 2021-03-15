@@ -1,60 +1,27 @@
-package top.codewood.wx.pay.v2.bean.notify;
+package top.codewood.wx.pay.v2.bean.result;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
 import top.codewood.wx.pay.v2.bean.WxPayBaseResult;
+import top.codewood.wx.pay.v2.bean.WxPayV2Coupon;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @XStreamAlias("xml")
-public class WxPayNotify extends WxPayBaseResult {
+public class WxPayOrderQueryV2Result extends WxPayBaseResult {
 
     /**
-     * 调用接口提交的公众账号ID
-     */
-    private String appid;
-
-    /**
-     * 调用接口提交的商户号
-     */
-    @XStreamAlias("mch_id")
-    private String mchid;
-
-    /**
-     * 自定义参数，可以为请求支付的终端设备号等
+     * 设备号
+     * 微信支付分配的终端设备号
      */
     @XStreamAlias("device_info")
     private String deviceInfo;
 
     /**
-     * 微信返回的随机字符串
-     */
-    @XStreamAlias("nonce_str")
-    private String nonceStr;
-
-    /**
-     * 微信返回的签名值
-     */
-    private String sign;
-
-    /**
-     * 签名类型，目前支持HMAC-SHA256和MD5，默认为MD5
-     */
-    @XStreamAlias("sign_type")
-    private String signType;
-
-    /**
      * 用户在商户appid下的唯一标识
      */
-    @XStreamAlias("openid")
     private String openid;
 
     /**
-     * 是否关注公众账号
      * 用户是否关注公众账号，Y-关注，N-未关注
      */
     @XStreamAlias("is_subscribe")
@@ -62,53 +29,71 @@ public class WxPayNotify extends WxPayBaseResult {
 
     /**
      * 交易类型
-     * JSAPI、NATIVE、APP
+     * 调用接口提交的交易类型，取值如下：JSAPI，NATIVE，APP，MICROPAY
      */
     @XStreamAlias("trade_type")
     private String tradeType;
 
     /**
-     * 银行类型，采用字符串类型的银行标识，银行类型见<a href="https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=4_2">银行列表</a>
+     * 交易状态
+     * SUCCESS--支付成功
+     * REFUND--转入退款
+     * NOTPAY--未支付
+     * CLOSED--已关闭
+     * REVOKED--已撤销(刷卡支付)
+     * USERPAYING--用户支付中
+     * PAYERROR--支付失败(其他原因，如银行返回失败)
+     * ACCEPT--已接收，等待扣款
+     * 支付状态机请见下单API页面
+     */
+    @XStreamAlias("trade_state")
+    private String tradeState;
+
+    /**
+     * 付款银行
+     * 银行类型，采用字符串类型的银行标识
      */
     @XStreamAlias("bank_type")
     private String bankType;
 
     /**
+     * 标价金额
      * 订单总金额，单位为分
      */
     @XStreamAlias("total_fee")
-    private int totalFee;
+    private String totalFee;
 
     /**
      * 应结订单金额
-     * 应结订单金额=订单金额-非充值代金券金额，应结订单金额<=订单金额。
+     * 当订单使用了免充值型优惠券后返回该参数，应结订单金额=订单金额-免充值优惠券金额。
      */
     @XStreamAlias("settlement_total_fee")
-    private int settlementTotalFee;
+    private String settlementTotalFee;
 
     /**
-     * 货币类型，符合ISO4217标准的三位字母代码，默认人民币：CNY，其他值列表详见货币类型
+     * 标价币种
+     * 货币类型，符合ISO 4217标准的三位字母代码，默认人民币：CNY，其他值列表详见<a href="https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=4_2">货币类型</a>
      */
     @XStreamAlias("fee_type")
     private String feeType;
 
     /**
      * 现金支付金额
-     * 现金支付金额订单现金支付金额，详见支付金额
+     * 	现金支付金额订单现金支付金额
      */
     @XStreamAlias("cash_fee")
-    private int cashFee;
+    private String cashFee;
 
     /**
-     * 现金支付货币类型
-     * 货币类型，符合ISO4217标准的三位字母代码，默认人民币：CNY，其他值列表详见货币类型
+     * 现金支付币种
+     * 货币类型，符合ISO 4217标准的三位字母代码，默认人民币：CNY，其他值列表详见<a href="https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=4_2">货币类型</a>
      */
     @XStreamAlias("cash_fee_type")
     private String cashFeeType;
 
     /**
-     * 总代金券金额
-     * 代金券金额<=订单金额，订单金额-代金券金额=现金支付金额，详见支付金额
+     * 代金券金额
+     * “代金券”金额<=订单金额，订单金额-“代金券”金额=现金支付金额
      */
     @XStreamAlias("coupon_fee")
     private String couponFee;
@@ -119,7 +104,7 @@ public class WxPayNotify extends WxPayBaseResult {
     @XStreamAlias("coupon_count")
     private int couponCount;
 
-    private List<WxPayNotifyCoupon> coupons;
+    private List<WxPayV2Coupon> coupons;
 
     /**
      * 微信支付订单号
@@ -135,32 +120,26 @@ public class WxPayNotify extends WxPayBaseResult {
     private String outTradeNo;
 
     /**
-     * 商家数据包，原样返回
+     * 附加数据
+     * 附加数据，原样返回
      */
-    @XStreamAlias("attach")
     private String attach;
 
     /**
-     * 支付完成时间，格式为yyyyMMddHHmmss，如2009年12月25日9点10分10秒表示为20091225091010。
+     * 支付完成时间
+     * 订单支付时间，格式为yyyyMMddHHmmss，如2009年12月25日9点10分10秒表示为20091225091010
      */
     @XStreamAlias("time_end")
     private String timeEnd;
 
-    public String getAppid() {
-        return appid;
-    }
+    /**
+     * 交易状态描述
+     * 对当前查询订单状态的描述和下一步操作的指引
+     */
+    @XStreamAlias("trade_state_desc")
+    private String tradeStateDesc;
 
-    public void setAppid(String appid) {
-        this.appid = appid;
-    }
 
-    public String getMchid() {
-        return mchid;
-    }
-
-    public void setMchid(String mchid) {
-        this.mchid = mchid;
-    }
 
     public String getDeviceInfo() {
         return deviceInfo;
@@ -168,30 +147,6 @@ public class WxPayNotify extends WxPayBaseResult {
 
     public void setDeviceInfo(String deviceInfo) {
         this.deviceInfo = deviceInfo;
-    }
-
-    public String getNonceStr() {
-        return nonceStr;
-    }
-
-    public void setNonceStr(String nonceStr) {
-        this.nonceStr = nonceStr;
-    }
-
-    public String getSign() {
-        return sign;
-    }
-
-    public void setSign(String sign) {
-        this.sign = sign;
-    }
-
-    public String getSignType() {
-        return signType;
-    }
-
-    public void setSignType(String signType) {
-        this.signType = signType;
     }
 
     public String getOpenid() {
@@ -218,6 +173,14 @@ public class WxPayNotify extends WxPayBaseResult {
         this.tradeType = tradeType;
     }
 
+    public String getTradeState() {
+        return tradeState;
+    }
+
+    public void setTradeState(String tradeState) {
+        this.tradeState = tradeState;
+    }
+
     public String getBankType() {
         return bankType;
     }
@@ -226,19 +189,19 @@ public class WxPayNotify extends WxPayBaseResult {
         this.bankType = bankType;
     }
 
-    public int getTotalFee() {
+    public String getTotalFee() {
         return totalFee;
     }
 
-    public void setTotalFee(int totalFee) {
+    public void setTotalFee(String totalFee) {
         this.totalFee = totalFee;
     }
 
-    public int getSettlementTotalFee() {
+    public String getSettlementTotalFee() {
         return settlementTotalFee;
     }
 
-    public void setSettlementTotalFee(int settlementTotalFee) {
+    public void setSettlementTotalFee(String settlementTotalFee) {
         this.settlementTotalFee = settlementTotalFee;
     }
 
@@ -250,11 +213,11 @@ public class WxPayNotify extends WxPayBaseResult {
         this.feeType = feeType;
     }
 
-    public int getCashFee() {
+    public String getCashFee() {
         return cashFee;
     }
 
-    public void setCashFee(int cashFee) {
+    public void setCashFee(String cashFee) {
         this.cashFee = cashFee;
     }
 
@@ -282,11 +245,11 @@ public class WxPayNotify extends WxPayBaseResult {
         this.couponCount = couponCount;
     }
 
-    public List<WxPayNotifyCoupon> getCoupons() {
+    public List<WxPayV2Coupon> getCoupons() {
         return coupons;
     }
 
-    public void setCoupons(List<WxPayNotifyCoupon> coupons) {
+    public void setCoupons(List<WxPayV2Coupon> coupons) {
         this.coupons = coupons;
     }
 
@@ -322,51 +285,32 @@ public class WxPayNotify extends WxPayBaseResult {
         this.timeEnd = timeEnd;
     }
 
-    /**
-     * 要先有couponCount，再转换
-     * @param xml
-     */
-    public void setCouponsFromXml(String xml) {
-        if (this.couponCount == 0) return;
-        this.coupons = new ArrayList<>(this.couponCount);
-        Document document = null;
-        try {
-            document = DocumentHelper.parseText(xml);
-            Element root = document.getRootElement();
-            for (int i = 0; i < this.couponCount; i++) {
-                WxPayNotifyCoupon coupon = new WxPayNotifyCoupon();
-                coupon.setCouponId(root.elementText("coupon_id_" + i));
-                coupon.setCouponType(root.elementText("coupon_type_" + i));
-                coupon.setCouponFee(Integer.valueOf(root.elementText("coupon_fee_" +i)));
-                coupons.add(coupon);
-            }
-        } catch (DocumentException e) {
-            e.printStackTrace();
-        }
+    public String getTradeStateDesc() {
+        return tradeStateDesc;
+    }
+
+    public void setTradeStateDesc(String tradeStateDesc) {
+        this.tradeStateDesc = tradeStateDesc;
     }
 
     @Override
     public String toString() {
-        return "WxPayNotify{" +
+        return "WxPayOrderQueryV2Result{" +
                 "returnCode='" + returnCode + '\'' +
                 ", returnMsg='" + returnMsg + '\'' +
                 ", resultCode='" + resultCode + '\'' +
                 ", errCode='" + errCode + '\'' +
                 ", errCodeDes='" + errCodeDes + '\'' +
-                ", appid='" + appid + '\'' +
-                ", mchid='" + mchid + '\'' +
                 ", deviceInfo='" + deviceInfo + '\'' +
-                ", nonceStr='" + nonceStr + '\'' +
-                ", sign='" + sign + '\'' +
-                ", signType='" + signType + '\'' +
                 ", openid='" + openid + '\'' +
                 ", isSubscribe='" + isSubscribe + '\'' +
                 ", tradeType='" + tradeType + '\'' +
+                ", tradeState='" + tradeState + '\'' +
                 ", bankType='" + bankType + '\'' +
-                ", totalFee=" + totalFee +
-                ", settlementTotalFee=" + settlementTotalFee +
+                ", totalFee='" + totalFee + '\'' +
+                ", settlementTotalFee='" + settlementTotalFee + '\'' +
                 ", feeType='" + feeType + '\'' +
-                ", cashFee=" + cashFee +
+                ", cashFee='" + cashFee + '\'' +
                 ", cashFeeType='" + cashFeeType + '\'' +
                 ", couponFee='" + couponFee + '\'' +
                 ", couponCount=" + couponCount +
@@ -375,6 +319,7 @@ public class WxPayNotify extends WxPayBaseResult {
                 ", outTradeNo='" + outTradeNo + '\'' +
                 ", attach='" + attach + '\'' +
                 ", timeEnd='" + timeEnd + '\'' +
+                ", tradeStateDesc='" + tradeStateDesc + '\'' +
                 '}';
     }
 }

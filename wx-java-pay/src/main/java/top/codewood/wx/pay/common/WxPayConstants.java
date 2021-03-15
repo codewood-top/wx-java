@@ -12,13 +12,13 @@ public class WxPayConstants {
         /**
          * JSAPI/小程序下单
          */
-        JSAPI("jsapi", V3PayUrl.WX_PAY_JSAPI_URL),
+        JSAPI("JSAPI", V3PayUrl.WX_PAY_JSAPI_URL),
 
-        APP("app", V3PayUrl.WX_PAY_APP_URL),
+        APP("APP", V3PayUrl.WX_PAY_APP_URL),
 
-        NATIVE("native", V3PayUrl.WX_PAY_NATIVE_URL),
+        NATIVE("NATIVE", V3PayUrl.WX_PAY_NATIVE_URL),
 
-        H5("h5", V3PayUrl.WX_PAY_H5_URL);
+        H5("H5", V3PayUrl.WX_PAY_H5_URL);
 
         private String type;
         private String payUrl;
@@ -49,7 +49,20 @@ public class WxPayConstants {
 
     public interface V2PayUrl {
 
+        /**
+         * 统一下单
+         */
+        String UNIFIED_ORDER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
 
+        /**
+         * 查询订单
+         */
+        String ORDER_QUERY_URL = "https://api.mch.weixin.qq.com/pay/orderquery";
+
+        /**
+         * 关闭订单
+         */
+        String ORDER_CLOSE_URL = "https://api.mch.weixin.qq.com/pay/closeorder";
 
     }
 

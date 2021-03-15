@@ -1,16 +1,16 @@
-package top.codewood.wx.pay.v2.bean.notify;
+package top.codewood.wx.pay.v2.bean;
 
 import java.io.Serializable;
 
-public class WxPayNotifyCoupon implements Serializable {
+public class WxPayV2Coupon implements Serializable {
 
     private String couponId;
     private String couponType;
     private Integer couponFee;
 
-    public WxPayNotifyCoupon() {}
+    public WxPayV2Coupon() {}
 
-    public WxPayNotifyCoupon(String couponId, String couponType, Integer couponFee) {
+    public WxPayV2Coupon(String couponId, String couponType, Integer couponFee) {
         this.couponId = couponId;
         this.couponType = couponType;
         this.couponFee = couponFee;

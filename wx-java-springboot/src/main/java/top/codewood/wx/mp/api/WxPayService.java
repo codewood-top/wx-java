@@ -1,5 +1,7 @@
 package top.codewood.wx.mp.api;
 
+import top.codewood.wx.pay.v2.bean.request.WxPayUnifiedOrderV2Request;
+import top.codewood.wx.pay.v2.bean.result.WxPayUnifiedOrderV2Result;
 import top.codewood.wx.pay.v3.bean.notify.WxPayTransaction;
 import top.codewood.wx.pay.v3.bean.request.WxPayRequest;
 import top.codewood.wx.pay.v3.bean.request.WxRefundRequest;
@@ -10,6 +12,8 @@ import java.util.Map;
 public interface WxPayService {
 
     Map<String, String> getPayInfo(String payType, WxPayRequest wxPayRequest);
+
+    WxPayUnifiedOrderV2Result unifiedOrder(WxPayUnifiedOrderV2Request unifiedOrderV2Request);
 
     WxRefundResult refund(WxRefundRequest wxRefundRequest);
 
@@ -24,5 +28,6 @@ public interface WxPayService {
     WxPayTransaction query(String transactionId, String outTradeNo);
 
     void closeTransaction(String outTradeNo);
+
 
 }

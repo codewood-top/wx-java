@@ -1,10 +1,12 @@
 package top.codewood.wx.pay.v3.bean.notify;
 
 import com.google.gson.annotations.SerializedName;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 
+@XStreamAlias("xml")
 public class WxPayNotify implements Serializable {
 
     /**
@@ -179,5 +181,15 @@ public class WxPayNotify implements Serializable {
         }
     }
 
-
+    @Override
+    public String toString() {
+        return "WxPayNotify{" +
+                "id='" + id + '\'' +
+                ", createTime=" + createTime +
+                ", resourceType='" + resourceType + '\'' +
+                ", eventType='" + eventType + '\'' +
+                ", summary='" + summary + '\'' +
+                ", resource=" + resource +
+                '}';
+    }
 }
