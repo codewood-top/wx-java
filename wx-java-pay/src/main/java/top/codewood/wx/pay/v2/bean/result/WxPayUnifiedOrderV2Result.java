@@ -1,7 +1,14 @@
 package top.codewood.wx.pay.v2.bean.result;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import top.codewood.wx.pay.v2.bean.WxPayBaseResult;
+import top.codewood.wx.pay.v2.bean.WxPayV2Coupon;
+
+import java.util.ArrayList;
 
 @XStreamAlias("xml")
 public class WxPayUnifiedOrderV2Result extends WxPayBaseResult {

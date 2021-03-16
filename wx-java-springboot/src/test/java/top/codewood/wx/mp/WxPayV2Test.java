@@ -1,22 +1,28 @@
 package top.codewood.wx.mp;
 
+import okhttp3.Response;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.junit.Test;
 import top.codewood.wx.common.util.xml.XStreamConverter;
+import top.codewood.wx.pay.common.WxPayConstants;
 import top.codewood.wx.pay.v2.api.EntPayApi;
 import top.codewood.wx.pay.v2.api.WxPayV2Api;
 import top.codewood.wx.pay.v2.bean.notify.WxPayV2Notify;
 import top.codewood.wx.pay.v2.bean.redpack.WxPayRedPackQueryRequest;
 import top.codewood.wx.pay.v2.bean.redpack.WxPayRedPackQueryResult;
-import top.codewood.wx.pay.v2.bean.request.WxPayOrderCloseV2Request;
-import top.codewood.wx.pay.v2.bean.request.WxPayOrderQueryV2Request;
-import top.codewood.wx.pay.v2.bean.result.WxPayOrderCloseV2Result;
-import top.codewood.wx.pay.v2.bean.result.WxPayOrderQueryV2Result;
+import top.codewood.wx.pay.v2.bean.request.WxPayDownloadBillV2Request;
+import top.codewood.wx.pay.v2.bean.request.WxPayDownloadFundFlowV2Request;
+import top.codewood.wx.pay.v2.bean.request.WxPayRefundQueryV2Request;
+import top.codewood.wx.pay.v2.bean.request.WxPayRefundV2Request;
+import top.codewood.wx.pay.v2.bean.result.WxPayRefundQueryV2Result;
+import top.codewood.wx.pay.v2.bean.result.WxPayRefundV2Result;
 import top.codewood.wx.util.Strings;
 
+import java.io.FileOutputStream;
 import java.io.InputStream;
 
 public class WxPayV2Test {
@@ -33,6 +39,39 @@ public class WxPayV2Test {
         InputStream certFileInputStream = this.getClass().getResourceAsStream(certFilePath);
         WxPayRedPackQueryResult redPackQueryResult = EntPayApi.getInstance().queryRedPack(redPackQueryRequest, mchid, certFileInputStream);
         System.out.println(redPackQueryResult);
+    }
+
+    //@Test
+    public void refundTest() {
+        WxPayRefundV2Request.Builder refundBuilder = new WxPayRefundV2Request.Builder();
+        WxPayRefundV2Request refundV2Request = refundBuilder.appid("")
+                .mchid("")
+                .nonceStr(Strings.randomString(32))
+                .transactionId("")
+                .outRefundNo("")
+                .totalFee(1)
+                .refundFee(1)
+                .build();
+        refundV2Request.setSign(WxPayV2Api.sign(refundV2Request, ""));
+
+        WxPayRefundV2Result refundV2Result = WxPayV2Api.refund(refundV2Request, "", this.getClass().getResourceAsStream(""));
+        System.out.println(refundV2Result);
+
+    }
+
+    //@Test
+    public void refundQueryTest() {
+        WxPayRefundQueryV2Request refundQueryV2Request = new WxPayRefundQueryV2Request();
+        refundQueryV2Request.setAppid("");
+        refundQueryV2Request.setMchid("");
+        refundQueryV2Request.setNonceStr(Strings.randomString(32));
+        refundQueryV2Request.setTransactionId("");
+
+        refundQueryV2Request.setSign(WxPayV2Api.sign(refundQueryV2Request, ""));
+
+        WxPayRefundQueryV2Result refundQueryV2Result = WxPayV2Api.refundQuery(refundQueryV2Request);
+        System.out.println(refundQueryV2Result);
+
     }
 
 
@@ -81,6 +120,56 @@ public class WxPayV2Test {
 
         WxPayV2Notify wxPayV2Notify = XStreamConverter.fromXml(WxPayV2Notify.class, xml);
         System.out.println(wxPayV2Notify);
+
+    }
+
+    //@Test
+    public void downloadBillTest() throws Exception {
+        WxPayDownloadBillV2Request.Builder builder = new WxPayDownloadBillV2Request.Builder();
+        WxPayDownloadBillV2Request downloadBillV2Request = builder.appid("")
+                .mchid("")
+                .nonceStr(Strings.randomString(32))
+                .billDate("")
+                .build();
+
+        String sign = WxPayV2Api.sign(downloadBillV2Request, "");
+
+        downloadBillV2Request.setSign(sign);
+
+        Response  response = WxPayV2Api.postWithReponse(WxPayConstants.V2PayUrl.DOWNLOAD_BILL_URL,  downloadBillV2Request.toXml());
+
+        InputStream inputStream = response.body().byteStream();
+        FileOutputStream fileOutputStream = new FileOutputStream("");
+        IOUtils.copy(inputStream, fileOutputStream);
+        inputStream.close();
+        fileOutputStream.close();
+
+    }
+
+    //@Test
+    public void downloadFundBillTest() throws Exception {
+        WxPayDownloadFundFlowV2Request.Builder builder = new WxPayDownloadFundFlowV2Request.Builder();
+        WxPayDownloadFundFlowV2Request downloadFundFlowV2Request = builder.appid("")
+                .mchid("")
+                .nonceStr(Strings.randomString(32))
+                .billDate("")
+                .accountType("")
+                .build();
+
+        String sign = WxPayV2Api.sign(downloadFundFlowV2Request, "");
+
+        downloadFundFlowV2Request.setSign(sign);
+
+
+        downloadFundFlowV2Request.checkRequiredFields();
+
+        Response  response = WxPayV2Api.postWithReponse(WxPayConstants.V2PayUrl.DOWNLOAD_FUND_FLOW,  downloadFundFlowV2Request.toXml());
+
+        InputStream inputStream = response.body().byteStream();
+        FileOutputStream fileOutputStream = new FileOutputStream("");
+        IOUtils.copy(inputStream, fileOutputStream);
+        inputStream.close();
+        fileOutputStream.close();
 
     }
 

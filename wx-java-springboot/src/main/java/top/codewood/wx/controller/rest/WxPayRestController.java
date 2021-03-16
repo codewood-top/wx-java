@@ -48,6 +48,75 @@ public class WxPayRestController {
     @Autowired
     private WxPayService wxPayService;
 
+    @RequestMapping("/getPayInfo")
+    public Map<String, String> getPayInfo(
+            @RequestParam("version") String version,
+            @RequestParam("payType") String payType,
+            @RequestParam("tradeNo") String tradeNo,
+            @RequestParam("description") String description,
+            @RequestParam("amount") double amount,
+            @RequestParam(value = "openid", required = false) String openid,
+            @RequestParam("timeStamp") String timeStamp,
+            @RequestParam("nonceStr") String nonceStr,
+            @RequestParam(value = "profitSharing", required = false, defaultValue = "false") boolean profitSharing) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+
+        Map<String, String> map = new HashMap<>();
+        map.put("appId", WxMpProperty.APP_ID);
+        map.put("timeStamp", timeStamp);
+        map.put("nonceStr", nonceStr);
+
+        Double total = amount * 100;
+
+        if (WxPayConstants.Version.V2.equals(version.toLowerCase())) {
+            WxPayUnifiedOrderV2Request.Builder builder = new WxPayUnifiedOrderV2Request.Builder();
+            builder.appid(WxMpProperty.APP_ID)
+                    .mchid(WxPayProperty.MCHID)
+                    .nonceStr(nonceStr)
+                    .body(description)
+                    .outTradeNo(tradeNo)
+                    .totalFee(total.intValue())
+                    .spbillCreateIp(NetUtils.localAddress())
+                    .openid(openid)
+                    .notifyUrl(WxPayProperty.NOTIFY_URL + "/" + WxPayConstants.Version.V2)
+                    .tradeType(payType)
+                    .profitSharing(profitSharing?"Y":"N");
+            WxPayUnifiedOrderV2Request unifiedOrderV2Request = builder.build();
+            unifiedOrderV2Request.setSign(WxPayV2Api.sign(unifiedOrderV2Request, WxPayProperty.API_V2_KEY));
+            WxPayUnifiedOrderV2Result unifiedOrderV2Result = wxPayService.unifiedOrder(unifiedOrderV2Request);
+
+            map.put("signType", WxPayConstants.SignType.MD5);
+            map.put("package", "prepay_id=" + unifiedOrderV2Result.getPrepayId());
+            map.put("paySign", WxPayV2Api.sign(map, WxPayProperty.API_V2_KEY));
+        } else {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+            String expireTimeStr = sdf.format(Date.from(LocalDateTime.now().plusMinutes(30).atZone(ZoneId.systemDefault()).toInstant()));
+
+            WxPayRequest payRequest = new WxPayRequest();
+            payRequest.setAppid(WxMpProperty.APP_ID);
+            payRequest.setMchid(WxPayProperty.MCHID);
+            payRequest.setDescription(description);
+            payRequest.setOutTradeNo(tradeNo);
+            payRequest.setExpireTime(expireTimeStr);
+            payRequest.setNotifyUrl(WxPayProperty.NOTIFY_URL);
+            payRequest.setAmount(total.intValue());
+            payRequest.setPayer(openid);
+
+            if (profitSharing) {
+                payRequest.setSettleInfo(profitSharing);
+            }
+
+            Map<String, String> payInfoMap = wxPayService.getPayInfo(payType, payRequest);
+
+            map.put("signType", "RSA");
+            map.put("package", "prepay_id=" + payInfoMap.get("prepay_id"));
+            String message = WxMpProperty.APP_ID + "\n" + timeStamp + "\n" + nonceStr + "\nprepay_id=" + map.get("prepay_id") + "\n";
+            String sign = WxPayV3Api.sign(WxPayProperty.MCHID, message.getBytes(StandardCharsets.UTF_8));
+            map.put("paySign", sign);
+        }
+
+        return map;
+    }
+
 
     @RequestMapping("/getPayInfoV2")
     public Map<String, String> getV2PayInfo(@RequestParam("payType") String payType,
@@ -69,7 +138,7 @@ public class WxPayRestController {
                 .totalFee(total.intValue())
                 .spbillCreateIp(NetUtils.localAddress())
                 .openid(openid)
-                .notifyUrl(WxPayProperty.NOTIFY_URL + "/v2")
+                .notifyUrl(WxPayProperty.NOTIFY_URL + "/" + WxPayConstants.Version.V2)
                 .tradeType(payType)
                 .profitSharing(profitSharing?"Y":"N");
         WxPayUnifiedOrderV2Request unifiedOrderV2Request = builder.build();
@@ -157,10 +226,10 @@ public class WxPayRestController {
             @RequestBody String notifyBody) {
 
         try {
-            if ("v2".equals(version)) {
+            if (WxPayConstants.Version.V2.equals(version)) {
                 WxPayV2Notify wxPayNotify = XStreamConverter.fromXml(WxPayV2Notify.class, notifyBody);
                 LOGGER.debug("wxPayNotify: {}", wxPayNotify);
-            } else if ("v3".equals(version)) {
+            } else if (WxPayConstants.Version.V3.equals(version)) {
                 if (WxPayProperty.API_V3_KEY == null) {
                     throw new RuntimeException("api-v3-key未配置");
                 }
@@ -197,7 +266,7 @@ public class WxPayRestController {
             e.printStackTrace();
         }
 
-        return notifyCallbackStr("V3", WxConstants.SUCCESS.toUpperCase(), "成功");
+        return notifyCallbackStr(WxPayConstants.Version.V3, WxConstants.SUCCESS.toUpperCase(), "成功");
     }
 
     @RequestMapping("/refundNotify")
@@ -218,7 +287,7 @@ public class WxPayRestController {
             e.printStackTrace();
         }
 
-        return notifyCallbackStr("V3", WxConstants.SUCCESS.toUpperCase(), "成功");
+        return notifyCallbackStr(WxPayConstants.Version.V3, WxConstants.SUCCESS.toUpperCase(), "成功");
     }
 
     @RequestMapping("/query")
@@ -246,7 +315,7 @@ public class WxPayRestController {
     }
 
     private String notifyCallbackStr(String version, String code, String message) {
-        if ("V2".equals(version.toUpperCase())) {
+        if (WxPayConstants.Version.V2.equals(version.toLowerCase())) {
             return String.format("<xml>\n" +
                     "  <return_code><![CDATA[%s]]></return_code>\n" +
                     "  <return_msg><![CDATA[%s]]></return_msg>\n" +

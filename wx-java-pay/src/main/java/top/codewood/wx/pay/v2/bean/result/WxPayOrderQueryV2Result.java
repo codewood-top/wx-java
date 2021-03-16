@@ -1,9 +1,14 @@
 package top.codewood.wx.pay.v2.bean.result;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import top.codewood.wx.pay.v2.bean.WxPayBaseResult;
 import top.codewood.wx.pay.v2.bean.WxPayV2Coupon;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @XStreamAlias("xml")
@@ -291,6 +296,29 @@ public class WxPayOrderQueryV2Result extends WxPayBaseResult {
 
     public void setTradeStateDesc(String tradeStateDesc) {
         this.tradeStateDesc = tradeStateDesc;
+    }
+
+    /**
+     * 要先有couponCount，再转换
+     * @param xml
+     */
+    public void setCouponsFromXml(String xml) {
+        if (this.couponCount == 0) return;
+        this.coupons = new ArrayList<>(this.couponCount);
+        Document document = null;
+        try {
+            document = DocumentHelper.parseText(xml);
+            Element root = document.getRootElement();
+            for (int i = 0; i < this.couponCount; i++) {
+                WxPayV2Coupon coupon = new WxPayV2Coupon();
+                coupon.setCouponId(root.elementText("coupon_id_" + i));
+                coupon.setCouponType(root.elementText("coupon_type_" + i));
+                coupon.setCouponFee(Integer.valueOf(root.elementText("coupon_fee_" +i)));
+                coupons.add(coupon);
+            }
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -8,6 +8,11 @@ public class WxPayConstants {
         String PUT = "PUT";
     }
 
+    public interface Version {
+        String V2 = "v2";
+        String V3 = "v3";
+    }
+
     public enum PayType {
         /**
          * JSAPI/小程序下单
@@ -63,6 +68,26 @@ public class WxPayConstants {
          * 关闭订单
          */
         String ORDER_CLOSE_URL = "https://api.mch.weixin.qq.com/pay/closeorder";
+
+        /**
+         * 申请退款
+         */
+        String REFUND_URL = "https://api.mch.weixin.qq.com/secapi/pay/refund";
+
+        /**
+         * 查询退款
+         */
+        String REFUND_QUERY_URL = "https://api.mch.weixin.qq.com/pay/refundquery";
+
+        /**
+         * 下载交易账单
+         */
+        String DOWNLOAD_BILL_URL = "https://api.mch.weixin.qq.com/pay/downloadbill";
+
+        /**
+         * 下载资金账单
+         */
+        String DOWNLOAD_FUND_FLOW = "https://api.mch.weixin.qq.com/pay/downloadfundflow";
 
     }
 

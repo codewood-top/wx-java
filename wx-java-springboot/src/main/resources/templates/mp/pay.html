@@ -62,8 +62,8 @@
     </div>
     <div class="form-cell">
         <div>
-            <input type="radio" style="width:auto;"  name="version" value="V2" checked>V2
-            <input type="radio" style="width:auto;"  name="version" value="V3">V3
+            <input type="radio" style="width:auto;"  name="version" value="v2" checked>V2
+            <input type="radio" style="width:auto;"  name="version" value="v3">V3
         </div>
     </div>
     <div class="form-cell">
@@ -107,7 +107,7 @@
 
             let nonceStr = Math.random().toString(36).substr(2),
                 timeStamp = parseInt(new Date().getTime() / 1000),
-                url = `/wx/pay/rest/getPayInfo${version}`
+                url = `/wx/pay/rest/getPayInfo`
 
             $.ajax({
                 url: url,
@@ -120,7 +120,8 @@
                     openid: openid,
                     profitSharing: profitSharing,
                     nonceStr: nonceStr,
-                    timeStamp: timeStamp
+                    timeStamp: timeStamp,
+                    version: version
                 },
                 success: function(res) {
                     if (res.code || res.message) {

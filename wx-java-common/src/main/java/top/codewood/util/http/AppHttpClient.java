@@ -145,4 +145,5 @@ public class AppHttpClient {
         return EntityUtils.toString(response.getEntity(), "UTF-8");
     }
 
+
 }
