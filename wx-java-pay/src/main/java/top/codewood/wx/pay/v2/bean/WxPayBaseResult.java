@@ -1,6 +1,8 @@
 package top.codewood.wx.pay.v2.bean;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import top.codewood.wx.common.api.WxConstants;
+import top.codewood.wx.common.bean.error.WxErrorException;
 
 import java.io.Serializable;
 
@@ -83,5 +85,15 @@ public class WxPayBaseResult implements Serializable {
     public void setErrCodeDes(String errCodeDes) {
         this.errCodeDes = errCodeDes;
     }
+
+    public void checkResult() {
+        if (!WxConstants.SUCCESS.equals(resultCode)) {
+            throw new WxErrorException(returnMsg);
+        }
+        if (!WxConstants.SUCCESS.equals(resultCode)) {
+            throw new WxErrorException(errCodeDes);
+        }
+    }
+
 
 }

@@ -87,8 +87,8 @@ public class WxPayV3Test {
         JsonObject json = gson.toJsonTree(payRequest).getAsJsonObject();
 
         String token = WxPayV3Api.getToken(mchid, serialNo, WxPayConstants.HttpMethod.POST, WxPayConstants.V3PayUrl.WX_PAY_JSAPI_URL, json.toString());
-        String respStr = WxPayV3Api.post(WxPayConstants.V3PayUrl.WX_PAY_JSAPI_URL, json.toString(), token);
-        System.out.println(respStr);
+        //String respStr = WxPayV3Api.post(WxPayConstants.V3PayUrl.WX_PAY_JSAPI_URL, json.toString(), token);
+        //System.out.println(respStr);
     }
 
     //@Test
@@ -109,15 +109,15 @@ public class WxPayV3Test {
 
     //@Test
     public void wxPayFundFlowBillTest() throws IOException {
-        WxPayBillDownloadResult wxPayBillDownloadResult = WxPayV3Api.fundFlowBill(mchid, serialNo, "2021-03-07", null, null);
-        String url = wxPayBillDownloadResult.getDownloadUrl();
-        String token = WxPayV3Api.getToken(mchid, serialNo, WxPayConstants.HttpMethod.GET, url, WxPayV3Api.EMPTY_STR);
-        Response response = WxPayV3Api.getWithReponse(url, token);
-        InputStream inputStream = response.body().byteStream();
-        FileOutputStream fileOutputStream = new FileOutputStream("your file path");
-        IOUtils.copy(inputStream, fileOutputStream);
-        inputStream.close();
-        fileOutputStream.close();
+//        WxPayBillDownloadResult wxPayBillDownloadResult = WxPayV3Api.fundFlowBill(mchid, serialNo, "2021-03-07", null, null);
+//        String url = wxPayBillDownloadResult.getDownloadUrl();
+//        String token = WxPayV3Api.getToken(mchid, serialNo, WxPayConstants.HttpMethod.GET, url, WxPayV3Api.EMPTY_STR);
+//        Response response = WxPayV3Api.getWithReponse(url, token);
+//        InputStream inputStream = response.body().byteStream();
+//        FileOutputStream fileOutputStream = new FileOutputStream("your file path");
+//        IOUtils.copy(inputStream, fileOutputStream);
+//        inputStream.close();
+//        fileOutputStream.close();
     }
 
 

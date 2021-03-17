@@ -15,6 +15,8 @@ public interface WxPayService {
 
     WxPayUnifiedOrderV2Result unifiedOrder(WxPayUnifiedOrderV2Request unifiedOrderV2Request);
 
+    String v2Sign(Object object);
+
     WxRefundResult refund(WxRefundRequest wxRefundRequest);
 
     WxRefundResult queryRefund(String outTradeNo);

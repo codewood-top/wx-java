@@ -10,15 +10,22 @@ weixin:
   mp:
     property:
       appid:
-      appsecret:
+      app-secret:
+      mchid:
   pay:
-    property:
+    v2:
+      appid:
+      mchid:
+      key:
+      cert-path:
+      notify-url:
+      refund-notify-url:
+    v3:
+      appid:
       mchid:
       serial-no:
-      api-v2-key:
-      api-v3-key:
-      cert-file-path:
-      key-file-path:
+      key:
+      cert-path:
       notify-url:
       refund-notify-url:
 logging:

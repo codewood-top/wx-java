@@ -95,6 +95,11 @@ public class WxPayConstants {
     public interface V3PayUrl {
 
         /**
+         * 获取平台证书列表
+         */
+        String CERTIFICATE_LIST_URL = "https://api.mch.weixin.qq.com/v3/certificates";
+
+        /**
          * JSAPI/小程序下单API
          */
         String WX_PAY_JSAPI_URL = "https://api.mch.weixin.qq.com/v3/pay/transactions/jsapi";

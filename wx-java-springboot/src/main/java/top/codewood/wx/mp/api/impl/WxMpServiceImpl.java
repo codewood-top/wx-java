@@ -3,6 +3,7 @@ package top.codewood.wx.mp.api.impl;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -13,7 +14,7 @@ import top.codewood.wx.mp.api.WxMpMenuApi;
 import top.codewood.wx.mp.api.WxMpService;
 import top.codewood.wx.mp.bean.WxMpJsapiTicket;
 import top.codewood.wx.mp.bean.menu.WxMenu;
-import top.codewood.wx.mp.property.WxMpProperty;
+import top.codewood.wx.config.property.WxMpProperty;
 import top.codewood.wx.util.Strings;
 
 import java.time.LocalDateTime;
@@ -25,6 +26,9 @@ public class WxMpServiceImpl implements WxMpService {
 
     private static WxAccessToken2 WX_ACCESS_TOKEN = null;
     private static WxJsapiTicket2 WX_JSAPI_TICKET = null;
+
+    @Autowired
+    private WxMpProperty wxMpProperty;
 
     @Override
     public String getAccessToken() {
@@ -77,12 +81,12 @@ public class WxMpServiceImpl implements WxMpService {
     }
 
     private void updateAccessToken() {
-        if (!StringUtils.hasText(WxMpProperty.APP_ID) || !StringUtils.hasText(WxMpProperty.APP_SECRET)) {
+        if (!StringUtils.hasText(wxMpProperty.getAppid()) || !StringUtils.hasText(wxMpProperty.getAppSecret())) {
             throw new RuntimeException("appid & appsecret 未配置 ");
         }
         LOGGER.debug("正在请求更新 access_token");
         try {
-            WxAccessToken wxAccessToken = WxMpApi.getAccessToken(WxMpProperty.APP_ID, WxMpProperty.APP_SECRET);
+            WxAccessToken wxAccessToken = WxMpApi.getAccessToken(wxMpProperty.getAppid(), wxMpProperty.getAppSecret());
             WxAccessToken2 wxAccessToken2 = new WxAccessToken2();
             wxAccessToken2.accessToken = wxAccessToken.getAccessToken();
             wxAccessToken2.expiresIn = wxAccessToken.getExpiresIn();

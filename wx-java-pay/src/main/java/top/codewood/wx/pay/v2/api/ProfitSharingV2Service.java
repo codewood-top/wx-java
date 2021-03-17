@@ -1,20 +1,23 @@
 package top.codewood.wx.pay.v2.api;
 
-import top.codewood.util.http.AppHttpClient;
+import top.codewood.wx.common.bean.error.WxErrorException;
 import top.codewood.wx.common.util.xml.XStreamConverter;
+import top.codewood.wx.pay.common.WxPayConfig;
 import top.codewood.wx.pay.common.WxPayConstants;
+import top.codewood.wx.pay.common.WxPayHttpClient;
 import top.codewood.wx.pay.v2.bean.profitsharing.*;
 
-import java.io.InputStream;
+public class ProfitSharingV2Service extends WxPayV2BaseService {
 
-public class ProfitSharingApi extends WxPayV2Api {
+    private WxPayConfig wxPayConfig;
 
-    private static class Holder {
-        private static ProfitSharingApi INSTANCE = new ProfitSharingApi();
+    public ProfitSharingV2Service(WxPayConfig wxPayConfig) {
+        this.wxPayConfig = wxPayConfig;
     }
 
-    public static ProfitSharingApi getInstance() {
-        return Holder.INSTANCE;
+    @Override
+    WxPayConfig getWxPayConfig() {
+        return wxPayConfig;
     }
 
     /**
@@ -24,17 +27,12 @@ public class ProfitSharingApi extends WxPayV2Api {
      * <a href="https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_1&index=1">开发文档</a>
      *
      * @param profitSharingRequest
-     * @param certPassword
-     * @param certFileInputStream
      * @return
      */
-    public ProfitSharingResult request(ProfitSharingRequest profitSharingRequest, String certPassword, InputStream certFileInputStream) {
+    public ProfitSharingResult request(ProfitSharingRequest profitSharingRequest) {
         assert profitSharingRequest != null;
-        profitSharingRequest.checkRequiredFields();
-        String respStr = sslPost(WxPayConstants.ProfitSharingUrl.PROFIT_SHARING_URL, profitSharingRequest.toXml(), certPassword, certFileInputStream);
-        ProfitSharingResult profitSharingResult = XStreamConverter.fromXml(ProfitSharingResult.class, respStr);
-        checkResult(profitSharingResult);
-        return profitSharingResult;
+        checkAndSign(profitSharingRequest, wxPayConfig.getKey());
+        return requestWithCert(wxPayConfig, WxPayConstants.ProfitSharingUrl.PROFIT_SHARING_URL, profitSharingRequest.toXml(), ProfitSharingResult.class);
     }
 
     /**
@@ -46,17 +44,12 @@ public class ProfitSharingApi extends WxPayV2Api {
      * <a href="https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_6&index=2">开发文档</a>
      *
      * @param profitSharingRequest
-     * @param certPassword
-     * @param certFileInputStream
      * @return
      */
-    public ProfitSharingResult multiRequest(ProfitSharingRequest profitSharingRequest, String certPassword, InputStream certFileInputStream) {
+    public ProfitSharingResult multiRequest(ProfitSharingRequest profitSharingRequest) {
         assert profitSharingRequest != null;
-        profitSharingRequest.checkRequiredFields();
-        String respStr = sslPost(WxPayConstants.ProfitSharingUrl.PROFIT_SHARING_MULTI_URL, profitSharingRequest.toXml(), certPassword, certFileInputStream);
-        ProfitSharingResult profitSharingResult = XStreamConverter.fromXml(ProfitSharingResult.class, respStr);
-        checkResult(profitSharingResult);
-        return profitSharingResult;
+        checkAndSign(profitSharingRequest, wxPayConfig.getKey());
+        return requestWithCert(wxPayConfig, WxPayConstants.ProfitSharingUrl.PROFIT_SHARING_MULTI_URL, profitSharingRequest.toXml(), ProfitSharingResult.class);
     }
 
     /**
@@ -71,12 +64,8 @@ public class ProfitSharingApi extends WxPayV2Api {
      */
     public ProfitSharingQueryResult query(ProfitSharingQueryRequest queryRequest) {
         assert queryRequest != null;
-        queryRequest.checkRequiredFields();
-        String respStr = post(WxPayConstants.ProfitSharingUrl.PROFIT_SHARING_QUERY_URL, queryRequest.toXml());
-        ProfitSharingQueryResult queryResult = XStreamConverter.fromXml(ProfitSharingQueryResult.class, respStr);
-        checkResult(queryResult);
-        return queryResult;
-
+        checkAndSign(queryRequest, wxPayConfig.getKey());
+        return request(wxPayConfig, WxPayConstants.ProfitSharingUrl.PROFIT_SHARING_QUERY_URL, queryRequest.toXml(), ProfitSharingQueryResult.class);
     }
 
     /**
@@ -90,11 +79,8 @@ public class ProfitSharingApi extends WxPayV2Api {
      */
     public ProfitSharingReceiverResult addReceiver(ProfitSharingReceiverRequest receiverRequest) {
         assert receiverRequest != null;
-        receiverRequest.checkRequiredFields();
-        String respStr = post(WxPayConstants.ProfitSharingUrl.PROFIT_SHARING_ADD_RECEIVER_URL, receiverRequest.toXml());
-        ProfitSharingReceiverResult receiverResult = XStreamConverter.fromXml(ProfitSharingReceiverResult.class, respStr);
-        checkResult(receiverResult);
-        return receiverResult;
+        checkAndSign(receiverRequest, wxPayConfig.getKey());
+        return request(wxPayConfig, WxPayConstants.ProfitSharingUrl.PROFIT_SHARING_ADD_RECEIVER_URL, receiverRequest.toXml(), ProfitSharingReceiverResult.class);
     }
 
     /**
@@ -108,11 +94,8 @@ public class ProfitSharingApi extends WxPayV2Api {
      */
     public ProfitSharingReceiverResult removeReceiver(ProfitSharingReceiverRequest receiverRequest) {
         assert receiverRequest != null;
-        receiverRequest.checkRequiredFields();
-        String respStr = post(WxPayConstants.ProfitSharingUrl.PROFIT_SHARING_REMOVE_RECEIVER_URL, receiverRequest.toXml());
-        ProfitSharingReceiverResult receiverResult = XStreamConverter.fromXml(ProfitSharingReceiverResult.class, respStr);
-        checkResult(receiverResult);
-        return receiverResult;
+        checkAndSign(receiverRequest, wxPayConfig.getKey());
+        return request(wxPayConfig, WxPayConstants.ProfitSharingUrl.PROFIT_SHARING_REMOVE_RECEIVER_URL, receiverRequest.toXml(), ProfitSharingReceiverResult.class);
     }
 
     /**
@@ -124,17 +107,12 @@ public class ProfitSharingApi extends WxPayV2Api {
      * <a href="https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_5&index=6">参考文档</a>
      *
      * @param finishRequest
-     * @param certPassword
-     * @param certFileInputStream
      * @return
      */
-    public ProfitSharingResult finish(ProfitSharingFinishRequest finishRequest, String certPassword, InputStream certFileInputStream) {
+    public ProfitSharingResult finish(ProfitSharingFinishRequest finishRequest) {
         assert finishRequest != null;
-        finishRequest.checkRequiredFields();
-        String respStr = sslPost(WxPayConstants.ProfitSharingUrl.PROFIT_SHARING_FINISH_URL, finishRequest.toXml(), certPassword, certFileInputStream);
-        ProfitSharingResult result = XStreamConverter.fromXml(ProfitSharingResult.class, respStr);
-        checkResult(result);
-        return result;
+        checkAndSign(finishRequest, wxPayConfig.getKey());
+        return requestWithCert(wxPayConfig, WxPayConstants.ProfitSharingUrl.PROFIT_SHARING_FINISH_URL, finishRequest.toXml(), ProfitSharingResult.class);
     }
 
     /**
@@ -149,10 +127,16 @@ public class ProfitSharingApi extends WxPayV2Api {
      */
     public ProfitSharingAmountQueryResult orderAmountQuery(ProfitSharingAmountQueryRequest amountQueryRequest) {
         assert amountQueryRequest != null;
-        amountQueryRequest.checkRequiredFields();
-        String respStr = post(WxPayConstants.ProfitSharingUrl.PROFIT_SHARING_ORDER_AMOUNT_QUERY_URL, amountQueryRequest.toXml());
-        ProfitSharingAmountQueryResult amountQueryResult = XStreamConverter.fromXml(ProfitSharingAmountQueryResult.class, respStr);
-        return amountQueryResult;
+        try {
+            checkAndSign(amountQueryRequest, wxPayConfig.getKey());
+            String respStr = new WxPayHttpClient(wxPayConfig).requestWithoutCert(WxPayConstants.ProfitSharingUrl.PROFIT_SHARING_ORDER_AMOUNT_QUERY_URL, amountQueryRequest.toXml());
+            ProfitSharingAmountQueryResult amountQueryResult = XStreamConverter.fromXml(ProfitSharingAmountQueryResult.class, respStr);
+            return amountQueryResult;
+        } catch (WxErrorException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     /**
@@ -166,16 +150,20 @@ public class ProfitSharingApi extends WxPayV2Api {
      * <a href="https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_7&index=8">开发文档</a>
      *
      * @param resultRequest
-     * @param certPassword
-     * @param certFileInputStream
      * @return
      */
-    public ProfitSharingReturnResult returnRequest(ProfitSharingReturnRequest resultRequest, String certPassword, InputStream certFileInputStream) {
+    public ProfitSharingReturnResult returnRequest(ProfitSharingReturnRequest resultRequest) {
         assert resultRequest != null;
-        resultRequest.checkRequiredFields();
-        String respStr = sslPost(WxPayConstants.ProfitSharingUrl.PROFIT_SHARING_RETURN_URL, resultRequest.toXml(), certPassword, certFileInputStream);
-        ProfitSharingReturnResult returnResult = XStreamConverter.fromXml(ProfitSharingReturnResult.class, respStr);
-        return returnResult;
+        try {
+            checkAndSign(resultRequest, wxPayConfig.getKey());
+            String respStr = new WxPayHttpClient(wxPayConfig).requestWithCert(WxPayConstants.ProfitSharingUrl.PROFIT_SHARING_RETURN_URL, resultRequest.toXml());
+            ProfitSharingReturnResult returnResult = XStreamConverter.fromXml(ProfitSharingReturnResult.class, respStr);
+            return returnResult;
+        } catch (WxErrorException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     /**
@@ -191,10 +179,16 @@ public class ProfitSharingApi extends WxPayV2Api {
      */
     public ProfitSharingReturnResult returnQuery(ProfitSharingReturnQueryRequest returnQueryRequest) {
         assert returnQueryRequest != null;
-        returnQueryRequest.checkRequiredFields();
-        String respStr = post(WxPayConstants.ProfitSharingUrl.PROFIT_SHARING_RETURN_QUERY_URL, returnQueryRequest.toXml());
-        ProfitSharingReturnResult returnResult = XStreamConverter.fromXml(ProfitSharingReturnResult.class, respStr);
-        return returnResult;
+        try {
+            checkAndSign(returnQueryRequest, wxPayConfig.getKey());
+            String respStr = new WxPayHttpClient(wxPayConfig).requestWithoutCert(WxPayConstants.ProfitSharingUrl.PROFIT_SHARING_RETURN_QUERY_URL, returnQueryRequest.toXml());
+            ProfitSharingReturnResult returnResult = XStreamConverter.fromXml(ProfitSharingReturnResult.class, respStr);
+            return returnResult;
+        } catch (WxErrorException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
 }

@@ -15,8 +15,7 @@ import top.codewood.wx.mp.api.OrderService;
 import top.codewood.wx.mp.api.WxMpOAuth2Api;
 import top.codewood.wx.mp.bean.oauth2.WxOAuth2AccessToken;
 import top.codewood.wx.mp.bean.oauth2.WxOAuth2UserInfo;
-import top.codewood.wx.mp.property.WxMpProperty;
-import top.codewood.wx.mp.property.WxPayProperty;
+import top.codewood.wx.config.property.WxMpProperty;
 import top.codewood.wx.util.Strings;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,10 +29,13 @@ public class WxMpController {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private WxMpProperty wxMpProperty;
+
     @GetMapping("/js_sdk")
     public String jsSdk(@RequestParam(value = "debug", required = false, defaultValue = "false") boolean debug, Model model) {
         model.addAttribute("debug", debug);
-        model.addAttribute("appid", WxMpProperty.APP_ID);
+        model.addAttribute("appid", wxMpProperty.getAppid());
         return "mp/js_sdk";
     }
 
@@ -65,7 +67,7 @@ public class WxMpController {
         String currentReqUrl = getCurrentUrl(request);
         LOGGER.info("current req url: {}, code: {}", currentReqUrl, code);
         if (StringUtils.hasText(code)) {
-            WxOAuth2AccessToken oAuth2AccessToken = WxMpOAuth2Api.getInstance().getOAuth2AccessToken(WxMpProperty.APP_ID, WxMpProperty.APP_SECRET, code);
+            WxOAuth2AccessToken oAuth2AccessToken = WxMpOAuth2Api.getInstance().getOAuth2AccessToken(wxMpProperty.getAppid(), wxMpProperty.getAppSecret(), code);
 
             String openid = oAuth2AccessToken.getOpenid();
             WxOAuth2UserInfo wxOAuth2UserInfo = null;
@@ -79,7 +81,7 @@ public class WxMpController {
 
         } else {
             String redirectUrl = String.format("https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s#wechat_redirect",
-                    WxMpProperty.APP_ID,
+                    wxMpProperty.getAppid(),
                     Strings.urlEncode(currentReqUrl),
                     scopeVal,
                     state
@@ -87,7 +89,7 @@ public class WxMpController {
             return "redirect:" + redirectUrl;
         }
         model.addAttribute("scope", scope);
-        model.addAttribute("appid", WxMpProperty.APP_ID);
+        model.addAttribute("appid", wxMpProperty.getAppid());
         return "mp/authorize";
     }
 
@@ -98,8 +100,8 @@ public class WxMpController {
         model.addAttribute("orderNumber", orderService.generateOrderNumber());
         model.addAttribute("description", "代码坞-素材小店-大好河山");
         model.addAttribute("amount", 0.01);
-        model.addAttribute("appid", WxMpProperty.APP_ID);
-        model.addAttribute("mchid", WxPayProperty.MCHID);
+        model.addAttribute("appid", wxMpProperty.getAppid());
+        model.addAttribute("mchid", wxMpProperty.getMchid());
         model.addAttribute("openid", openid);
         return "mp/pay";
     }
