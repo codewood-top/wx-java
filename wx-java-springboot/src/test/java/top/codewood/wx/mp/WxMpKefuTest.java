@@ -1,7 +1,6 @@
 package top.codewood.wx.mp;
 
-import org.junit.Test;
-import top.codewood.util.http.AppHttpClient;
+import top.codewood.util.http.WxHttpClient;
 import top.codewood.wx.mp.api.WxMpKefuApi;
 import top.codewood.wx.mp.bean.kefu.message.WxMpKfMessage;
 import top.codewood.wx.mp.bean.kefu.result.WxMpKfInfo;
@@ -35,7 +34,7 @@ public class WxMpKefuTest {
 
     //@Test
     public void updateHeadimg() throws IOException {
-        InputStream is = AppHttpClient.getInstance().getStream("http://img1.codewood.top/developer/images/code-logo-large.png");
+        InputStream is = WxHttpClient.getInstance().getInputStream("http://img1.codewood.top/developer/images/code-logo-large.png");
         WxMpKefuApi.getInstance().updateHeadimg(accessToken, "", is);
     }
 

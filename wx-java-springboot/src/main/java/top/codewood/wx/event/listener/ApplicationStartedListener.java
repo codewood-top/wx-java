@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import top.codewood.wx.config.property.WxPayProperties;
 import top.codewood.wx.pay.v3.api.WxPayV3Api;
 import top.codewood.wx.pay.v3.cert.CertificateItem;
@@ -24,8 +25,8 @@ public class ApplicationStartedListener implements ApplicationListener<Applicati
     public void onApplicationEvent(ApplicationStartedEvent applicationStartedEvent) {
 
         if (wxPayProperties != null && wxPayProperties.getV3() != null) {
-            if (wxPayProperties.getV3().getMchid() != null && wxPayProperties.getV3().getSerialNo() != null
-                    && wxPayProperties.getV3().getCertPath() != null && wxPayProperties.getV3().getKey() != null) {
+            if (StringUtils.hasText(wxPayProperties.getV3().getMchid()) && StringUtils.hasText(wxPayProperties.getV3().getSerialNo())
+                    && StringUtils.hasText(wxPayProperties.getV3().getCertPath()) && StringUtils.hasText(wxPayProperties.getV3().getKey())) {
                 WxPayV3Api.loadPrivateKey(wxPayProperties.getV3().getMchid(), this.getClass().getResourceAsStream(wxPayProperties.getV3().getCertPath()));
                 LOGGER.info("已加载私钥");
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 public class WxTemplateTest {
 
-    String accessToken = "42_KodlNv4wac606iH-LgQ10YNEGBRfeKIccPoDWlqI20CRVnPQtrYFS2w75ZqhFOfZv9T-TTK_a_Y0fgLKabLlh_RZh0TVn6hNuMeLk__qfnlJO9I7mvQ1ZcF-sg-xBntSFg9-cume_a96sY-BLDIfAGAFXC";
+    String accessToken = "";
 
     //@Test
     public void setIndustryTest() {

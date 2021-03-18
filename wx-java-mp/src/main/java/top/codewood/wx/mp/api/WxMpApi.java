@@ -1,6 +1,6 @@
 package top.codewood.wx.mp.api;
 
-import top.codewood.util.http.AppHttpClient;
+import top.codewood.util.http.WxHttpClient;
 import top.codewood.wx.common.bean.WxAccessToken;
 import top.codewood.wx.common.bean.error.WxError;
 import top.codewood.wx.common.bean.error.WxErrorException;
@@ -15,7 +15,7 @@ public class WxMpApi {
 
     protected static String get(String url) {
         try {
-            String respStr = AppHttpClient.getInstance().get(url);
+            String respStr = WxHttpClient.getInstance().get(url);
             return handleResponse(respStr);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -24,7 +24,7 @@ public class WxMpApi {
 
     protected static String post(String url, String postData) {
         try {
-            String respStr = AppHttpClient.getInstance().post(url, postData);
+            String respStr = WxHttpClient.getInstance().post(url, postData);
             return handleResponse(respStr);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -33,22 +33,22 @@ public class WxMpApi {
 
     protected static String upload(String url, File file) {
         try {
-            String respStr = AppHttpClient.getInstance().upload(url, file);
+            String respStr = WxHttpClient.getInstance().upload(url, file);
             return handleResponse(respStr);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    protected static InputStream getStream(String url) {
+    protected static InputStream getInputStream(String url) {
         try {
-            return AppHttpClient.getInstance().getStream(url);
+            return WxHttpClient.getInstance().getInputStream(url);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static String handleResponse(String resp) {
+    protected static String handleResponse(String resp) {
         WxError wxError = WxGsonBuilder.create().fromJson(resp, WxError.class);
         if (wxError.getErrorCode() != 0) {
             throw new WxErrorException(wxError);
@@ -83,6 +83,5 @@ public class WxMpApi {
         String respStr = get(url);
         return WxGsonBuilder.create().fromJson(respStr, WxMpJsapiTicket.class);
     }
-
 
 }
