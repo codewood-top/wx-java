@@ -7,7 +7,10 @@ import top.codewood.wx.pay.v2.bean.result.WxPayOrderCloseV2Result;
 import top.codewood.wx.pay.v2.bean.result.WxPayRefundV2Result;
 import top.codewood.wx.pay.v2.bean.result.WxPayUnifiedOrderV2Result;
 
+import java.util.Map;
+
 public class WxPayV2Service extends WxPayV2BaseService {
+
 
     private WxPayConfig wxPayConfig;
 
@@ -15,10 +18,6 @@ public class WxPayV2Service extends WxPayV2BaseService {
         this.wxPayConfig = wxPayConfig;
     }
 
-    @Override
-    WxPayConfig getWxPayConfig() {
-        return wxPayConfig;
-    }
 
     /**
      * 统一下单
@@ -115,5 +114,11 @@ public class WxPayV2Service extends WxPayV2BaseService {
         return request(wxPayConfig, WxPayConstants.V2PayUrl.REFUND_URL, refundQueryV2Request.toXml(), WxPayRefundV2Result.class);
     }
 
+    public String sign(Map map) {
+        return sign(map, wxPayConfig.getKey());
+    }
 
+    public String sign(Object object) {
+        return sign(object, wxPayConfig.getKey());
+    }
 }

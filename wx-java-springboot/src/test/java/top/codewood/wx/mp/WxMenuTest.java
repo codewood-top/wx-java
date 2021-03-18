@@ -1,10 +1,6 @@
 package top.codewood.wx.mp;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import org.junit.Test;
-import top.codewood.wx.mp.util.json.WxGsonBuilder;
-import top.codewood.wx.mp.api.WxMpMenuApi;
+import top.codewood.wx.service.WxMpMenuApi;
 import top.codewood.wx.mp.bean.menu.WxMenu;
 import top.codewood.wx.mp.bean.menu.WxMenuButton;
 

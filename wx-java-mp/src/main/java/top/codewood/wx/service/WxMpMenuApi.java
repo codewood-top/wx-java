@@ -1,4 +1,4 @@
-package top.codewood.wx.mp.api;
+package top.codewood.wx.service;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;

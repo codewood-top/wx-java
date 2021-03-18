@@ -1,7 +1,7 @@
 package top.codewood.wx.mp;
 
 import org.junit.Test;
-import top.codewood.wx.mp.api.WxMpOAuth2Api;
+import top.codewood.wx.service.WxMpOAuth2Api;
 import top.codewood.wx.mp.bean.oauth2.WxOAuth2UserInfo;
 
 public class WxMpOAuth2Test {

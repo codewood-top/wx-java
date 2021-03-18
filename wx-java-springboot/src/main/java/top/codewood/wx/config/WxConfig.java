@@ -2,11 +2,10 @@ package top.codewood.wx.config;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import top.codewood.wx.config.property.WxMpProperty;
-import top.codewood.wx.config.property.WxPayProperties;
+import top.codewood.wx.config.property.WxConfigProperties;
 
 @Configuration
-@EnableConfigurationProperties({WxMpProperty.class, WxPayProperties.class})
+@EnableConfigurationProperties({WxConfigProperties.class})
 public class WxConfig {
 
 }

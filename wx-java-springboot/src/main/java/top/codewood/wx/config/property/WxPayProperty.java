@@ -1,9 +1,12 @@
-package top.codewood.wx.pay.common;
+package top.codewood.wx.config.property;
 
-import java.io.InputStream;
+public class WxPayProperty {
 
-public class WxPayConfig {
-
+    /**
+     * 支付版本信息 v2 | v3
+     * @see top.codewood.wx.pay.common.WxPayConstants.Version
+     */
+    private String version;
     private String mchid;
 
     /**
@@ -31,6 +34,15 @@ public class WxPayConfig {
      * 退款通知url
      */
     private String refundNotifyUrl;
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
 
     public String getMchid() {
         return mchid;
@@ -78,40 +90,5 @@ public class WxPayConfig {
 
     public void setRefundNotifyUrl(String refundNotifyUrl) {
         this.refundNotifyUrl = refundNotifyUrl;
-    }
-
-    public InputStream getCertStream() {
-        if (this.certPath == null) throw new RuntimeException("certPath 未配置");
-        return this.getClass().getResourceAsStream(this.certPath);
-    }
-
-
-    /**
-     * HTTP(S) 连接超时时间，单位毫秒
-     * @return
-     */
-    public int getConnectTimeoutMs() {
-        return 3 * 1000;
-    }
-
-    /**
-     * HTTP(S) 读数据超时时间，单位毫秒
-     * @return
-     */
-    public int getReadTimeoutMs() {
-        return 3 * 1000;
-    }
-
-
-    @Override
-    public String toString() {
-        return "WxPayConfig{" +
-                "mchid='" + mchid + '\'' +
-                ", serialNo='" + serialNo + '\'' +
-                ", Key='" + Key + '\'' +
-                ", certPath='" + certPath + '\'' +
-                ", notifyUrl='" + notifyUrl + '\'' +
-                ", refundNotifyUrl='" + refundNotifyUrl + '\'' +
-                '}';
     }
 }

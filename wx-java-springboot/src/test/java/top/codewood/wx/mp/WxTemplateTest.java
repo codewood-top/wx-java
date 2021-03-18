@@ -1,7 +1,6 @@
 package top.codewood.wx.mp;
 
-import org.junit.Test;
-import top.codewood.wx.mp.api.WxMpTemplateApi;
+import top.codewood.wx.service.WxMpTemplateApi;
 import top.codewood.wx.mp.bean.template.*;
 
 import java.util.List;

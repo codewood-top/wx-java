@@ -1,7 +1,6 @@
 package top.codewood.wx.mp;
 
-import org.junit.Test;
-import top.codewood.wx.mp.api.WxMpQrcodeApi;
+import top.codewood.wx.service.WxMpQrcodeApi;
 import top.codewood.wx.mp.bean.result.WxMpQrcodeTicket;
 
 public class WxQrcodeTest {

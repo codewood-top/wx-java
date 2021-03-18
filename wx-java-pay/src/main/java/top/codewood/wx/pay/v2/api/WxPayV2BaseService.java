@@ -17,7 +17,9 @@ import java.util.TreeMap;
 
 public abstract class WxPayV2BaseService {
 
-    abstract WxPayConfig getWxPayConfig();
+    WxPayConfig getWxPayConfig() {
+        return null;
+    }
 
     /**
      * 对微信支付相关的bean进行签名
@@ -26,7 +28,7 @@ public abstract class WxPayV2BaseService {
      * @param signKey 微信商户平台(pay.weixin.qq.com)-->账户设置-->API安全-->密钥设置
      * @return
      */
-    protected String sign(Map map, String signKey) {
+    public String sign(Map map, String signKey) {
         assert map != null && signKey != null;
         String signType = (String) map.getOrDefault("sign_type", WxPayConstants.SignType.MD5);
         SortedMap<String, Object> sortedMap = new TreeMap<>(map);
@@ -50,19 +52,12 @@ public abstract class WxPayV2BaseService {
      * @param signKey 微信商户平台(pay.weixin.qq.com)-->账户设置-->API安全-->密钥设置
      * @return
      */
-    protected String sign(Object object, String signKey) {
+    public String sign(Object object, String signKey) {
         assert object != null;
         Map map = BeanUtils.xmlBean2Map(object);
         return sign(map, signKey);
     }
 
-    public String sign(Object object) {
-        return sign(object, getWxPayConfig().getKey());
-    }
-
-    public String sign(Map map) {
-        return sign(map, getWxPayConfig().getKey());
-    }
 
     /**
      * 对微信支付相关的bean进行签名

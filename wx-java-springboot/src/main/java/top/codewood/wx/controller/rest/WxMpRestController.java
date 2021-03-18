@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.codewood.wx.common.api.WxConstants;
-import top.codewood.wx.mp.api.WxMpService;
+import top.codewood.wx.service.WxMpService;
 import top.codewood.wx.mp.bean.message.WxMpTextRespXmlMessage;
 import top.codewood.wx.mp.bean.message.WxMpTransferKefuRespXMLMessage;
 import top.codewood.wx.mp.bean.message.WxMpXmlMessage;

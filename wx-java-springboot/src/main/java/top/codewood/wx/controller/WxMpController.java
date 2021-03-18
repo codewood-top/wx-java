@@ -11,11 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import top.codewood.wx.common.api.WxConstants;
-import top.codewood.wx.mp.api.OrderService;
-import top.codewood.wx.mp.api.WxMpOAuth2Api;
+import top.codewood.wx.service.OrderService;
+import top.codewood.wx.service.WxMpOAuth2Api;
 import top.codewood.wx.mp.bean.oauth2.WxOAuth2AccessToken;
 import top.codewood.wx.mp.bean.oauth2.WxOAuth2UserInfo;
-import top.codewood.wx.config.property.WxMpProperty;
 import top.codewood.wx.util.Strings;
 
 import javax.servlet.http.HttpServletRequest;

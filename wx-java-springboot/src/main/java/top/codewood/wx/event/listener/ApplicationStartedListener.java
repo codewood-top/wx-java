@@ -7,7 +7,6 @@ import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import top.codewood.wx.config.property.WxPayProperties;
 import top.codewood.wx.pay.v3.api.WxPayV3Api;
 import top.codewood.wx.pay.v3.cert.CertificateItem;
 

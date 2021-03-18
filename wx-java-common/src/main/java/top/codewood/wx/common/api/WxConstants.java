@@ -132,4 +132,16 @@ public class WxConstants {
         String USER_INFO = "snsapi_userinfo";
     }
 
+    /**
+     * 公众号 | 小程序 | app
+     */
+    public interface AppType {
+
+        String MP = "mp";
+
+        String MINIPROGRAM = "miniprogram";
+
+        String APP = "app";
+    }
+
 }

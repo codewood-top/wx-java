@@ -13,6 +13,7 @@
         <module>wx-java-springboot</module>
         <module>wx-java-common</module>
         <module>wx-java-pay</module>
+        <module>wx-java-miniprogram</module>
     </modules>
 
     <properties>

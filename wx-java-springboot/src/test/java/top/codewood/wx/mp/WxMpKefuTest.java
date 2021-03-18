@@ -1,7 +1,7 @@
 package top.codewood.wx.mp;
 
 import top.codewood.util.http.WxHttpClient;
-import top.codewood.wx.mp.api.WxMpKefuApi;
+import top.codewood.wx.service.WxMpKefuApi;
 import top.codewood.wx.mp.bean.kefu.message.WxMpKfMessage;
 import top.codewood.wx.mp.bean.kefu.result.WxMpKfInfo;
 import top.codewood.wx.mp.bean.kefu.result.WxMpKfMsgList;

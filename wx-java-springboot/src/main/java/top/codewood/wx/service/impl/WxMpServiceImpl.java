@@ -1,4 +1,4 @@
-package top.codewood.wx.mp.api.impl;
+package top.codewood.wx.service.impl;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
@@ -6,15 +6,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
+import top.codewood.wx.common.api.WxConstants;
 import top.codewood.wx.common.bean.WxAccessToken;
 import top.codewood.wx.common.bean.error.WxErrorException;
-import top.codewood.wx.mp.api.WxMpApi;
-import top.codewood.wx.mp.api.WxMpMenuApi;
-import top.codewood.wx.mp.api.WxMpService;
+import top.codewood.wx.config.property.WxAppProperty;
+import top.codewood.wx.config.property.WxConfigProperties;
 import top.codewood.wx.mp.bean.WxMpJsapiTicket;
 import top.codewood.wx.mp.bean.menu.WxMenu;
-import top.codewood.wx.config.property.WxMpProperty;
+import top.codewood.wx.service.WxMpApi;
+import top.codewood.wx.service.WxMpMenuApi;
+import top.codewood.wx.service.WxMpService;
 import top.codewood.wx.util.Strings;
 
 import java.time.LocalDateTime;
@@ -28,7 +29,7 @@ public class WxMpServiceImpl implements WxMpService {
     private static WxJsapiTicket2 WX_JSAPI_TICKET = null;
 
     @Autowired
-    private WxMpProperty wxMpProperty;
+    private WxConfigProperties wxConfigProperties;
 
     @Override
     public String getAccessToken() {
@@ -81,12 +82,10 @@ public class WxMpServiceImpl implements WxMpService {
     }
 
     private void updateAccessToken() {
-        if (!StringUtils.hasText(wxMpProperty.getAppid()) || !StringUtils.hasText(wxMpProperty.getAppSecret())) {
-            throw new RuntimeException("appid & appsecret 未配置 ");
-        }
+        WxAppProperty wxAppProperty = wxConfigProperties.getAppPropertyByType(WxConstants.AppType.MP);
         LOGGER.debug("正在请求更新 access_token");
         try {
-            WxAccessToken wxAccessToken = WxMpApi.getAccessToken(wxMpProperty.getAppid(), wxMpProperty.getAppSecret());
+            WxAccessToken wxAccessToken = WxMpApi.getAccessToken(wxAppProperty.getAppid(), wxAppProperty.getSecret());
             WxAccessToken2 wxAccessToken2 = new WxAccessToken2();
             wxAccessToken2.accessToken = wxAccessToken.getAccessToken();
             wxAccessToken2.expiresIn = wxAccessToken.getExpiresIn();

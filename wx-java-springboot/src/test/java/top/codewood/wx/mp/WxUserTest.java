@@ -1,8 +1,6 @@
 package top.codewood.wx.mp;
 
-import org.junit.Test;
-import top.codewood.wx.mp.api.WxMpApi;
-import top.codewood.wx.mp.api.WxMpUserApi;
+import top.codewood.wx.service.WxMpUserApi;
 
 import java.util.Arrays;
 

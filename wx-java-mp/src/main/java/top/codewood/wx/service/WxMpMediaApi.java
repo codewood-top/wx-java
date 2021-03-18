@@ -1,6 +1,5 @@
-package top.codewood.wx.mp.api;
+package top.codewood.wx.service;
 
-import top.codewood.wx.common.util.file.FileUtils;
 import top.codewood.wx.mp.bean.media.WxMediaUploadImgResult;
 import top.codewood.wx.mp.bean.media.WxMediaUploadResult;
 import top.codewood.wx.mp.util.json.WxGsonBuilder;
@@ -8,7 +7,6 @@ import top.codewood.wx.mp.util.json.WxGsonBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.UUID;
 
 public class WxMpMediaApi extends WxMpApi {
 

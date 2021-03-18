@@ -18,11 +18,6 @@ public class EntPayV2Service extends WxPayV2BaseService {
         this.wxPayConfig = wxPayConfig;
     }
 
-    @Override
-    WxPayConfig getWxPayConfig() {
-        return wxPayConfig;
-    }
-
     /**
      * 发放红包接口
      * 1.发送频率限制------默认30/秒

@@ -1,10 +1,9 @@
 package top.codewood.wx.mp;
 
-import org.junit.Test;
 import top.codewood.util.http.WxHttpClient;
 import top.codewood.wx.common.api.WxConstants;
 import top.codewood.wx.common.util.file.FileUtils;
-import top.codewood.wx.mp.api.WxMpMediaApi;
+import top.codewood.wx.service.WxMpMediaApi;
 import top.codewood.wx.mp.bean.media.WxMediaUploadImgResult;
 import top.codewood.wx.mp.bean.media.WxMediaUploadResult;
 import top.codewood.wx.util.Strings;

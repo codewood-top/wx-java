@@ -1,6 +1,6 @@
 package top.codewood.wx.mp;
 
-import top.codewood.wx.mp.api.WxMpUtilApi;
+import top.codewood.wx.service.WxMpUtilApi;
 import top.codewood.wx.util.Strings;
 
 public class WxUtilTest {

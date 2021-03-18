@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import top.codewood.wx.common.api.WxConstants;
 import top.codewood.wx.common.util.net.NetUtils;
 import top.codewood.wx.common.util.xml.XStreamConverter;
-import top.codewood.wx.config.property.WxPayProperties;
-import top.codewood.wx.mp.api.WxPayService;
+import top.codewood.wx.service.WxPayService;
 import top.codewood.wx.pay.common.WxPayConfig;
 import top.codewood.wx.pay.common.WxPayConstants;
 import top.codewood.wx.pay.v2.bean.notify.WxPayV2Notify;
@@ -51,6 +50,7 @@ public class WxPayRestController {
     @RequestMapping("/getPayInfo")
     public Map<String, String> getPayInfo(
             @RequestParam("version") String version,
+            @RequestParam("appid") String appid,
             @RequestParam("payType") String payType,
             @RequestParam("tradeNo") String tradeNo,
             @RequestParam("description") String description,
@@ -63,7 +63,7 @@ public class WxPayRestController {
         WxPayConfig wxPayConfig = getWxPayConfig(version);
 
         Map<String, String> map = new HashMap<>();
-        map.put("appId", wxPayConfig.getAppid());
+        map.put("appId", appid);
         map.put("timeStamp", timeStamp);
         map.put("nonceStr", nonceStr);
 
@@ -71,7 +71,7 @@ public class WxPayRestController {
 
         if (WxPayConstants.Version.V2.equals(version.toLowerCase())) {
             WxPayUnifiedOrderV2Request.Builder builder = new WxPayUnifiedOrderV2Request.Builder();
-            builder.appid(wxPayConfig.getAppid())
+            builder.appid(appid)
                     .mchid(wxPayConfig.getMchid())
                     .nonceStr(nonceStr)
                     .body(description)
@@ -83,17 +83,17 @@ public class WxPayRestController {
                     .tradeType(payType)
                     .profitSharing(profitSharing?"Y":"N");
             WxPayUnifiedOrderV2Request unifiedOrderV2Request = builder.build();
-            WxPayUnifiedOrderV2Result unifiedOrderV2Result = wxPayService.unifiedOrder(unifiedOrderV2Request);
+            WxPayUnifiedOrderV2Result unifiedOrderV2Result = wxPayService.unifiedOrder(appid, unifiedOrderV2Request);
 
             map.put("signType", WxPayConstants.SignType.MD5);
             map.put("package", "prepay_id=" + unifiedOrderV2Result.getPrepayId());
-            map.put("paySign", wxPayService.v2Sign(map));
+            map.put("paySign", wxPayService.v2Sign(appid, map));
         } else {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
             String expireTimeStr = sdf.format(Date.from(LocalDateTime.now().plusMinutes(30).atZone(ZoneId.systemDefault()).toInstant()));
 
             WxPayRequest payRequest = new WxPayRequest();
-            payRequest.setAppid(wxPayConfig.getAppid());
+            payRequest.setAppid(appid);
             payRequest.setMchid(wxPayConfig.getMchid());
             payRequest.setDescription(description);
             payRequest.setOutTradeNo(tradeNo);
@@ -106,11 +106,11 @@ public class WxPayRestController {
                 payRequest.setSettleInfo(profitSharing);
             }
 
-            Map<String, String> payInfoMap = wxPayService.getPayInfo(payType, payRequest);
+            Map<String, String> payInfoMap = wxPayService.getPayInfo(appid, payType, payRequest);
 
             map.put("signType", "RSA");
             map.put("package", "prepay_id=" + payInfoMap.get("prepay_id"));
-            String message = wxPayConfig.getAppid() + "\n" + timeStamp + "\n" + nonceStr + "\nprepay_id=" + payInfoMap.get("prepay_id") + "\n";
+            String message = appid + "\n" + timeStamp + "\n" + nonceStr + "\nprepay_id=" + payInfoMap.get("prepay_id") + "\n";
             String sign = WxPayV3Api.sign(wxPayConfig.getMchid(), message.getBytes(StandardCharsets.UTF_8));
             map.put("paySign", sign);
         }
@@ -122,6 +122,7 @@ public class WxPayRestController {
     @RequestMapping("/refund")
     public String refund(
             @RequestParam("version") String version,
+            @RequestParam("appid") String appid,
             @RequestParam("tradeNo") String tradeNo,
                          @RequestParam(value = "reason", required = false) String reason,
                          @RequestParam("amount") double amount) {
@@ -139,7 +140,7 @@ public class WxPayRestController {
             refundRequest.setReason(reason);
         }
 
-        WxRefundResult refundResult = wxPayService.refund(refundRequest);
+        WxRefundResult refundResult = wxPayService.refund(appid, refundRequest);
 
         LOGGER.debug("refund result: {}", refundResult);
 
@@ -202,26 +203,32 @@ public class WxPayRestController {
     }
 
     @RequestMapping("/query")
-    public String query(@RequestParam(value = "transactionId", required = false) String transactionId,
+    public String query(
+            @RequestParam("appid") String appid,
+            @RequestParam(value = "transactionId", required = false) String transactionId,
                         @RequestParam(value = "tradeNo", required = false) String outTradeNo) {
         if (transactionId == null && outTradeNo == null) {
             throw new RuntimeException("transactionId,outTradeNo不能都为空！");
         }
-        WxPayTransaction wxPayTransaction = wxPayService.query(transactionId, outTradeNo);
+        WxPayTransaction wxPayTransaction = wxPayService.query(appid, transactionId, outTradeNo);
         LOGGER.debug("wxPayTransaction: {}", wxPayTransaction);
         return WxConstants.SUCCESS;
     }
 
     @RequestMapping("/queryRefund")
-    public String queryRefund(@RequestParam(value = "tradeNo") String outTradeNo) {
-        WxRefundResult wxRefundResult = wxPayService.queryRefund(outTradeNo);
+    public String queryRefund(
+            @RequestParam("appid") String appid,
+            @RequestParam(value = "tradeNo") String outTradeNo) {
+        WxRefundResult wxRefundResult = wxPayService.queryRefund(appid, outTradeNo);
         LOGGER.debug("wxRefundResult: {}", wxRefundResult);
         return WxConstants.SUCCESS;
     }
 
     @RequestMapping("/close")
-    public String close(@RequestParam("tradeNo") String outTradeNo) {
-        wxPayService.closeTransaction(outTradeNo);
+    public String close(
+            @RequestParam("appid") String appid,
+            @RequestParam("tradeNo") String outTradeNo) {
+        wxPayService.closeTransaction(appid, outTradeNo);
         return WxConstants.SUCCESS;
     }
 

@@ -1,4 +1,4 @@
-package top.codewood.wx.mp.api;
+package top.codewood.wx.service;
 
 public interface OrderService {
 

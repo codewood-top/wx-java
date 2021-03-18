@@ -44,6 +44,11 @@
         </dependency>
         <dependency>
             <groupId>top.codewood.wx</groupId>
+            <artifactId>wx-java-miniprogram</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>top.codewood.wx</groupId>
             <artifactId>wx-java-pay</artifactId>
             <version>1.0.0</version>
         </dependency>
