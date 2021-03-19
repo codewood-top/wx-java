@@ -1,7 +1,7 @@
 package top.codewood.wx.pay.v2.bean.request;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import top.codewood.wx.pay.common.WxPayConstants;
+import top.codewood.wx.pay.v2.common.WxPayConstants;
 import top.codewood.wx.pay.v2.bean.WxPayBaseRequest;
 
 @XStreamAlias("xml")
@@ -36,7 +36,7 @@ public class WxPayOrderCloseV2Request extends WxPayBaseRequest {
         this.signType = signType;
     }
 
-    @Override
+
     public String toString() {
         return "WxPayOrderCloseV2Request{" +
                 "appid='" + appid + '\'' +
@@ -47,4 +47,33 @@ public class WxPayOrderCloseV2Request extends WxPayBaseRequest {
                 ", signType='" + signType + '\'' +
                 '}';
     }
+
+    public static class Builder extends WxPayBaseRequest.Builder<Builder> {
+        private String outTradeNo;
+        private String signType;
+
+        public Builder outTradeNo(String outTradeNo) {
+            this.outTradeNo = outTradeNo;
+            return this;
+        }
+
+        public Builder signType(String signType) {
+            this.signType = signType;
+            return this;
+        }
+
+        public WxPayOrderCloseV2Request build() {
+            WxPayOrderCloseV2Request orderCloseV2Request = new WxPayOrderCloseV2Request();
+            orderCloseV2Request.setAppid(this.appid);
+            orderCloseV2Request.setMchid(this.mchid);
+            orderCloseV2Request.setNonceStr(this.nonceStr);
+            orderCloseV2Request.setOutTradeNo(this.outTradeNo);
+            if (signType != null) {
+                orderCloseV2Request.setSignType(this.signType);
+            }
+            return orderCloseV2Request;
+        }
+
+    }
+
 }

@@ -59,7 +59,7 @@ public class WxPayV2Notify extends WxPayBaseResult {
      * 用户是否关注公众账号，Y-关注，N-未关注
      */
     @XStreamAlias("is_subscribe")
-    private String isSubscribe;
+    private String subscribe;
 
     /**
      * 交易类型
@@ -203,12 +203,12 @@ public class WxPayV2Notify extends WxPayBaseResult {
         this.openid = openid;
     }
 
-    public String getIsSubscribe() {
-        return isSubscribe;
+    public String getSubscribe() {
+        return subscribe;
     }
 
-    public void setIsSubscribe(String isSubscribe) {
-        this.isSubscribe = isSubscribe;
+    public void setSubscribe(String isSubscribe) {
+        this.subscribe = isSubscribe;
     }
 
     public String getTradeType() {
@@ -361,7 +361,7 @@ public class WxPayV2Notify extends WxPayBaseResult {
                 ", sign='" + sign + '\'' +
                 ", signType='" + signType + '\'' +
                 ", openid='" + openid + '\'' +
-                ", isSubscribe='" + isSubscribe + '\'' +
+                ", subscribe='" + subscribe + '\'' +
                 ", tradeType='" + tradeType + '\'' +
                 ", bankType='" + bankType + '\'' +
                 ", totalFee=" + totalFee +

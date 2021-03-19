@@ -1,15 +1,16 @@
 package top.codewood.wx.pay.v2.api;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import top.codewood.wx.pay.common.WxPayConfig;
-import top.codewood.wx.pay.common.WxPayHttpClient;
 import top.codewood.wx.common.bean.error.WxErrorException;
 import top.codewood.wx.common.util.SignUtils;
 import top.codewood.wx.common.util.bean.BeanUtils;
 import top.codewood.wx.common.util.xml.XStreamConverter;
-import top.codewood.wx.pay.common.WxPayConstants;
+import top.codewood.wx.common.util.xml.XmlUtils;
 import top.codewood.wx.pay.v2.bean.WxPayBaseRequest;
 import top.codewood.wx.pay.v2.bean.WxPayBaseResult;
+import top.codewood.wx.pay.v2.common.WxPayConfig;
+import top.codewood.wx.pay.v2.common.WxPayConstants;
+import top.codewood.wx.pay.v2.common.WxPayHttpClient;
 
 import java.util.Map;
 import java.util.SortedMap;
@@ -28,7 +29,7 @@ public abstract class WxPayV2BaseService {
      * @param signKey 微信商户平台(pay.weixin.qq.com)-->账户设置-->API安全-->密钥设置
      * @return
      */
-    public String sign(Map map, String signKey) {
+    protected String sign(Map map, String signKey) {
         assert map != null && signKey != null;
         String signType = (String) map.getOrDefault("sign_type", WxPayConstants.SignType.MD5);
         SortedMap<String, Object> sortedMap = new TreeMap<>(map);
@@ -52,10 +53,23 @@ public abstract class WxPayV2BaseService {
      * @param signKey 微信商户平台(pay.weixin.qq.com)-->账户设置-->API安全-->密钥设置
      * @return
      */
-    public String sign(Object object, String signKey) {
+    protected String sign(Object object, String signKey) {
         assert object != null;
         Map map = BeanUtils.xmlBean2Map(object);
         return sign(map, signKey);
+    }
+
+    /**
+     * 对微信支付通知结果进行签名验证，以防虚假伪造支付通知
+     * @param xml
+     * @param signKey
+     */
+    protected void verifyResultSign(String xml, String signKey) {
+        Map<String, Object> map = XmlUtils.xml2Map(xml);
+        String xmlSign = (String) map.remove("sign");
+        if (!sign(map, signKey).equals(xmlSign)) {
+            throw new RuntimeException("签名校验失败！");
+        }
     }
 
 

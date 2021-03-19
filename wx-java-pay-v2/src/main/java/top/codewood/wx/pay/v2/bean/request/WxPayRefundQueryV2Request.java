@@ -1,7 +1,7 @@
 package top.codewood.wx.pay.v2.bean.request;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import top.codewood.wx.pay.common.WxPayConstants;
+import top.codewood.wx.pay.v2.common.WxPayConstants;
 import top.codewood.wx.pay.v2.bean.WxPayBaseRequest;
 
 /**

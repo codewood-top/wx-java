@@ -12,7 +12,7 @@
     <artifactId>wx-java-demo</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>wx-java-springboot-mp</module>
+        <module>wx-java-springboot</module>
     </modules>
 
     <properties>

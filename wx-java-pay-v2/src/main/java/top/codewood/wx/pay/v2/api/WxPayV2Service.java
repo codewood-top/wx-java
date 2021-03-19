@@ -1,11 +1,9 @@
 package top.codewood.wx.pay.v2.api;
 
-import top.codewood.wx.pay.common.WxPayConfig;
-import top.codewood.wx.pay.common.WxPayConstants;
+import top.codewood.wx.pay.v2.bean.result.*;
+import top.codewood.wx.pay.v2.common.WxPayConfig;
+import top.codewood.wx.pay.v2.common.WxPayConstants;
 import top.codewood.wx.pay.v2.bean.request.*;
-import top.codewood.wx.pay.v2.bean.result.WxPayOrderCloseV2Result;
-import top.codewood.wx.pay.v2.bean.result.WxPayRefundV2Result;
-import top.codewood.wx.pay.v2.bean.result.WxPayUnifiedOrderV2Result;
 
 import java.util.Map;
 
@@ -46,10 +44,10 @@ public class WxPayV2Service extends WxPayV2BaseService {
      * @param orderQueryV2Request
      * @return
      */
-    public WxPayOrderCloseV2Result orderQuery(WxPayOrderQueryV2Request orderQueryV2Request) {
+    public WxPayOrderQueryV2Result orderQuery(WxPayOrderQueryV2Request orderQueryV2Request) {
         assert orderQueryV2Request != null && wxPayConfig != null;
         checkAndSign(orderQueryV2Request, wxPayConfig.getKey());
-        return request(wxPayConfig, WxPayConstants.V2PayUrl.ORDER_QUERY_URL, orderQueryV2Request.toXml(), WxPayOrderCloseV2Result.class);
+        return request(wxPayConfig, WxPayConstants.V2PayUrl.ORDER_QUERY_URL, orderQueryV2Request.toXml(), WxPayOrderQueryV2Result.class);
 
     }
 
@@ -108,10 +106,10 @@ public class WxPayV2Service extends WxPayV2BaseService {
      * @param refundQueryV2Request
      * @return
      */
-    public WxPayRefundV2Result refundQuery(WxPayRefundQueryV2Request refundQueryV2Request) {
+    public WxPayRefundQueryV2Result refundQuery(WxPayRefundQueryV2Request refundQueryV2Request) {
         assert refundQueryV2Request != null && wxPayConfig != null;
         checkAndSign(refundQueryV2Request, wxPayConfig.getKey());
-        return request(wxPayConfig, WxPayConstants.V2PayUrl.REFUND_URL, refundQueryV2Request.toXml(), WxPayRefundV2Result.class);
+        return request(wxPayConfig, WxPayConstants.V2PayUrl.REFUND_URL, refundQueryV2Request.toXml(), WxPayRefundQueryV2Result.class);
     }
 
     public String sign(Map map) {
@@ -120,5 +118,13 @@ public class WxPayV2Service extends WxPayV2BaseService {
 
     public String sign(Object object) {
         return sign(object, wxPayConfig.getKey());
+    }
+
+    /**
+     * 对微信支付通知结果进行签名验证，以防虚假伪造支付通知
+     * @param xml
+     */
+    public void verifyResultSign(String xml) {
+        verifyResultSign(xml, wxPayConfig.getKey());
     }
 }

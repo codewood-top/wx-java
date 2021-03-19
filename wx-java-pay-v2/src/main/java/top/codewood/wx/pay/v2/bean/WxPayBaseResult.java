@@ -87,7 +87,7 @@ public class WxPayBaseResult implements Serializable {
     }
 
     public void checkResult() {
-        if (!WxConstants.SUCCESS.equals(resultCode)) {
+        if (!WxConstants.SUCCESS.equals(returnCode)) {
             throw new WxErrorException(returnMsg);
         }
         if (!WxConstants.SUCCESS.equals(resultCode)) {

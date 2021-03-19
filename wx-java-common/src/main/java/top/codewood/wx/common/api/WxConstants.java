@@ -142,6 +142,13 @@ public class WxConstants {
         String MINIPROGRAM = "miniprogram";
 
         String APP = "app";
+
+        static void checkType(String type) {
+            if (!MP.equals(type) && !MINIPROGRAM.equals(type) && !APP.equals(type)) {
+                throw new RuntimeException("不合法的type: " + type);
+            }
+        }
+
     }
 
 }

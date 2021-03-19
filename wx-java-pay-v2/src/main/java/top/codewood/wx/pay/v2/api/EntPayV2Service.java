@@ -2,8 +2,8 @@ package top.codewood.wx.pay.v2.api;
 
 import top.codewood.wx.common.util.bean.BeanUtils;
 import top.codewood.wx.common.util.xml.XStreamConverter;
-import top.codewood.wx.pay.common.WxPayConfig;
-import top.codewood.wx.pay.common.WxPayConstants;
+import top.codewood.wx.pay.v2.common.WxPayConfig;
+import top.codewood.wx.pay.v2.common.WxPayConstants;
 import top.codewood.wx.pay.v2.bean.entpay.EntPayQueryRequest;
 import top.codewood.wx.pay.v2.bean.entpay.EntPayQueryResult;
 import top.codewood.wx.pay.v2.bean.entpay.EntPayRequest;

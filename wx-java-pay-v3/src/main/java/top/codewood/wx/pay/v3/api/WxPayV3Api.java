@@ -2,14 +2,14 @@ package top.codewood.wx.pay.v3.api;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import top.codewood.wx.pay.common.WxPayConstants;
-import top.codewood.wx.pay.common.WxPayHttpClient;
+import top.codewood.wx.pay.v2.common.WxPayConstants;
+import top.codewood.wx.pay.v2.common.WxPayHttpClient;
 import top.codewood.wx.pay.v3.bean.error.WxPayError;
 import top.codewood.wx.pay.v3.bean.error.WxPayErrorException;
 import top.codewood.wx.pay.v3.cert.CertificateItem;
 import top.codewood.wx.pay.v3.cert.CertificateList;
-import top.codewood.wx.pay.v3.util.cert.AesUtil;
-import top.codewood.wx.pay.v3.util.cert.PemUtil;
+import top.codewood.wx.pay.v3.util.security.AesUtil;
+import top.codewood.wx.pay.v3.util.security.PemUtil;
 import top.codewood.wx.pay.v3.util.json.WxGsonBuilder;
 
 import java.io.ByteArrayInputStream;

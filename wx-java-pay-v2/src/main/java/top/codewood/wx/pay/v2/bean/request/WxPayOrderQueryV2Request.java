@@ -1,7 +1,7 @@
 package top.codewood.wx.pay.v2.bean.request;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import top.codewood.wx.pay.common.WxPayConstants;
+import top.codewood.wx.pay.v2.common.WxPayConstants;
 import top.codewood.wx.pay.v2.bean.WxPayBaseRequest;
 
 /**
@@ -51,6 +51,45 @@ public class WxPayOrderQueryV2Request extends WxPayBaseRequest {
 
     public void setSignType(String signType) {
         this.signType = signType;
+    }
+
+    public static class Builder extends WxPayBaseRequest.Builder<Builder> {
+        private String transactionId;
+        private String outTradeNo;
+        private String signType;
+
+        public Builder transactionId(String transactionId) {
+            this.transactionId = transactionId;
+            return this;
+        }
+
+        public Builder outTradeNo(String outTradeNo) {
+            this.outTradeNo = outTradeNo;
+            return this;
+        }
+
+        public Builder signType(String signType) {
+            this.signType = signType;
+            return this;
+        }
+
+        public WxPayOrderQueryV2Request build() {
+            WxPayOrderQueryV2Request orderQueryV2Request = new WxPayOrderQueryV2Request();
+            orderQueryV2Request.setAppid(this.appid);
+            orderQueryV2Request.setMchid(this.mchid);
+            orderQueryV2Request.setNonceStr(this.nonceStr);
+            if (this.transactionId != null) {
+                orderQueryV2Request.setTransactionId(this.transactionId);
+            }
+            if (this.outTradeNo != null) {
+                orderQueryV2Request.setOutTradeNo(this.outTradeNo);
+            }
+            if (this.signType != null) {
+                orderQueryV2Request.setSignType(this.signType);
+            }
+            return orderQueryV2Request;
+        }
+
     }
 
     @Override

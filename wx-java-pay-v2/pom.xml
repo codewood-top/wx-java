@@ -17,6 +17,14 @@
             <artifactId>wx-java-common</artifactId>
             <version>1.0.0</version>
         </dependency>
+
+        <!-- 引入 BouncyCastleProvider, 用于退款通知结果 AES/ECB/PKCS7Padding 解密  -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.63</version>
+        </dependency>
+
     </dependencies>
 
     <properties>
