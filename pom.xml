@@ -14,6 +14,9 @@
         <module>wx-java-common</module>
         <module>wx-java-pay</module>
         <module>wx-java-miniprogram</module>
+        <module>wx-java-pay-v3</module>
+        <module>wx-java-pay-v2</module>
+        <module>wx-java-demo</module>
     </modules>
 
     <properties>

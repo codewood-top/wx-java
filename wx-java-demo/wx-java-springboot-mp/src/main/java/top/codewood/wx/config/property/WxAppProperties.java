@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ConfigurationProperties(prefix = "weixin.config.properties")
-public class WxConfigProperties {
+public class WxAppProperties {
 
     private final Map<String, WxAppProperty> appPropertyMap;
 
@@ -17,22 +17,12 @@ public class WxConfigProperties {
 
     private WxAppProperty[] apps;
 
-    private WxPayProperty2 pay;
-
     public WxAppProperty[] getApps() {
         return apps;
     }
 
     public void setApps(WxAppProperty[] apps) {
         this.apps = apps;
-    }
-
-    public WxPayProperty2 getPay() {
-        return pay;
-    }
-
-    public void setPay(WxPayProperty2 pay) {
-        this.pay = pay;
     }
 
     public WxAppProperty getAppProperty(String appid) {
@@ -47,7 +37,6 @@ public class WxConfigProperties {
         }
         throw new RuntimeException(String.format("未配置类型 %s 的参数！", type));
     }
-
 
     @PostConstruct
     public void postConstruct() {

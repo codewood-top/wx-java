@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import top.codewood.wx.common.api.WxConstants;
 import top.codewood.wx.common.util.net.NetUtils;
 import top.codewood.wx.common.util.xml.XStreamConverter;
+import top.codewood.wx.config.property.WxConfigProperties;
 import top.codewood.wx.service.WxPayService;
 import top.codewood.wx.pay.common.WxPayConfig;
 import top.codewood.wx.pay.common.WxPayConstants;
@@ -45,7 +46,7 @@ public class WxPayRestController {
     private WxPayService wxPayService;
 
     @Autowired
-    private WxPayProperties wxPayProperties;
+    private WxConfigProperties wxConfigProperties;
 
     @RequestMapping("/getPayInfo")
     public Map<String, String> getPayInfo(
@@ -60,8 +61,6 @@ public class WxPayRestController {
             @RequestParam("nonceStr") String nonceStr,
             @RequestParam(value = "profitSharing", required = false, defaultValue = "false") boolean profitSharing) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
 
-        WxPayConfig wxPayConfig = getWxPayConfig(version);
-
         Map<String, String> map = new HashMap<>();
         map.put("appId", appid);
         map.put("timeStamp", timeStamp);
@@ -72,14 +71,14 @@ public class WxPayRestController {
         if (WxPayConstants.Version.V2.equals(version.toLowerCase())) {
             WxPayUnifiedOrderV2Request.Builder builder = new WxPayUnifiedOrderV2Request.Builder();
             builder.appid(appid)
-                    .mchid(wxPayConfig.getMchid())
+                    .mchid(wxConfigProperties.getPay().getMchid())
                     .nonceStr(nonceStr)
                     .body(description)
                     .outTradeNo(tradeNo)
                     .totalFee(total.intValue())
                     .spbillCreateIp(NetUtils.localAddress())
                     .openid(openid)
-                    .notifyUrl(wxPayConfig.getNotifyUrl())
+                    .notifyUrl(wxConfigProperties.getPay().getV2NotifyUrl())
                     .tradeType(payType)
                     .profitSharing(profitSharing?"Y":"N");
             WxPayUnifiedOrderV2Request unifiedOrderV2Request = builder.build();
@@ -94,11 +93,11 @@ public class WxPayRestController {
 
             WxPayRequest payRequest = new WxPayRequest();
             payRequest.setAppid(appid);
-            payRequest.setMchid(wxPayConfig.getMchid());
+            payRequest.setMchid(wxConfigProperties.getPay().getMchid());
             payRequest.setDescription(description);
             payRequest.setOutTradeNo(tradeNo);
             payRequest.setExpireTime(expireTimeStr);
-            payRequest.setNotifyUrl(wxPayConfig.getNotifyUrl());
+            payRequest.setNotifyUrl(wxConfigProperties.getPay().getV3NotifyUrl());
             payRequest.setAmount(total.intValue());
             payRequest.setPayer(openid);
 
@@ -111,7 +110,7 @@ public class WxPayRestController {
             map.put("signType", "RSA");
             map.put("package", "prepay_id=" + payInfoMap.get("prepay_id"));
             String message = appid + "\n" + timeStamp + "\n" + nonceStr + "\nprepay_id=" + payInfoMap.get("prepay_id") + "\n";
-            String sign = WxPayV3Api.sign(wxPayConfig.getMchid(), message.getBytes(StandardCharsets.UTF_8));
+            String sign = WxPayV3Api.sign(wxConfigProperties.getPay().getMchid(), message.getBytes(StandardCharsets.UTF_8));
             map.put("paySign", sign);
         }
 
@@ -127,15 +126,14 @@ public class WxPayRestController {
                          @RequestParam(value = "reason", required = false) String reason,
                          @RequestParam("amount") double amount) {
 
-        WxPayConfig wxPayConfig = getWxPayConfig(version);
-
         Double total = amount * 100;
+
 
         WxRefundRequest refundRequest = new WxRefundRequest();
         refundRequest.setAmount(total.intValue(), total.intValue());
         refundRequest.setOutRefundNo(tradeNo);
         refundRequest.setOutTradeNo(tradeNo);
-        refundRequest.setNotifyUrl(wxPayConfig.getRefundNotifyUrl());
+        refundRequest.setNotifyUrl(wxConfigProperties.getRefundNotifyUrl());
         if (reason != null) {
             refundRequest.setReason(reason);
         }
@@ -152,19 +150,17 @@ public class WxPayRestController {
             @PathVariable("version") String version,
             @RequestBody String notifyBody) {
 
-        WxPayConfig wxPayConfig = getWxPayConfig(version);
-
         try {
             if (WxPayConstants.Version.V2.equals(version)) {
                 WxPayV2Notify wxPayNotify = XStreamConverter.fromXml(WxPayV2Notify.class, notifyBody);
                 LOGGER.debug("wxPayNotify: {}", wxPayNotify);
             } else if (WxPayConstants.Version.V3.equals(version)) {
-                if (wxPayConfig.getKey() == null) {
+                if (wxConfigProperties.getPay().getV3Key() == null) {
                     throw new RuntimeException("api-v3-key未配置");
                 }
                 Gson gson = WxGsonBuilder.create();
                 WxPayNotify wxPayNotify = gson.fromJson(notifyBody, WxPayNotify.class);
-                AesUtil aesUtil = new AesUtil(wxPayConfig.getKey().getBytes(StandardCharsets.UTF_8));
+                AesUtil aesUtil = new AesUtil(wxConfigProperties.getPay().getV3Key().getBytes(StandardCharsets.UTF_8));
                 String result = aesUtil.decryptToString(wxPayNotify.getResource().getAssociatedData().getBytes(StandardCharsets.UTF_8), wxPayNotify.getResource().getNonce().getBytes(StandardCharsets.UTF_8), wxPayNotify.getResource().getCipherText());
                 WxPayTransaction wxPayTransaction = gson.fromJson(result, WxPayTransaction.class);
                 LOGGER.debug("wxPayTransaction: {}", wxPayTransaction.toString());
@@ -183,14 +179,13 @@ public class WxPayRestController {
             @PathVariable("version") String version,
             @RequestBody String notifyBody) {
 
-        WxPayConfig wxPayConfig = getWxPayConfig(version);
         try {
-            if (wxPayConfig.getKey() == null) {
+            if (wxConfigProperties.getPay().getV3Key() == null) {
                 throw new RuntimeException("api-v3-key未配置");
             }
             Gson gson = WxGsonBuilder.create();
             WxPayNotify wxPayNotify = gson.fromJson(notifyBody, WxPayNotify.class);
-            AesUtil aesUtil = new AesUtil(wxPayConfig.getKey().getBytes(StandardCharsets.UTF_8));
+            AesUtil aesUtil = new AesUtil(wxConfigProperties.getPay().getV3Key().getBytes(StandardCharsets.UTF_8));
             String result = aesUtil.decryptToString(wxPayNotify.getResource().getAssociatedData().getBytes(StandardCharsets.UTF_8), wxPayNotify.getResource().getNonce().getBytes(StandardCharsets.UTF_8), wxPayNotify.getResource().getCipherText());
             WxRefundTransaction wxRefundTransaction = gson.fromJson(result, WxRefundTransaction.class);
             LOGGER.debug("wxRefundTransaction: {}", wxRefundTransaction);
@@ -230,10 +225,6 @@ public class WxPayRestController {
             @RequestParam("tradeNo") String outTradeNo) {
         wxPayService.closeTransaction(appid, outTradeNo);
         return WxConstants.SUCCESS;
-    }
-
-    private WxPayConfig getWxPayConfig(String version) {
-        return WxPayConstants.Version.V2.equals(version.toLowerCase()) ? wxPayProperties.getV2() : wxPayProperties.getV3();
     }
 
     private String notifyCallbackStr(String version, String code, String message) {
