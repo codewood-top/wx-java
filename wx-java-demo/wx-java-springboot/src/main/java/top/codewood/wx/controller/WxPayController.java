@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import top.codewood.wx.common.api.WxConstants;
 import top.codewood.wx.config.property.WxAppProperties;
-import top.codewood.wx.pay.v2.common.WxPayConstants;
 import top.codewood.wx.service.OrderService;
 
 @Controller

@@ -51,7 +51,6 @@ public class WxBaseHttpApi {
         if (wxError.getErrorCode() != 0) {
             throw new WxErrorException(wxError);
         }
-
         return resp;
     }
 
