@@ -166,6 +166,75 @@ public class WxPayConstants {
 
     }
 
+    public enum ProfitSharingReceiverType {
+        /**
+         * 商户号（mch_id或者sub_mch_id）
+         */
+        MERCHANT_ID,
+        /**
+         * 个人openid
+         */
+        PERSONAL_OPENID;
+    }
+
+    public enum ProfitShargingReceiverRelationType {
+
+        /**
+         * 服务商
+         */
+        SERVICE_PROVIDER,
+
+        /**
+         * 门店
+         */
+        STORE,
+
+        /**
+         * STORE_OWNER
+         */
+        STAFF,
+
+        /**
+         * 店主
+         */
+        STORE_OWNER,
+
+        /**
+         * 合作伙伴
+         */
+        PARTNER,
+
+        /**
+         * 总部
+         */
+        HEADQUARTER,
+
+        /**
+         * 品牌方
+         */
+        BRAND,
+
+        /**
+         * 分销商
+         */
+        DISTRIBUTOR,
+
+        /**
+         * 用户
+         */
+        USER,
+
+        /**
+         * 供应商
+         */
+        SUPPLIER,
+
+        /**
+         * 自定义
+         */
+        CUSTOM;
+    }
+
     public enum Bank {
         BANK_1002(1002, "工商银行"),
         BANK_1005(1005, "农业银行"),

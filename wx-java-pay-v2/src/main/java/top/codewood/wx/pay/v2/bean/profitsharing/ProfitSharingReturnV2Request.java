@@ -9,7 +9,7 @@ import top.codewood.wx.pay.v2.bean.WxPayBaseRequest;
  * order_id & out_order_no 二选一
  */
 @XStreamAlias("xml")
-public class ProfitSharingReturnRequest extends WxPayBaseRequest {
+public class ProfitSharingReturnV2Request extends WxPayBaseRequest {
 
     /**
      * 签名类型
@@ -179,8 +179,8 @@ public class ProfitSharingReturnRequest extends WxPayBaseRequest {
             return this;
         }
 
-        public ProfitSharingReturnRequest build() {
-            ProfitSharingReturnRequest returnRequest = new ProfitSharingReturnRequest();
+        public ProfitSharingReturnV2Request build() {
+            ProfitSharingReturnV2Request returnRequest = new ProfitSharingReturnV2Request();
 
             returnRequest.setAppid(this.appid);
             returnRequest.setMchid(this.mchid);

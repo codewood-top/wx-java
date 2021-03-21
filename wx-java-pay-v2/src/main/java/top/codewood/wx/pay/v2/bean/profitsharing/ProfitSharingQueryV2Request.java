@@ -9,7 +9,7 @@ import top.codewood.wx.pay.v2.bean.WxPayBaseRequest;
  * 此request不能填下appid
  */
 @XStreamAlias("xml")
-public class ProfitSharingQueryRequest extends WxPayBaseRequest {
+public class ProfitSharingQueryV2Request extends WxPayBaseRequest {
 
     /**
      * 签名类型，目前只支持HMAC-SHA256
@@ -63,8 +63,23 @@ public class ProfitSharingQueryRequest extends WxPayBaseRequest {
         private String transactionId;
         private String outOrderNo;
 
-        public ProfitSharingQueryRequest build() {
-            ProfitSharingQueryRequest queryRequest = new ProfitSharingQueryRequest();
+        public Builder signType(String signType) {
+            this.signType = signType;
+            return this;
+        }
+
+        public Builder transactionId(String transactionId) {
+            this.transactionId = transactionId;
+            return this;
+        }
+
+        public Builder outOrderNo(String outOrderNo) {
+            this.outOrderNo = outOrderNo;
+            return this;
+        }
+
+        public ProfitSharingQueryV2Request build() {
+            ProfitSharingQueryV2Request queryRequest = new ProfitSharingQueryV2Request();
 
             queryRequest.setNonceStr(this.nonceStr);
             queryRequest.setTransactionId(this.transactionId);

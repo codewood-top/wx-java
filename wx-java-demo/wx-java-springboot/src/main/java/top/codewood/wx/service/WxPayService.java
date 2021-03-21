@@ -20,4 +20,6 @@ public interface WxPayService {
     WxPayRefundQueryV2Result refundQuery(WxPayRefundQueryV2Request refundQueryV2Request);
 
     String decrypt(String encryptedStr);
+
+
 }

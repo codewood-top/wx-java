@@ -1,15 +1,19 @@
 package top.codewood.wx.pay.v2.bean.profitsharing;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import top.codewood.wx.annotation.Required;
 import top.codewood.wx.pay.v2.bean.WxPayBaseResult;
 
-@XStreamAlias("xml")
-public class ProfitSharingReceiverResult extends WxPayBaseResult {
+import java.io.Serializable;
 
-    /**
-     * 调用接口提供的公众账号ID
-     */
-    private String appid;
+/**
+ * 此Result只需验证 return_code == SUCCESS | FAIL
+ *
+ * <a href="https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_10&index=7">开发文档</a>
+ *
+ */
+@XStreamAlias("xml")
+public class ProfitSharingAmountQueryV2Result extends WxPayBaseResult {
 
     /**
      * 调用接口时提供的商户号
@@ -18,9 +22,16 @@ public class ProfitSharingReceiverResult extends WxPayBaseResult {
     private String mchid;
 
     /**
-     * 分账接收方对象（不包含分账接收方全称），json格式
+     * 微信支付订单号
      */
-    private String receiver;
+    @XStreamAlias("transaction_id")
+    private String transactionId;
+
+    /**
+     * 订单剩余待分金额，整数，单位为分
+     */
+    @XStreamAlias("unsplit_amount")
+    private int unSplitAmount;
 
     /**
      * 微信返回的随机字符串
@@ -31,15 +42,9 @@ public class ProfitSharingReceiverResult extends WxPayBaseResult {
     /**
      * 微信返回的签名
      */
+    @XStreamAlias("sign")
     private String sign;
 
-    public String getAppid() {
-        return appid;
-    }
-
-    public void setAppid(String appid) {
-        this.appid = appid;
-    }
 
     public String getMchid() {
         return mchid;
@@ -49,12 +54,20 @@ public class ProfitSharingReceiverResult extends WxPayBaseResult {
         this.mchid = mchid;
     }
 
-    public String getReceiver() {
-        return receiver;
+    public String getTransactionId() {
+        return transactionId;
     }
 
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
+    }
+
+    public int getUnSplitAmount() {
+        return unSplitAmount;
+    }
+
+    public void setUnSplitAmount(int unSplitAmount) {
+        this.unSplitAmount = unSplitAmount;
     }
 
     public String getNonceStr() {
@@ -75,15 +88,15 @@ public class ProfitSharingReceiverResult extends WxPayBaseResult {
 
     @Override
     public String toString() {
-        return "ProfitSharingReceiverResult{" +
+        return "ProfitSharingAmountQueryV2Result{" +
                 "returnCode='" + returnCode + '\'' +
                 ", returnMsg='" + returnMsg + '\'' +
                 ", resultCode='" + resultCode + '\'' +
                 ", errCode='" + errCode + '\'' +
                 ", errCodeDes='" + errCodeDes + '\'' +
-                ", appid='" + appid + '\'' +
                 ", mchid='" + mchid + '\'' +
-                ", receiver='" + receiver + '\'' +
+                ", transactionId='" + transactionId + '\'' +
+                ", unSplitAmount=" + unSplitAmount +
                 ", nonceStr='" + nonceStr + '\'' +
                 ", sign='" + sign + '\'' +
                 '}';

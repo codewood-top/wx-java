@@ -9,7 +9,7 @@ import top.codewood.wx.pay.v2.bean.WxPayBaseRequest;
  * 此request不需要传appid
  */
 @XStreamAlias("xml")
-public class ProfitSharingAmountQueryRequest extends WxPayBaseRequest {
+public class ProfitSharingAmountQueryV2Request extends WxPayBaseRequest {
 
     /**
      * 微信订单号
@@ -59,8 +59,8 @@ public class ProfitSharingAmountQueryRequest extends WxPayBaseRequest {
             return this;
         }
 
-        public ProfitSharingAmountQueryRequest build() {
-            ProfitSharingAmountQueryRequest amountQueryRequest = new ProfitSharingAmountQueryRequest();
+        public ProfitSharingAmountQueryV2Request build() {
+            ProfitSharingAmountQueryV2Request amountQueryRequest = new ProfitSharingAmountQueryV2Request();
 
             amountQueryRequest.setNonceStr(this.nonceStr);
             amountQueryRequest.setMchid(this.mchid);

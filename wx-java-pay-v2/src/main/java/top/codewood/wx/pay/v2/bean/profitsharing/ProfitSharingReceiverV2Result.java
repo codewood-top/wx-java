@@ -4,7 +4,12 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import top.codewood.wx.pay.v2.bean.WxPayBaseResult;
 
 @XStreamAlias("xml")
-public class ProfitSharingResult extends WxPayBaseResult {
+public class ProfitSharingReceiverV2Result extends WxPayBaseResult {
+
+    /**
+     * 调用接口提供的公众账号ID
+     */
+    private String appid;
 
     /**
      * 调用接口时提供的商户号
@@ -13,9 +18,9 @@ public class ProfitSharingResult extends WxPayBaseResult {
     private String mchid;
 
     /**
-     * 调用接口提供的公众账号ID
+     * 分账接收方对象（不包含分账接收方全称），json格式
      */
-    private String appid;
+    private String receiver;
 
     /**
      * 微信返回的随机字符串
@@ -28,24 +33,13 @@ public class ProfitSharingResult extends WxPayBaseResult {
      */
     private String sign;
 
-    /**
-     * 微信订单号
-     */
-    @XStreamAlias("transaction_id")
-    private String transactionId;
+    public String getAppid() {
+        return appid;
+    }
 
-    /**
-     * 商户分账单号
-     * 调用接口提供的商户系统内部的分账单号
-     */
-    @XStreamAlias("out_order_no")
-    private String outOrderNo;
-
-    /**
-     * 微信分账单号，微信系统返回的唯一标识
-     */
-    @XStreamAlias("order_id")
-    private String orderId;
+    public void setAppid(String appid) {
+        this.appid = appid;
+    }
 
     public String getMchid() {
         return mchid;
@@ -55,12 +49,12 @@ public class ProfitSharingResult extends WxPayBaseResult {
         this.mchid = mchid;
     }
 
-    public String getAppid() {
-        return appid;
+    public String getReceiver() {
+        return receiver;
     }
 
-    public void setAppid(String appid) {
-        this.appid = appid;
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 
     public String getNonceStr() {
@@ -79,45 +73,19 @@ public class ProfitSharingResult extends WxPayBaseResult {
         this.sign = sign;
     }
 
-    public String getTransactionId() {
-        return transactionId;
-    }
-
-    public void setTransactionId(String transactionId) {
-        this.transactionId = transactionId;
-    }
-
-    public String getOutOrderNo() {
-        return outOrderNo;
-    }
-
-    public void setOutOrderNo(String outOrderNo) {
-        this.outOrderNo = outOrderNo;
-    }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
-
     @Override
     public String toString() {
-        return "ProfitSharingResult{" +
+        return "ProfitSharingReceiverResult{" +
                 "returnCode='" + returnCode + '\'' +
                 ", returnMsg='" + returnMsg + '\'' +
                 ", resultCode='" + resultCode + '\'' +
                 ", errCode='" + errCode + '\'' +
                 ", errCodeDes='" + errCodeDes + '\'' +
-                ", mchid='" + mchid + '\'' +
                 ", appid='" + appid + '\'' +
+                ", mchid='" + mchid + '\'' +
+                ", receiver='" + receiver + '\'' +
                 ", nonceStr='" + nonceStr + '\'' +
                 ", sign='" + sign + '\'' +
-                ", transactionId='" + transactionId + '\'' +
-                ", outOrderNo='" + outOrderNo + '\'' +
-                ", orderId='" + orderId + '\'' +
                 '}';
     }
 }

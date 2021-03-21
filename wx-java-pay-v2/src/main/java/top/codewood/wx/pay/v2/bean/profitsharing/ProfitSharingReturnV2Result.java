@@ -8,7 +8,7 @@ import java.io.Serializable;
  * 此Result只需验证 return_code == SUCCESS | FAIL
  */
 @XStreamAlias("xml")
-public class ProfitSharingReturnResult implements Serializable {
+public class ProfitSharingReturnV2Result implements Serializable {
 
     /**
      * 返回状态码

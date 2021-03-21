@@ -5,8 +5,11 @@ import top.codewood.wx.annotation.Required;
 import top.codewood.wx.pay.v2.common.WxPayConstants;
 import top.codewood.wx.pay.v2.bean.WxPayBaseRequest;
 
+/**
+ * <a href="https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_1&index=1">参考文档</a>
+ */
 @XStreamAlias("xml")
-public class ProfitSharingFinishRequest extends WxPayBaseRequest {
+public class ProfitSharingV2Request extends WxPayBaseRequest {
 
     /**
      * 签名类型
@@ -25,17 +28,35 @@ public class ProfitSharingFinishRequest extends WxPayBaseRequest {
 
     /**
      * 商户分账单号
-     * 查询分账结果，输入申请分账时的商户分账单号； 查询分账完结执行的结果，输入发起分账完结时的商户分账单号
+     * 商户系统内部的分账单号，在商户系统内部唯一（单次分账、多次分账、完结分账应使用不同的商户分账单号），同一分账单号多次请求等同一次。只能是数字、大小写字母_-|*@
      */
     @Required
     @XStreamAlias("out_order_no")
     private String outOrderNo;
 
     /**
-     * 分账完结的原因描述
+     * 分账接收方列表
+     * 分账接收方列表，不超过50个json对象，不能设置分账方作为分账接受方
+     *
+     * [
+     *     {
+     *          "type": "MERCHANT_ID",
+     *          "account":"190001001",
+     *          "amount":100,
+     *          "description": "分到商户"
+     *      },
+     *     {
+     *          "type": "PERSONAL_OPENID",
+     *          "account":"86693952",
+     *          "amount":888,
+     *          "description": "分到个人"
+     *      }
+     * ]
+     *
      */
     @Required
-    private String description;
+    private String receivers;
+
 
     public String getSignType() {
         return signType;
@@ -61,20 +82,21 @@ public class ProfitSharingFinishRequest extends WxPayBaseRequest {
         this.outOrderNo = outOrderNo;
     }
 
-    public String getDescription() {
-        return description;
+    public String getReceivers() {
+        return receivers;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setReceivers(String receivers) {
+        this.receivers = receivers;
     }
+
 
     public static class Builder extends WxPayBaseRequest.Builder<Builder> {
 
         private String signType;
         private String transactionId;
         private String outOrderNo;
-        private String description;
+        private String receivers;
 
         public Builder signType(String signType) {
             this.signType = signType;
@@ -91,29 +113,30 @@ public class ProfitSharingFinishRequest extends WxPayBaseRequest {
             return this;
         }
 
-        public Builder description(String description) {
-            this.description = description;
+        public Builder receivers(String receivers) {
+            this.receivers = receivers;
             return this;
         }
 
-        public ProfitSharingFinishRequest build() {
-            ProfitSharingFinishRequest finishRequest = new ProfitSharingFinishRequest();
-
-            if (signType != null) {
-                finishRequest.setSignType(this.signType);
+        public ProfitSharingV2Request build() {
+            ProfitSharingV2Request request = new ProfitSharingV2Request();
+            request.setMchid(this.mchid);
+            request.setAppid(this.appid);
+            request.setNonceStr(this.nonceStr);
+            request.setTransactionId(this.transactionId);
+            request.setOutOrderNo(this.outOrderNo);
+            request.setReceivers(this.receivers);
+            if (this.signType != null) {
+                request.setSignType(this.signType);
             }
-            finishRequest.setTransactionId(this.transactionId);
-            finishRequest.setOutOrderNo(this.outOrderNo);
-            finishRequest.setDescription(this.description);
-
-            return finishRequest;
+            return request;
         }
 
     }
 
     @Override
     public String toString() {
-        return "ProfitSharingFinishRequest{" +
+        return "ProfitSharingRequest{" +
                 "appid='" + appid + '\'' +
                 ", mchid='" + mchid + '\'' +
                 ", nonceStr='" + nonceStr + '\'' +
@@ -121,7 +144,7 @@ public class ProfitSharingFinishRequest extends WxPayBaseRequest {
                 ", signType='" + signType + '\'' +
                 ", transactionId='" + transactionId + '\'' +
                 ", outOrderNo='" + outOrderNo + '\'' +
-                ", description='" + description + '\'' +
+                ", receivers='" + receivers + '\'' +
                 '}';
     }
 }

@@ -5,7 +5,7 @@ import top.codewood.wx.pay.v2.common.WxPayConstants;
 import top.codewood.wx.pay.v2.bean.WxPayBaseRequest;
 
 @XStreamAlias("xml")
-public class ProfitSharingReceiverRequest extends WxPayBaseRequest {
+public class ProfitSharingReceiverV2Request extends WxPayBaseRequest {
 
     /**
      * 签名类型
@@ -51,8 +51,8 @@ public class ProfitSharingReceiverRequest extends WxPayBaseRequest {
             return this;
         }
 
-        public ProfitSharingReceiverRequest build() {
-            ProfitSharingReceiverRequest receiverRequest = new ProfitSharingReceiverRequest();
+        public ProfitSharingReceiverV2Request build() {
+            ProfitSharingReceiverV2Request receiverRequest = new ProfitSharingReceiverV2Request();
             receiverRequest.setNonceStr(this.nonceStr);
             receiverRequest.setMchid(this.mchid);
             receiverRequest.setAppid(this.appid);

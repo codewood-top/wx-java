@@ -12,7 +12,7 @@
         input {
             width: 80%;
         }
-        .btn_submit {
+        .btn {
             width: 100%;
             font-size: 14px;
             line-height: 30px;
@@ -21,7 +21,7 @@
             color: #fff;
             border-radius: 3px;
         }
-        .btn_submit+.btn_submit {
+        .btn+.btn {
             margin-top: 10px;
         }
         .refund-cell {
@@ -74,10 +74,11 @@
         </div>
     </div>
     <div class="form-cell">
-        <button class="btn_submit" data-url="/wx/pay/rest/query">支付查询</button>
-        <button class="btn_submit" data-url="/wx/pay/rest/close">关闭支付</button>
-        <button class="btn_submit" data-url="/wx/pay/rest/refund">提交退款</button>
-        <button class="btn_submit" data-url="/wx/pay/rest/refundquery">退款查询</button>
+        <button class="btn pay" data-url="/wx/pay/rest/query">支付查询</button>
+        <button class="btn pay" data-url="/wx/pay/rest/close">关闭支付</button>
+        <button class="btn refund" data-url="/wx/pay/rest/refund">提交退款</button>
+        <button class="btn refund" data-url="/wx/pay/rest/refundquery">退款查询</button>
+        <button class="btn profitsharing" data-url="/wx/pay/rest/profitsharing">提交分账</button>
     </div>
 </div>
 
@@ -117,7 +118,7 @@
     }
 
     $(function() {
-        let btns = document.querySelectorAll('.btn_submit')
+        let btns = document.querySelectorAll('.btn')
         btns.forEach(btn => btn.addEventListener('click', btnClicked))
 
         let refundCheckBox = document.querySelector('input[name=refund]'),

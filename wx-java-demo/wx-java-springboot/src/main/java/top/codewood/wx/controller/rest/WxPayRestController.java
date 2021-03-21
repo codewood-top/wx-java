@@ -9,18 +9,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.codewood.wx.common.api.WxConstants;
+import top.codewood.wx.common.util.json.WxGsonBuilder;
 import top.codewood.wx.common.util.net.NetUtils;
 import top.codewood.wx.common.util.xml.XStreamConverter;
 import top.codewood.wx.common.util.xml.XmlUtils;
 import top.codewood.wx.config.property.WxAppProperties;
+import top.codewood.wx.pay.v2.bean.WxPayBaseRequest;
 import top.codewood.wx.pay.v2.bean.notify.WxPayV2Notify;
+import top.codewood.wx.pay.v2.bean.profitsharing.*;
 import top.codewood.wx.pay.v2.bean.request.*;
 import top.codewood.wx.pay.v2.bean.result.*;
 import top.codewood.wx.pay.v2.common.WxPayConstants;
+import top.codewood.wx.service.ProfitSharingService;
 import top.codewood.wx.service.WxPayService;
 import top.codewood.wx.util.Strings;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +38,9 @@ public class WxPayRestController {
 
     @Autowired
     private WxPayService wxPayService;
+
+    @Autowired
+    private ProfitSharingService profitSharingService;
 
     @Autowired
     private WxAppProperties wxAppProperties;
@@ -62,7 +70,7 @@ public class WxPayRestController {
                 .openid(openid)
                 .notifyUrl(wxAppProperties.getPay().getNotifyUrl())
                 .tradeType(payType)
-                .profitSharing(profitSharing?"Y":"N");
+                .profitSharing(profitSharing ? "Y" : "N");
         WxPayUnifiedOrderV2Request unifiedOrderV2Request = builder.build();
         WxPayUnifiedOrderV2Result unifiedOrderV2Result = wxPayService.unifiedOrder(unifiedOrderV2Request);
 
@@ -94,9 +102,9 @@ public class WxPayRestController {
 
     @RequestMapping("/query")
     public WxPayOrderQueryV2Result query(
-                        @RequestParam("appid") String appid,
-                        @RequestParam(value = "transactionId", required = false) String transactionId,
-                        @RequestParam(value = "tradeNo", required = false) String outTradeNo) {
+            @RequestParam("appid") String appid,
+            @RequestParam(value = "transactionId", required = false) String transactionId,
+            @RequestParam(value = "tradeNo", required = false) String outTradeNo) {
         if (!StringUtils.hasText(transactionId) && !StringUtils.hasText(outTradeNo)) {
             throw new RuntimeException("transactionId,outTradeNo不能都为空！");
         }
@@ -183,10 +191,9 @@ public class WxPayRestController {
                 .build();
 
         return wxPayService.refundQuery(refundQueryV2Request);
-
     }
 
-    private String notifyCallbackStr( String code, String message) {
+    private String notifyCallbackStr(String code, String message) {
         return String.format("<xml>\n" +
                 "  <return_code><![CDATA[%s]]></return_code>\n" +
                 "  <return_msg><![CDATA[%s]]></return_msg>\n" +
