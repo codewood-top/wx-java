@@ -6,4 +6,6 @@ public interface WxMnpService {
 
     WxMnpCode2SessionResult code2Session(String code);
 
+    String getAccessToken();
+
 }

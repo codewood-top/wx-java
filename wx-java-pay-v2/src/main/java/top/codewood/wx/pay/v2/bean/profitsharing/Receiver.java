@@ -24,7 +24,7 @@ public class Receiver implements Serializable {
      * 分账金额
      * 分账金额，单位为分，只能为整数，不能超过原订单支付金额及最大分账比例金额
      */
-    private int amount;
+    private Integer amount;
 
     /**
      * 分账描述
@@ -155,11 +155,11 @@ public class Receiver implements Serializable {
         this.account = account;
     }
 
-    public int getAmount() {
+    public Integer getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(Integer amount) {
         this.amount = amount;
     }
 

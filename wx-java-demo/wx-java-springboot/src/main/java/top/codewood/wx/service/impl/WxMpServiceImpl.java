@@ -25,23 +25,23 @@ public class WxMpServiceImpl implements WxMpService {
 
     static final Logger LOGGER = LoggerFactory.getLogger(WxMpServiceImpl.class);
 
-    private static WxAccessToken2 WX_ACCESS_TOKEN = null;
-    private static WxJsapiTicket2 WX_JSAPI_TICKET = null;
+    private WxAccessToken2 wxAccessToken = null;
+    private WxJsapiTicket2 wxJsapiTicket = null;
 
     @Autowired
     private WxAppProperties wxAppProperties;
 
     @Override
     public String getAccessToken() {
-        if (WX_ACCESS_TOKEN == null || WX_ACCESS_TOKEN.expiredTime.isBefore(LocalDateTime.now())) {
+        if (wxAccessToken == null || wxAccessToken.expiredTime.isBefore(LocalDateTime.now())) {
             synchronized (this) {
-                if (WX_ACCESS_TOKEN != null && WX_ACCESS_TOKEN.expiredTime.isAfter(LocalDateTime.now())) {
-                    return WX_ACCESS_TOKEN.accessToken;
+                if (wxAccessToken != null && wxAccessToken.expiredTime.isAfter(LocalDateTime.now())) {
+                    return wxAccessToken.accessToken;
                 }
                 updateAccessToken();
             }
         }
-        return WX_ACCESS_TOKEN != null ? WX_ACCESS_TOKEN.accessToken : Strings.EMPTY;
+        return wxAccessToken != null ? wxAccessToken.accessToken : Strings.EMPTY;
     }
 
     @Override
@@ -64,10 +64,10 @@ public class WxMpServiceImpl implements WxMpService {
     }
 
     private String getJsapiTicket(String accessToken) {
-        if (WX_JSAPI_TICKET == null || WX_JSAPI_TICKET.expiredTime.isBefore(LocalDateTime.now())) {
+        if (wxJsapiTicket == null || wxJsapiTicket.expiredTime.isBefore(LocalDateTime.now())) {
             synchronized (this) {
-                if (WX_JSAPI_TICKET != null && WX_JSAPI_TICKET.expiredTime.isAfter(LocalDateTime.now())) {
-                    return WX_JSAPI_TICKET.ticket;
+                if (wxJsapiTicket != null && wxJsapiTicket.expiredTime.isAfter(LocalDateTime.now())) {
+                    return wxJsapiTicket.ticket;
                 }
                 WxMpJsapiTicket jsapiTicket = WxMpApi.getJsapiTicket(accessToken);
                 LOGGER.debug("正在更新jsapi_ticket: {}", jsapiTicket);
@@ -75,22 +75,22 @@ public class WxMpServiceImpl implements WxMpService {
                 wxJsapiTicket2.ticket = jsapiTicket.getTicket();
                 wxJsapiTicket2.expiresIn = jsapiTicket.getExpiresIn();
                 wxJsapiTicket2.expiredTime = LocalDateTime.now().plusSeconds(wxJsapiTicket2.expiresIn - 200);
-                WX_JSAPI_TICKET = wxJsapiTicket2;
+                wxJsapiTicket = wxJsapiTicket2;
             }
         }
-        return WX_JSAPI_TICKET != null ? WX_JSAPI_TICKET.ticket : Strings.EMPTY;
+        return wxJsapiTicket != null ? wxJsapiTicket.ticket : Strings.EMPTY;
     }
 
     private void updateAccessToken() {
         WxAppProperty wxAppProperty = wxAppProperties.getAppPropertyByType(WxConstants.AppType.MP);
         LOGGER.debug("正在请求更新 access_token");
         try {
-            WxAccessToken wxAccessToken = WxMpApi.getAccessToken(wxAppProperty.getAppid(), wxAppProperty.getSecret());
+            WxAccessToken accessToken = WxMpApi.getAccessToken(wxAppProperty.getAppid(), wxAppProperty.getSecret());
             WxAccessToken2 wxAccessToken2 = new WxAccessToken2();
-            wxAccessToken2.accessToken = wxAccessToken.getAccessToken();
-            wxAccessToken2.expiresIn = wxAccessToken.getExpiresIn();
+            wxAccessToken2.accessToken = accessToken.getAccessToken();
+            wxAccessToken2.expiresIn = accessToken.getExpiresIn();
             wxAccessToken2.expiredTime = LocalDateTime.now().plusSeconds(wxAccessToken2.expiresIn - 200);
-            WX_ACCESS_TOKEN = wxAccessToken2;
+            wxAccessToken = wxAccessToken2;
         } catch (WxErrorException e) {
             LOGGER.error("请求更新 access_token 失败：{}", e.getMessage());
         }

@@ -31,6 +31,11 @@ public class WxMnpRestController {
     @Autowired
     private OrderService orderService;
 
+    @RequestMapping("/access_token")
+    public String getAccessToken() {
+        return wxMnpService.getAccessToken();
+    }
+
     @RequestMapping("/code2session")
     public Map code2Session(@RequestParam("code") String code) {
         WxMnpCode2SessionResult result = wxMnpService.code2Session(code);

@@ -46,7 +46,7 @@ public class WxBaseHttpApi {
         }
     }
 
-    protected static String handleResponse(String resp) {
+    private static String handleResponse(String resp) {
         WxError wxError = WxGsonBuilder.create().fromJson(resp, WxError.class);
         if (wxError.getErrorCode() != 0) {
             throw new WxErrorException(wxError);

@@ -11,7 +11,12 @@ weixin:
         - appid:
           secret:
           type: miniprogram
-
+      pay:
+        mchid:
+        key:
+        cert-path:
+        notify-url:
+        refund-notify-url:
 logging:
   level:
     top.codewood.wx: debug
