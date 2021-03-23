@@ -2,8 +2,10 @@ package top.codewood.util.http;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -21,6 +23,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 public class WxHttpClient {
 
@@ -39,7 +42,7 @@ public class WxHttpClient {
     private int connectTimeoutMs = 5 * 1000;
     private int readTimeoutMs = 5 * 1000;
 
-    private HttpResponse request(final String url, String method, String data, File file) throws IOException {
+    private HttpResponse request(final String url, String method, Object data, File file) throws IOException {
         BasicHttpClientConnectionManager connManager = new BasicHttpClientConnectionManager(
                 RegistryBuilder.<ConnectionSocketFactory>create()
                         .register("http", PlainConnectionSocketFactory.getSocketFactory())
@@ -60,8 +63,12 @@ public class WxHttpClient {
         } else {
             httpRequest = new HttpPost(url);
             if (data != null) {
-                StringEntity postEntity = new StringEntity(data, CHAR_SET_UTF_8);
-                ((HttpPost) httpRequest).setEntity(postEntity);
+                if (data instanceof String) {
+                    StringEntity postEntity = new StringEntity((String) data, CHAR_SET_UTF_8);
+                    ((HttpPost) httpRequest).setEntity(postEntity);
+                } else if (data instanceof List) {
+                    ((HttpPost) httpRequest).setEntity(new UrlEncodedFormEntity((List<? extends NameValuePair>) data, CHAR_SET_UTF_8));
+                }
             }
             if (file != null) {
                 HttpEntity entity = MultipartEntityBuilder.create()
@@ -71,12 +78,13 @@ public class WxHttpClient {
                 ((HttpPost) httpRequest).setEntity(entity);
             }
         }
+
         RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectTimeout(connectTimeoutMs)
                 .setSocketTimeout(readTimeoutMs)
                 .build();
-
         httpRequest.setConfig(requestConfig);
+
         return httpClient.execute(httpRequest);
 
     }
@@ -89,6 +97,12 @@ public class WxHttpClient {
 
     public String post(String url, String data) throws IOException {
         HttpResponse httpResponse =  request(url, HTTP_METHOD_POST, data, null);
+        HttpEntity httpEntity = httpResponse.getEntity();
+        return EntityUtils.toString(httpEntity, CHAR_SET_UTF_8);
+    }
+
+    public String post(String url, List<? extends NameValuePair> parameters) throws IOException {
+        HttpResponse httpResponse =  request(url, HTTP_METHOD_POST, parameters, null);
         HttpEntity httpEntity = httpResponse.getEntity();
         return EntityUtils.toString(httpEntity, CHAR_SET_UTF_8);
     }

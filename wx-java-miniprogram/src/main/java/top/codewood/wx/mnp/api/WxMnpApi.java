@@ -6,6 +6,7 @@ import top.codewood.wx.common.bean.WxAccessToken;
 import top.codewood.wx.mnp.bean.result.WxMnpCode2SessionResult;
 import top.codewood.wx.mnp.util.json.WxGsonBuilder;
 
+
 public class WxMnpApi extends WxBaseHttpApi {
 
     private static class Holder {

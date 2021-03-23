@@ -1,5 +1,6 @@
 package top.codewood.wx.common.api;
 
+import org.apache.http.NameValuePair;
 import top.codewood.util.http.WxHttpClient;
 import top.codewood.wx.common.bean.error.WxError;
 import top.codewood.wx.common.bean.error.WxErrorException;
@@ -8,6 +9,7 @@ import top.codewood.wx.common.util.json.WxGsonBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 public class WxBaseHttpApi {
 
@@ -23,6 +25,15 @@ public class WxBaseHttpApi {
     protected static String post(String url, String postData) {
         try {
             String respStr = WxHttpClient.getInstance().post(url, postData);
+            return handleResponse(respStr);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected static String post(String url, List<? extends NameValuePair> parameters) {
+        try {
+            String respStr = WxHttpClient.getInstance().post(url, parameters);
             return handleResponse(respStr);
         } catch (IOException e) {
             throw new RuntimeException(e);

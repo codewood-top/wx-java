@@ -2,15 +2,18 @@ package top.codewood.wx.mnp.api;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 import top.codewood.wx.common.api.WxBaseHttpApi;
 import top.codewood.wx.mnp.bean.analysis.*;
 import top.codewood.wx.mnp.util.json.WxGsonBuilder;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 小程序数据分析接口
+ */
 public class WxMnpAnalysisApi extends WxBaseHttpApi {
 
     private static class Holder {
@@ -85,7 +88,7 @@ public class WxMnpAnalysisApi extends WxBaseHttpApi {
     public List<WxMnpSummaryTrend> getSummaryThrend(String accessToken, LocalDate beginDate, LocalDate endDate) {
         assert accessToken != null && beginDate != null && endDate != null;
         String url = String.format("https://api.weixin.qq.com/datacube/getweanalysisappiddailysummarytrend?access_token=%s", accessToken);
-        return getAnalysisResultAsList(url, beginDate, endDate);
+        return getAnalysisResultAsList(url, beginDate, endDate, WxMnpSummaryTrend.class);
     }
 
     /**
@@ -99,7 +102,7 @@ public class WxMnpAnalysisApi extends WxBaseHttpApi {
     public List<WxMnpVisitTrend> getDailyVisitTrend(String accessToken, LocalDate date) {
         assert accessToken != null && date != null;
         String url = String.format("https://api.weixin.qq.com/datacube/getweanalysisappiddailyvisittrend?access_token=%s", accessToken);
-        return getAnalysisResultAsList(url, date, date);
+        return getAnalysisResultAsList(url, date, date, WxMnpVisitTrend.class);
     }
 
     /**
@@ -114,7 +117,7 @@ public class WxMnpAnalysisApi extends WxBaseHttpApi {
     public List<WxMnpVisitTrend> getMonthlyVisitTrend(String accessToken, LocalDate beginDate, LocalDate endDate) {
         assert accessToken != null && beginDate != null && endDate != null;
         String url = String.format("https://api.weixin.qq.com/datacube/getweanalysisappidmonthlyvisittrend?access_token=%s", accessToken);
-        return getAnalysisResultAsList(url, beginDate, endDate);
+        return getAnalysisResultAsList(url, beginDate, endDate, WxMnpVisitTrend.class);
     }
 
     /**
@@ -129,7 +132,7 @@ public class WxMnpAnalysisApi extends WxBaseHttpApi {
     public List<WxMnpVisitTrend> getWeeklyVisitTrend(String accessToken, LocalDate beginDate, LocalDate endDate) {
         assert accessToken != null && beginDate != null && endDate != null;
         String url = String.format("https://api.weixin.qq.com/datacube/getweanalysisappidweeklyvisittrend?access_token=%s", accessToken);
-        return getAnalysisResultAsList(url, beginDate, endDate);
+        return getAnalysisResultAsList(url, beginDate, endDate, WxMnpVisitTrend.class);
     }
 
     /**
@@ -211,11 +214,15 @@ public class WxMnpAnalysisApi extends WxBaseHttpApi {
         return WxGsonBuilder.create().fromJson(respStr, clz);
     }
 
-    private <T> List<T> getAnalysisResultAsList(String url, LocalDate beginDate, LocalDate endDate) {
+    private <T> List<T> getAnalysisResultAsList(String url, LocalDate beginDate, LocalDate endDate, Class<T> clz) {
         String respStr = post(url, dateToJson(beginDate, endDate).toString());
-        JsonObject jsonObject = WxGsonBuilder.create().fromJson(respStr, JsonObject.class);
+        Gson gson = WxGsonBuilder.create();
+        JsonObject jsonObject = gson.fromJson(respStr, JsonObject.class);
         if (jsonObject.has("list")) {
-            return WxGsonBuilder.create().fromJson(jsonObject.get("list").getAsJsonArray(), new TypeToken<List<T>>(){}.getType());
+            //return WxGsonBuilder.create().fromJson(jsonObject.get("list").getAsJsonArray(), new TypeToken<List<T>>(){}.getType());
+            List<T> list = new ArrayList<>();
+            jsonObject.get("list").getAsJsonArray().forEach(jsonEle -> list.add(gson.fromJson(jsonEle, clz)));
+            return list;
         }
         return null;
     }
@@ -226,5 +233,6 @@ public class WxMnpAnalysisApi extends WxBaseHttpApi {
         json.addProperty("end_date", DateTimeFormatter.ofPattern("yyyyMMdd").format(endDate));
         return json;
     }
+
 
 }
