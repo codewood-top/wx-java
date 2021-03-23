@@ -1,5 +1,6 @@
 package top.codewood.util.http;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -13,12 +14,16 @@ import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.apache.http.util.EntityUtils;
+import top.codewood.wx.common.bean.error.WxError;
+import top.codewood.wx.common.bean.error.WxErrorException;
+import top.codewood.wx.common.util.json.WxGsonBaseBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -115,6 +120,14 @@ public class WxHttpClient {
 
     public InputStream getInputStream(String url) throws IOException {
         HttpResponse httpResponse = request(url, HTTP_METHOD_GET, null, null);
+
+        Header[] contentTypeHeaders = httpResponse.getHeaders("Content-Type");
+        if (contentTypeHeaders != null && contentTypeHeaders.length > 0) {
+            if (contentTypeHeaders[0].getValue().startsWith(ContentType.APPLICATION_JSON.getMimeType()) || contentTypeHeaders[0].getValue().startsWith(ContentType.TEXT_PLAIN.getMimeType())) {
+                String respContent = EntityUtils.toString(httpResponse.getEntity(), CHAR_SET_UTF_8);
+                throw new WxErrorException(WxGsonBaseBuilder.create().fromJson(respContent, WxError.class));
+            }
+        }
         HttpEntity httpEntity = httpResponse.getEntity();
         return httpEntity.getContent();
     }

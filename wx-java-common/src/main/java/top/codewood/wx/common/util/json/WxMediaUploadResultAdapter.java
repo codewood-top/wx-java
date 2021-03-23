@@ -1,7 +1,7 @@
-package top.codewood.wx.mp.util.json;
+package top.codewood.wx.common.util.json;
 
 import com.google.gson.*;
-import top.codewood.wx.mp.bean.media.WxMediaUploadResult;
+import top.codewood.wx.common.bean.media.WxMediaUploadResult;
 
 import java.lang.reflect.Type;
 

@@ -4,7 +4,7 @@ import org.apache.http.NameValuePair;
 import top.codewood.util.http.WxHttpClient;
 import top.codewood.wx.common.bean.error.WxError;
 import top.codewood.wx.common.bean.error.WxErrorException;
-import top.codewood.wx.common.util.json.WxGsonBuilder;
+import top.codewood.wx.common.util.json.WxGsonBaseBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,6 +49,12 @@ public class WxBaseHttpApi {
         }
     }
 
+    /**
+     *
+     * @param url
+     * @return
+     * @throws top.codewood.wx.common.bean.error.WxErrorException
+     */
     protected static InputStream getInputStream(String url) {
         try {
             return WxHttpClient.getInstance().getInputStream(url);
@@ -58,7 +64,7 @@ public class WxBaseHttpApi {
     }
 
     private static String handleResponse(String resp) {
-        WxError wxError = WxGsonBuilder.create().fromJson(resp, WxError.class);
+        WxError wxError = WxGsonBaseBuilder.create().fromJson(resp, WxError.class);
         if (wxError.getErrorCode() != 0) {
             throw new WxErrorException(wxError);
         }

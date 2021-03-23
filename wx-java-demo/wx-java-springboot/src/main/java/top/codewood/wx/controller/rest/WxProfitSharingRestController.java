@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.codewood.wx.common.api.WxConstants;
-import top.codewood.wx.common.util.json.WxGsonBuilder;
+import top.codewood.wx.common.util.json.WxGsonBaseBuilder;
 import top.codewood.wx.config.property.WxAppProperties;
 import top.codewood.wx.pay.v2.bean.profitsharing.*;
 import top.codewood.wx.service.ProfitSharingService;
@@ -45,7 +45,7 @@ public class WxProfitSharingRestController {
                 .appid(appid)
                 .mchid(wxAppProperties.getPay().getMchid())
                 .nonceStr(Strings.randomString(32))
-                .receiver(WxGsonBuilder.create().toJson(receiver))
+                .receiver(WxGsonBaseBuilder.create().toJson(receiver))
                 .build();
         ProfitSharingReceiverV2Result receiverV2Result = profitSharingService.addReceiver(receiverV2Request);
         LOGGER.debug("receiver result: {}", receiverV2Result);
@@ -61,7 +61,7 @@ public class WxProfitSharingRestController {
                 .appid(appid)
                 .mchid(wxAppProperties.getPay().getMchid())
                 .nonceStr(Strings.randomString(32))
-                .receiver(WxGsonBuilder.create().toJson(receiver))
+                .receiver(WxGsonBaseBuilder.create().toJson(receiver))
                 .build();
         ProfitSharingReceiverV2Result receiverV2Result = profitSharingService.removeReceiver(receiverV2Request);
         LOGGER.debug("receiver result: {}", receiverV2Result);
@@ -93,7 +93,7 @@ public class WxProfitSharingRestController {
                 .nonceStr(Strings.randomString(32))
                 .transactionId(transactionId)
                 .outOrderNo(outOrderNo)
-                .receivers(WxGsonBuilder.create().toJson(Arrays.asList(receiver)))
+                .receivers(WxGsonBaseBuilder.create().toJson(Arrays.asList(receiver)))
                 .build();
         ProfitSharingV2Result profitSharingV2Result = profitSharingService.profitSharing(profitSharingV2Request, multi);
         LOGGER.debug("profit sharing result: {}", profitSharingV2Result);

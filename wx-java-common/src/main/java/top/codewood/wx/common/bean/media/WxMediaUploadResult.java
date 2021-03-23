@@ -1,4 +1,4 @@
-package top.codewood.wx.mp.bean.media;
+package top.codewood.wx.common.bean.media;
 
 import java.io.Serializable;
 

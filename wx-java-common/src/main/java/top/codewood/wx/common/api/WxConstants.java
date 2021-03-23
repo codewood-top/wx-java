@@ -23,6 +23,13 @@ public class WxConstants {
         String TRANSFER_CUSTOMER_SERVICE = "transfer_customer_service";
     }
 
+    public interface MiniprogramKefuMsgType {
+        String TEXT = "text";
+        String IMAGE = "image";
+        String LINK = "link";
+        String MINIPROGRAM_PAGE = "miniprogrampage";
+    }
+
     public interface EventType {
         String SUBSCRIBE = "subscribe";
         String UNSUBSCRIBE = "unsubscribe";
