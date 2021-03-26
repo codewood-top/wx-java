@@ -8,7 +8,7 @@ import top.codewood.wx.config.property.WxAppProperties;
 import top.codewood.wx.pay.v2.api.WxPayV2Service;
 import top.codewood.wx.pay.v2.bean.request.*;
 import top.codewood.wx.pay.v2.bean.result.*;
-import top.codewood.wx.pay.v2.util.security.AesUtil;
+import top.codewood.wx.pay.v2.util.crypt.WxPayV2CryptUtils;
 import top.codewood.wx.service.WxPayService;
 
 import javax.annotation.PostConstruct;
@@ -69,7 +69,7 @@ public class WxPayServiceImpl implements WxPayService {
 
     @Override
     public String decrypt(String encryptedStr) {
-        return AesUtil.decryptToString(encryptedStr, wxAppProperties.getPay().getKey());
+        return WxPayV2CryptUtils.decrypt(encryptedStr, wxAppProperties.getPay().getKey());
     }
 
     @PostConstruct

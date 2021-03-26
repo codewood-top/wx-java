@@ -1,4 +1,4 @@
-package top.codewood.wx.pay.v3.util.security;
+package top.codewood.wx.pay.v3.util.crypt;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -11,7 +11,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
 
-public class PemUtil {
+public class PemUtils {
 
     public static PrivateKey loadPrivateKey(InputStream inputStream) {
         try {

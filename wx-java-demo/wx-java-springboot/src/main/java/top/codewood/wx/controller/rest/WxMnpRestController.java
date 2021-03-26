@@ -10,6 +10,7 @@ import top.codewood.wx.common.api.WxConstants;
 import top.codewood.wx.config.property.WxAppProperties;
 import top.codewood.wx.config.property.WxAppProperty;
 import top.codewood.wx.mnp.bean.result.WxMnpCode2SessionResult;
+import top.codewood.wx.mnp.bean.user.WxMnpUserInfo;
 import top.codewood.wx.service.OrderService;
 import top.codewood.wx.service.WxMnpService;
 
@@ -44,6 +45,16 @@ public class WxMnpRestController {
         map.put("openid", result.getOpenid());
         map.put("unionId", result.getUnionId());
         return map;
+    }
+
+    @RequestMapping("/getuserinfo")
+    public WxMnpUserInfo getUserInfo(
+            @RequestParam("openid") String openid,
+            @RequestParam("encryptedData") String encryptedData,
+            @RequestParam("iv") String iv) {
+        WxMnpUserInfo wxMnpUserInfo = wxMnpService.getUserInfo(openid, encryptedData, iv);
+        LOGGER.debug("userInfo: {}", wxMnpUserInfo);
+        return wxMnpUserInfo;
     }
 
     @RequestMapping("/getdefaultorderpayinfo")

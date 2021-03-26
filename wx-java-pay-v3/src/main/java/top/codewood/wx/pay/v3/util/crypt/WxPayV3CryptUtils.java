@@ -1,4 +1,4 @@
-package top.codewood.wx.pay.v3.util.security;
+package top.codewood.wx.pay.v3.util.crypt;
 
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
@@ -11,20 +11,20 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
-public class AesUtil {
+public class WxPayV3CryptUtils {
 
     static final int KEY_LENGTH_BYTE = 32;
     static final int TAG_LENGTH_BIT = 128;
     private final byte[] aesKey;
 
-    public AesUtil(byte[] key) {
+    public WxPayV3CryptUtils(byte[] key) {
         if (key.length != KEY_LENGTH_BYTE) {
             throw new IllegalArgumentException("无效的ApiV3Key，长度必须为32个字节");
         }
         this.aesKey = key;
     }
 
-    public String decryptToString(byte[] associatedData, byte[] nonce, String ciphertext)
+    public String decrypt(byte[] associatedData, byte[] nonce, String ciphertext)
             throws GeneralSecurityException, IOException {
         try {
             Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");

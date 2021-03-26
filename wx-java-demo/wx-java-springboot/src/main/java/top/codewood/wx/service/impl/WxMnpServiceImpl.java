@@ -10,16 +10,26 @@ import top.codewood.wx.common.bean.error.WxErrorException;
 import top.codewood.wx.config.property.WxAppProperties;
 import top.codewood.wx.config.property.WxAppProperty;
 import top.codewood.wx.mnp.api.WxMnpApi;
+import top.codewood.wx.mnp.api.WxMnpUserApi;
 import top.codewood.wx.mnp.bean.result.WxMnpCode2SessionResult;
+import top.codewood.wx.mnp.bean.user.WxMnpUserInfo;
 import top.codewood.wx.service.WxMnpService;
 import top.codewood.wx.util.Strings;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service("wxMnpService")
 public class WxMnpServiceImpl implements WxMnpService {
 
     static final Logger LOGGER = LoggerFactory.getLogger(WxMnpServiceImpl.class);
+
+    static final Map<String, String> OPENID_SESSIONKEY_MAP;
+
+    static {
+        OPENID_SESSIONKEY_MAP = new HashMap<>();
+    }
 
     private WxAccessToken2 wxAccessToken = null;
 
@@ -29,7 +39,11 @@ public class WxMnpServiceImpl implements WxMnpService {
     @Override
     public WxMnpCode2SessionResult code2Session(String code) {
         WxAppProperty wxAppProperty = wxAppProperties.getAppPropertyByType(WxConstants.AppType.MINIPROGRAM);
-        return WxMnpApi.getInstance().code2Session(wxAppProperty.getAppid(), wxAppProperty.getSecret(), code);
+        WxMnpCode2SessionResult code2SessionResult = WxMnpApi.getInstance().code2Session(wxAppProperty.getAppid(), wxAppProperty.getSecret(), code);
+        if (code2SessionResult != null) {
+            OPENID_SESSIONKEY_MAP.put(code2SessionResult.getOpenid(), code2SessionResult.getSessionKey());
+        }
+        return code2SessionResult;
     }
 
     @Override
@@ -45,6 +59,16 @@ public class WxMnpServiceImpl implements WxMnpService {
         }
         return wxAccessToken != null ? wxAccessToken.accessToken : Strings.EMPTY;
 
+    }
+
+    @Override
+    public WxMnpUserInfo getUserInfo(String openid, String encryptedData, String iv) {
+        assert openid != null;
+        String sessionKey = OPENID_SESSIONKEY_MAP.get(openid);
+        if (sessionKey == null) {
+            throw new RuntimeException("调用wx.login后再操作。");
+        }
+        return WxMnpUserApi.getInstance().getUserInfo(sessionKey, encryptedData, iv);
     }
 
     private void updateAccessToken() {

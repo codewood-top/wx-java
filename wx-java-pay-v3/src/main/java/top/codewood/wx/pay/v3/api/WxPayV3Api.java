@@ -8,8 +8,8 @@ import top.codewood.wx.pay.v3.bean.error.WxPayError;
 import top.codewood.wx.pay.v3.bean.error.WxPayErrorException;
 import top.codewood.wx.pay.v3.cert.CertificateItem;
 import top.codewood.wx.pay.v3.cert.CertificateList;
-import top.codewood.wx.pay.v3.util.security.AesUtil;
-import top.codewood.wx.pay.v3.util.security.PemUtil;
+import top.codewood.wx.pay.v3.util.crypt.WxPayV3CryptUtils;
+import top.codewood.wx.pay.v3.util.crypt.PemUtils;
 import top.codewood.wx.pay.v3.util.json.WxGsonBuilder;
 
 import java.io.ByteArrayInputStream;
@@ -108,7 +108,7 @@ public class WxPayV3Api {
      * @param inputStream
      */
     public static PrivateKey loadPrivateKey(String mchid, InputStream inputStream) {
-        PrivateKey privateKey = PemUtil.loadPrivateKey(inputStream);
+        PrivateKey privateKey = PemUtils.loadPrivateKey(inputStream);
         PRIVATE_KEY_MAP.put(mchid, privateKey);
         return privateKey;
     }
@@ -116,13 +116,13 @@ public class WxPayV3Api {
     public static void loadCertificates(String apiV3Key, List<CertificateItem> certificateItems) {
         assert certificateItems != null;
         if (certificateItems.size() > 0) {
-            AesUtil aesUtil = new AesUtil(apiV3Key.getBytes(StandardCharsets.UTF_8));
+            WxPayV3CryptUtils wxPayV3CryptUtils = new WxPayV3CryptUtils(apiV3Key.getBytes(StandardCharsets.UTF_8));
             certificateItems.stream().forEach(certificateItem -> {
                 try {
-                    String publicKey = aesUtil.decryptToString(certificateItem.getEncryptCertificateItem().getAssociatedData().getBytes(StandardCharsets.UTF_8),
+                    String publicKey = wxPayV3CryptUtils.decrypt(certificateItem.getEncryptCertificateItem().getAssociatedData().getBytes(StandardCharsets.UTF_8),
                             certificateItem.getEncryptCertificateItem().getNonce().getBytes(StandardCharsets.UTF_8),
                             certificateItem.getEncryptCertificateItem().getCipherText());
-                    CERTIFICATE_MAP.put(certificateItem.getSerialNo(), PemUtil.loadCertificate(new ByteArrayInputStream(publicKey.getBytes(StandardCharsets.UTF_8))));
+                    CERTIFICATE_MAP.put(certificateItem.getSerialNo(), PemUtils.loadCertificate(new ByteArrayInputStream(publicKey.getBytes(StandardCharsets.UTF_8))));
                 } catch (GeneralSecurityException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
