@@ -13,6 +13,7 @@
 /.recommenders/
 /**/src/main/resources/files/cert/
 /**/src/main/resources/files/enc/
+/**/src/test/
 /.vscode/
 /.idea/
 /**/.idea/

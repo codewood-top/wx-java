@@ -32,7 +32,7 @@ public class WxMnpApi extends WxBaseHttpApi {
         assert appid != null && secret != null && jscode != null;
         String url = String.format("https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code", appid, secret, jscode);
         String respStr = get(url);
-        return WxGsonBuilder.create().fromJson(respStr, WxMnpCode2SessionResult.class);
+        return WxGsonBuilder.instance().fromJson(respStr, WxMnpCode2SessionResult.class);
     }
 
     /**
@@ -49,7 +49,7 @@ public class WxMnpApi extends WxBaseHttpApi {
         assert appid != null && secret != null;
         String url = String.format("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s", appid, secret);
         String respStr = get(url);
-        return WxGsonBuilder.create().fromJson(respStr, WxAccessToken.class);
+        return WxGsonBuilder.instance().fromJson(respStr, WxAccessToken.class);
     }
 
     /**
@@ -69,7 +69,7 @@ public class WxMnpApi extends WxBaseHttpApi {
         assert accessToken != null && openid != null && transactionId != null;
         String url = String.format("https://api.weixin.qq.com/wxa/getpaidunionid?access_token=%s&openid=%s&transaction_id=%s", accessToken, openid, transactionId);
         String respStr = get(url);
-        JsonObject json = WxGsonBuilder.create().toJsonTree(respStr).getAsJsonObject();
+        JsonObject json = WxGsonBuilder.instance().toJsonTree(respStr).getAsJsonObject();
         return json.get("unionid").getAsString();
     }
 
@@ -91,7 +91,7 @@ public class WxMnpApi extends WxBaseHttpApi {
         assert accessToken != null && openid != null && mchid != null && outTradeNo != null;
         String url = String.format("https://api.weixin.qq.com/wxa/getpaidunionid?access_token=%s&openid=%s&mch_id=%s&out_trade_no=%s", accessToken, openid, mchid, outTradeNo);
         String respStr = get(url);
-        JsonObject json = WxGsonBuilder.create().toJsonTree(respStr).getAsJsonObject();
+        JsonObject json = WxGsonBuilder.instance().toJsonTree(respStr).getAsJsonObject();
         return json.get("unionid").getAsString();
     }
 

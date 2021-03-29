@@ -148,7 +148,7 @@ public class WxMnpAnalysisApi extends WxBaseHttpApi {
     public WxMnpPerformanceResult getPerformanceData(String accessToken, WxMnpPerformanceRequest performanceRequest) {
         assert accessToken != null && performanceRequest != null;
         String url = String.format("https://api.weixin.qq.com/wxa/business/performance/boot?access_token=%s", accessToken);
-        Gson gson = WxGsonBuilder.create();
+        Gson gson = WxGsonBuilder.instance();
         String postData = gson.toJson(performanceRequest);
         String respStr = post(url, postData);
         return gson.fromJson(respStr, WxMnpPerformanceResult.class);
@@ -211,12 +211,12 @@ public class WxMnpAnalysisApi extends WxBaseHttpApi {
 
     private <T> T getAnalysisData(String url, LocalDate beginDate, LocalDate endDate,Class<T> clz) {
         String respStr = post(url, dateToJson(beginDate, endDate).toString());
-        return WxGsonBuilder.create().fromJson(respStr, clz);
+        return WxGsonBuilder.instance().fromJson(respStr, clz);
     }
 
     private <T> List<T> getAnalysisResultAsList(String url, LocalDate beginDate, LocalDate endDate, Class<T> clz) {
         String respStr = post(url, dateToJson(beginDate, endDate).toString());
-        Gson gson = WxGsonBuilder.create();
+        Gson gson = WxGsonBuilder.instance();
         JsonObject jsonObject = gson.fromJson(respStr, JsonObject.class);
         if (jsonObject.has("list")) {
             //return WxGsonBuilder.create().fromJson(jsonObject.get("list").getAsJsonArray(), new TypeToken<List<T>>(){}.getType());

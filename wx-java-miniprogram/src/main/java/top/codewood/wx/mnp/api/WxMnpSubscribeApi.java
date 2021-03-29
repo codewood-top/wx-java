@@ -5,10 +5,7 @@ import com.google.gson.JsonObject;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import top.codewood.wx.common.api.WxBaseHttpApi;
-import top.codewood.wx.mnp.bean.subscribemsg.WxMnpPubTemplateKeyword;
-import top.codewood.wx.mnp.bean.subscribemsg.WxMnpPubTemplateTitleList;
-import top.codewood.wx.mnp.bean.subscribemsg.WxMnpTemplateCategory;
-import top.codewood.wx.mnp.bean.subscribemsg.WxMnpTemplateInfo;
+import top.codewood.wx.mnp.bean.subscribemsg.*;
 import top.codewood.wx.mnp.util.json.WxGsonBuilder;
 
 import java.util.ArrayList;
@@ -56,7 +53,7 @@ public class WxMnpSubscribeApi extends WxBaseHttpApi {
             parameters.add(new BasicNameValuePair("sceneDesc", sceneDesc));
         }
         String respStr = post(url, parameters);
-        JsonObject retJson = WxGsonBuilder.create().fromJson(respStr, JsonObject.class);
+        JsonObject retJson = WxGsonBuilder.instance().fromJson(respStr, JsonObject.class);
         return retJson.get("priTmplId").getAsString();
     }
 
@@ -118,7 +115,7 @@ public class WxMnpSubscribeApi extends WxBaseHttpApi {
         assert accessToken != null && ids != null;
         String url = String.format("https://api.weixin.qq.com/wxaapi/newtmpl/getpubtemplatetitles?access_token=%s&ids=%s&start=%s&limit=%s", accessToken, String.join(",", ids), start, limit);
         String respStr = get(url);
-        return WxGsonBuilder.create().fromJson(respStr, WxMnpPubTemplateTitleList.class);
+        return WxGsonBuilder.instance().fromJson(respStr, WxMnpPubTemplateTitleList.class);
     }
 
     /**
@@ -152,9 +149,24 @@ public class WxMnpSubscribeApi extends WxBaseHttpApi {
         return getDataResultAsList(url, WxMnpPubTemplateKeyword.class);
     }
 
+    /**
+     * subscribeMessage.send
+     * 发送订阅消息
+     *
+     * <a href="https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.send.html#%E4%BA%91%E8%B0%83%E7%94%A8">参考文档</a>
+     *
+     * @param accessToken
+     * @param subscribeMsg
+     */
+    public void send(String accessToken, WxMnpSubscribeMsg subscribeMsg) {
+        assert accessToken != null && subscribeMsg != null;
+        String url = String.format("https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=%s", accessToken);
+        post(url, WxGsonBuilder.instance().toJson(subscribeMsg));
+    }
+
     private <T> List<T> getDataResultAsList(String url, Class<T> clz) {
         String respStr = get(url);
-        Gson gson = WxGsonBuilder.create();
+        Gson gson = WxGsonBuilder.instance();
         JsonObject jsonObject = gson.fromJson(respStr, JsonObject.class);
         if (jsonObject.has("data")) {
             List<T> list = new ArrayList<>();

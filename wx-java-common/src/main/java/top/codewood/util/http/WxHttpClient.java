@@ -131,4 +131,18 @@ public class WxHttpClient {
         HttpEntity httpEntity = httpResponse.getEntity();
         return httpEntity.getContent();
     }
+
+    public InputStream postInputStream(String url, String data) throws IOException {
+        HttpResponse httpResponse = request(url, HTTP_METHOD_POST, data, null);
+
+        Header[] contentTypeHeaders = httpResponse.getHeaders("Content-Type");
+        if (contentTypeHeaders != null && contentTypeHeaders.length > 0) {
+            if (contentTypeHeaders[0].getValue().startsWith(ContentType.APPLICATION_JSON.getMimeType()) || contentTypeHeaders[0].getValue().startsWith(ContentType.TEXT_PLAIN.getMimeType())) {
+                String respContent = EntityUtils.toString(httpResponse.getEntity(), CHAR_SET_UTF_8);
+                throw new WxErrorException(WxGsonBaseBuilder.create().fromJson(respContent, WxError.class));
+            }
+        }
+        HttpEntity httpEntity = httpResponse.getEntity();
+        return httpEntity.getContent();
+    }
 }

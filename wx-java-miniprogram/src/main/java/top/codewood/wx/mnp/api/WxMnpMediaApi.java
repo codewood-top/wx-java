@@ -37,7 +37,7 @@ public class WxMnpMediaApi extends WxBaseHttpApi {
         assert accessToken != null && file != null;
         String url = String.format("https://api.weixin.qq.com/cgi-bin/media/upload?access_token=%s&type=image", accessToken);
         String respStr = upload(url, file);
-        return WxGsonBuilder.create().fromJson(respStr, WxMediaUploadResult.class);
+        return WxGsonBuilder.instance().fromJson(respStr, WxMediaUploadResult.class);
     }
 
     /**

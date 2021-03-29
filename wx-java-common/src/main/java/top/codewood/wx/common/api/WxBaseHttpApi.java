@@ -63,6 +63,19 @@ public class WxBaseHttpApi {
         }
     }
 
+    /**
+     *
+     * @param url
+     * @return
+     */
+    protected static InputStream postInputStream(String url, String postData) {
+        try {
+            return WxHttpClient.getInstance().postInputStream(url, postData);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private static String handleResponse(String resp) {
         WxError wxError = WxGsonBaseBuilder.create().fromJson(resp, WxError.class);
         if (wxError.getErrorCode() != 0) {
