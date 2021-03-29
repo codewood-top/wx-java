@@ -92,6 +92,42 @@ public class WxMpController {
         return "mp/authorize";
     }
 
+    @RequestMapping("/authorize_code/{scope}")
+    public String authorize_code(@PathVariable("scope") String scope,
+                                 @RequestParam(required = false, name = "code") String code,
+                                 @RequestParam(required = false, name = "state", defaultValue = "") String state,
+                                 Model model,
+                                 HttpServletRequest request) {
+
+        String scopeVal = null;
+        if ("base".equals(scope)) {
+            scopeVal = WxConstants.MpAuthorizeScope.BASE;
+        } else if ("userinfo".equals(scope)) {
+            scopeVal = WxConstants.MpAuthorizeScope.USER_INFO;
+        } else {
+            throw new RuntimeException("invalid scope: " + scope);
+        }
+
+        WxAppProperty wxAppProperty = wxAppProperties.getAppPropertyByType(WxConstants.AppType.MP);
+
+        String currentReqUrl = getCurrentUrl(request);
+        LOGGER.info("current req url: {}, code: {}", currentReqUrl, code);
+        if (StringUtils.hasText(code)) {
+            model.addAttribute("appid", wxAppProperty.getAppid());
+            model.addAttribute("code", code);
+            model.addAttribute("scope", scope);
+            return "mp/authorizeCode";
+        } else {
+            String redirectUrl = String.format("https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s#wechat_redirect",
+                    wxAppProperty.getAppid(),
+                    Strings.urlEncode(currentReqUrl),
+                    scopeVal,
+                    state
+            );
+            return "redirect:" + redirectUrl;
+        }
+    }
+
     private String getCurrentUrl(HttpServletRequest request) {
 
         StringBuilder sb = new StringBuilder();
