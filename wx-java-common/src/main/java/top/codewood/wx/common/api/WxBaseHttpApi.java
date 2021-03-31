@@ -49,6 +49,15 @@ public class WxBaseHttpApi {
         }
     }
 
+    protected static String upload(String url, File file, String fileName) {
+        try {
+            String respStr = WxHttpClient.getInstance().upload(url, file, fileName);
+            return handleResponse(respStr);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      *
      * @param url

@@ -47,7 +47,7 @@ public class WxHttpClient {
     private int connectTimeoutMs = 5 * 1000;
     private int readTimeoutMs = 5 * 1000;
 
-    private HttpResponse request(final String url, String method, Object data, File file) throws IOException {
+    private HttpResponse request(final String url, String method, Object data, File file, String fileName) throws IOException {
         BasicHttpClientConnectionManager connManager = new BasicHttpClientConnectionManager(
                 RegistryBuilder.<ConnectionSocketFactory>create()
                         .register("http", PlainConnectionSocketFactory.getSocketFactory())
@@ -77,7 +77,7 @@ public class WxHttpClient {
             }
             if (file != null) {
                 HttpEntity entity = MultipartEntityBuilder.create()
-                        .addBinaryBody("media", file)
+                        .addBinaryBody(fileName, file)
                         .setMode(HttpMultipartMode.RFC6532)
                         .build();
                 ((HttpPost) httpRequest).setEntity(entity);
@@ -94,6 +94,14 @@ public class WxHttpClient {
 
     }
 
+    private HttpResponse request(final String url, String method, Object data) throws IOException {
+        return request(url, method, data, null, null);
+    }
+
+    private HttpResponse request(final String url, Object data, File file, String fileName) throws IOException {
+        return request(url, HTTP_METHOD_POST, data, file, fileName);
+    }
+
     public String get(String url) throws IOException {
         HttpResponse httpResponse =  request(url, HTTP_METHOD_GET, null, null);
         HttpEntity httpEntity = httpResponse.getEntity();
@@ -101,19 +109,25 @@ public class WxHttpClient {
     }
 
     public String post(String url, String data) throws IOException {
-        HttpResponse httpResponse =  request(url, HTTP_METHOD_POST, data, null);
+        HttpResponse httpResponse =  request(url, HTTP_METHOD_POST, data);
         HttpEntity httpEntity = httpResponse.getEntity();
         return EntityUtils.toString(httpEntity, CHAR_SET_UTF_8);
     }
 
     public String post(String url, List<? extends NameValuePair> parameters) throws IOException {
-        HttpResponse httpResponse =  request(url, HTTP_METHOD_POST, parameters, null);
+        HttpResponse httpResponse =  request(url, HTTP_METHOD_POST, parameters);
         HttpEntity httpEntity = httpResponse.getEntity();
         return EntityUtils.toString(httpEntity, CHAR_SET_UTF_8);
     }
 
     public String upload(String url, File file) throws IOException {
-        HttpResponse httpResponse =  request(url, HTTP_METHOD_POST, null, file);
+        HttpResponse httpResponse =  request(url, HTTP_METHOD_POST, null, file, "media");
+        HttpEntity httpEntity = httpResponse.getEntity();
+        return EntityUtils.toString(httpEntity, CHAR_SET_UTF_8);
+    }
+
+    public String upload(String url, File file, String fileName) throws IOException {
+        HttpResponse httpResponse =  request(url, HTTP_METHOD_POST, null, file, fileName);
         HttpEntity httpEntity = httpResponse.getEntity();
         return EntityUtils.toString(httpEntity, CHAR_SET_UTF_8);
     }
@@ -133,7 +147,7 @@ public class WxHttpClient {
     }
 
     public InputStream postInputStream(String url, String data) throws IOException {
-        HttpResponse httpResponse = request(url, HTTP_METHOD_POST, data, null);
+        HttpResponse httpResponse = request(url, HTTP_METHOD_POST, data);
 
         Header[] contentTypeHeaders = httpResponse.getHeaders("Content-Type");
         if (contentTypeHeaders != null && contentTypeHeaders.length > 0) {
