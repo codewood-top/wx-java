@@ -60,8 +60,20 @@
             <input type="checkbox" style="width:auto;" id="profitSharing" name="profitSharing">是否分账
         </div>
     </div>
+    <div>
+        <div>
+            <input type="radio" style="width:auto;" name="payType" value="JSAPI" checked>JSAPI
+            <input type="radio" style="width:auto;" name="payType" value="NATIVE">NATIVE
+        </div>
+    </div>
     <div class="form-cell">
         <button id="btn_submit">提交支付</button>
+    </div>
+    <div class="form-cell pay-qrcode" style="display:none">
+        <label>付款码</label>
+        <div>
+            <img id="codeImg" src="">
+        </div>
     </div>
 </div>
 
@@ -89,13 +101,16 @@
 
     $(function() {
 
+        let payQrcode = document.querySelector('.pay-qrcode')
+
         document.querySelector('#btn_submit').addEventListener('click', function() {
             let appid = document.querySelector('#appid').value,
                 orderNumber = document.querySelector('#orderNumber').value,
                 description = document.querySelector('#description').value,
                 amount = document.querySelector('#amount').value,
                 openid = document.querySelector('#openid').value,
-                profitSharing = document.querySelector('#profitSharing').checked
+                profitSharing = document.querySelector('#profitSharing').checked,
+                payType = document.querySelector('input[name=payType]:checked').value
 
             console.log(`${appid}, ${orderNumber}, ${description}, ${amount}, ${openid}, ${profitSharing}`)
 
@@ -105,7 +120,7 @@
                 method: 'POST',
                 data: {
                     appid: appid,
-                    payType: 'JSAPI',
+                    payType: payType,
                     tradeNo: orderNumber,
                     description: description,
                     amount: amount,
@@ -115,6 +130,10 @@
                 success: function(res) {
                     if (res.code || res.message) {
                         alert(res.message)
+                    } else if (payType == "NATIVE") {
+                        document.querySelector('#codeImg').src="/qrcode/create?content=" + encodeURIComponent(res.codeUrl)
+                        payQrcode.style.display = 'block'
+
                     } else {
                         if (typeof WeixinJSBridge == "undefined") {
                             if (document.addEventListener) {

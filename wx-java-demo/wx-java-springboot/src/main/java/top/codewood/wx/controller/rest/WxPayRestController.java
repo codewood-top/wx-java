@@ -1,8 +1,10 @@
 package top.codewood.wx.controller.rest;
 
+import com.google.zxing.WriterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +22,10 @@ import top.codewood.wx.pay.v2.common.WxPayConstants;
 import top.codewood.wx.service.ProfitSharingService;
 import top.codewood.wx.service.WxPayService;
 import top.codewood.wx.util.Strings;
+import top.codewood.wx.util.qrcode.QRCodeUtils;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,7 +53,8 @@ public class WxPayRestController {
                                             @RequestParam("description") String description,
                                             @RequestParam("amount") double amount,
                                             @RequestParam(value = "openid", required = false) String openid,
-                                            @RequestParam(value = "profitSharing", required = false, defaultValue = "false") boolean profitSharing) {
+                                            @RequestParam(value = "profitSharing", required = false, defaultValue = "false") boolean profitSharing,
+                                            HttpServletResponse response) {
 
 
         String nonceStr = Strings.randomString(32);
@@ -63,24 +69,32 @@ public class WxPayRestController {
                 .outTradeNo(tradeNo)
                 .totalFee(total.intValue())
                 .spbillCreateIp(NetUtils.localAddress())
-                .openid(openid)
                 .notifyUrl(wxAppProperties.getPay().getNotifyUrl())
                 .tradeType(payType)
                 .profitSharing(profitSharing ? "Y" : "N");
+        if (WxPayConstants.PayType.JSAPI.name().equalsIgnoreCase(payType)) {
+            builder.openid(openid);
+        }
         WxPayUnifiedOrderV2Request unifiedOrderV2Request = builder.build();
         WxPayUnifiedOrderV2Result unifiedOrderV2Result = wxPayService.unifiedOrder(unifiedOrderV2Request);
 
         Map<String, String> map = new HashMap<>();
-        map.put("appId", appid);
-        map.put("timeStamp", String.valueOf(timeStamp));
-        map.put("nonceStr", nonceStr);
 
-        map.put("signType", WxPayConstants.SignType.MD5);
-        map.put("package", "prepay_id=" + unifiedOrderV2Result.getPrepayId());
-        map.put("paySign", wxPayService.sign(map));
+        if (WxPayConstants.PayType.NATIVE.name().equalsIgnoreCase(payType)) {
+            map.put("codeUrl", unifiedOrderV2Result.getCodeUrl());
+        } else {
+            map.put("appId", appid);
+            map.put("timeStamp", String.valueOf(timeStamp));
+            map.put("nonceStr", nonceStr);
+
+            map.put("signType", WxPayConstants.SignType.MD5);
+            map.put("package", "prepay_id=" + unifiedOrderV2Result.getPrepayId());
+            map.put("paySign", wxPayService.sign(map));
+        }
 
         return map;
     }
+
 
     @RequestMapping("/notify")
     public String notify(@RequestBody String notifyBody) {

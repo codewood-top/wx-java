@@ -38,11 +38,11 @@ public abstract class WxPayV2BaseService {
             signBuilder.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
         }
         signBuilder.append("key=").append(signKey);
-
         if (WxPayConstants.SignType.HMAC_SHA256.equals(signType)) {
             return SignUtils.createHmacSha256Sign(signBuilder.toString(), signKey).toUpperCase();
         } else {
-            return DigestUtils.md5Hex(signBuilder.toString()).toUpperCase();
+            String sign =  DigestUtils.md5Hex(signBuilder.toString()).toUpperCase();
+            return sign;
         }
     }
 

@@ -33,6 +33,7 @@ public class WxPayController {
         return "pay/unifiedOrder";
     }
 
+
     @GetMapping("/operate")
     public String operate(Model model) {
         model.addAttribute("apps", wxAppProperties.getApps());

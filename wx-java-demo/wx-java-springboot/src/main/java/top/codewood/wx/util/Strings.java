@@ -28,4 +28,8 @@ public class Strings {
         }
     }
 
+    public static boolean hasText(String content) {
+        return content != null && content.trim().length() > 0;
+    }
+
 }
