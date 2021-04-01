@@ -15,7 +15,7 @@ public class QrcodeController {
 
     static final Logger LOGGER = LoggerFactory.getLogger(QrcodeController.class);
 
-    static final String LOGO = "http://img1.codewood.top/developer/images/code-logo-large.png"''
+    static final String LOGO = "http://img1.codewood.top/developer/images/code-logo-large.png";
 
 
     @RequestMapping("/create")
