@@ -4,16 +4,6 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 import java.io.Serializable;
 
-/**
- * ex：
- * <xml>
- *  <ToUserName><![CDATA[粉丝号]]></ToUserName>
- *  <FromUserName><![CDATA[公众号]]></FromUserName>
- *  <CreateTime>1460541339</CreateTime>
- *  <MsgType><![CDATA[text]]></MsgType>
- *  <Content><![CDATA[test]]></Content>
- * </xml>
- */
 @XStreamAlias("xml")
 public class WxMpXmlMessage implements Serializable {
 

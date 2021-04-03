@@ -9,8 +9,8 @@ public class WxMpApi extends WxBaseHttpApi {
 
     /**
      *
-     * @param appid
-     * @param appsecret
+     * @param appid 微信分配的appid
+     * @param appsecret secret
      * @return
      *  success: {"access_token":"ACCESS_TOKEN","expires_in":7200}
      *  failure: {"errcode":40013,"errmsg":"invalid appid"}
