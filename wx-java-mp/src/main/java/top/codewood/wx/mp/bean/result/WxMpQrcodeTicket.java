@@ -6,7 +6,7 @@ public class WxMpQrcodeTicket implements Serializable {
 
     protected String ticket;
     /**
-     * 值为 -1 -> 永久二维码
+     * 值为 -1: 永久二维码
      */
     protected int expireSeconds = -1;
     protected String url;
