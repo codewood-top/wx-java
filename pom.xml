@@ -7,7 +7,7 @@
     <groupId>top.codewood.wx</groupId>
     <artifactId>wx-java</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0</version>
+    <version>1.0.3</version>
     <name>wx-java</name>
     <description>微信公众号/小程序, App服务端API</description>
     <url>https://github.com/codewood-top/wx-java</url>
@@ -96,6 +96,22 @@
         </repository>
     </distributionManagement>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.7</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>false</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <profiles>
         <profile>
             <id>doclint-java8-disable</id>
@@ -147,7 +163,7 @@
                         <version>1.5</version>
                         <executions>
                             <execution>
-                                <id>gpg</id>
+                                <id>sign-artifacts</id>
                                 <phase>verify</phase>
                                 <goals>
                                     <goal>sign</goal>
@@ -170,21 +186,5 @@
             </build>
         </profile>
     </profiles>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.7</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

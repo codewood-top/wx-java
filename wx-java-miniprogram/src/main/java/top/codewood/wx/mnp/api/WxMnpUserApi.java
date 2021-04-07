@@ -2,6 +2,7 @@ package top.codewood.wx.mnp.api;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import top.codewood.util.http.WxHttpClient;
+import top.codewood.wx.mnp.bean.user.WxMnpPhoneInfo;
 import top.codewood.wx.mnp.bean.user.WxMnpUserInfo;
 import top.codewood.wx.mnp.util.crypt.WxMnpCryptUtils;
 import top.codewood.wx.mnp.util.json.WxGsonBuilder;
@@ -41,6 +42,21 @@ public class WxMnpUserApi extends WxHttpClient {
     public WxMnpUserInfo getUserInfo(String sessionKey, String encryptedData, String iv) {
         String decryptedData = WxMnpCryptUtils.decrypt(sessionKey, encryptedData, iv);
         return WxGsonBuilder.instance().fromJson(decryptedData, WxMnpUserInfo.class);
+    }
+
+    /**
+     * 解密小程序侧 wx.getPhoneNumber.encryptedData 包括敏感数据在内的完整用户信息的加密数据
+     *
+     * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/getPhoneNumber.html">参考文档</a>
+     *
+     * @param sessionKey
+     * @param encryptedData
+     * @param iv
+     * @return
+     */
+    public WxMnpPhoneInfo getPhoneInfo(String sessionKey, String encryptedData, String iv) {
+        String decryptedData = WxMnpCryptUtils.decrypt(sessionKey, encryptedData, iv);
+        return WxGsonBuilder.instance().fromJson(decryptedData, WxMnpPhoneInfo.class);
     }
 
 }
