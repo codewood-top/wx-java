@@ -115,12 +115,12 @@ public class WxOAuth2UserInfo implements Serializable {
         this.privilege = privilege;
     }
 
-    public String getUnionId() {
-        return unionId;
+    public String getUnionid() {
+        return unionid;
     }
 
-    public void setUnionId(String unionId) {
-        this.unionId = unionId;
+    public void setUnionid(String unionId) {
+        this.unionid = unionId;
     }
 
     @Override
@@ -134,7 +134,7 @@ public class WxOAuth2UserInfo implements Serializable {
                 ", country='" + country + '\'' +
                 ", headImgUrl='" + headImgUrl + '\'' +
                 ", privilege=" + Arrays.toString(privilege) +
-                ", unionId='" + unionId + '\'' +
+                ", unionId='" + unionid + '\'' +
                 '}';
     }
 }
