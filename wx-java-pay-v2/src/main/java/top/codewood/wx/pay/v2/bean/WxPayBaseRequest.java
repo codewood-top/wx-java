@@ -4,6 +4,7 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import top.codewood.wx.annotation.Required;
 import top.codewood.wx.common.util.bean.BeanUtils;
 import top.codewood.wx.common.util.xml.XStreamConverter;
+import top.codewood.wx.pay.v2.common.WxPayConstants;
 
 import java.io.Serializable;
 
@@ -35,6 +36,12 @@ public class WxPayBaseRequest implements Serializable {
      * 详见<a href="https://pay.weixin.qq.com/wiki/doc/api/tools/cash_coupon.php?chapter=4_3">签名生成算法</a>
      */
     protected String sign;
+
+    /**
+     * 签名类型，目前支持HMAC-SHA256和MD5，默认为MD5
+     */
+    @XStreamAlias("sign_type")
+    protected String signType = WxPayConstants.SignType.MD5;
 
 
     public String getAppid() {
@@ -69,6 +76,14 @@ public class WxPayBaseRequest implements Serializable {
         this.sign = sign;
     }
 
+    public String getSignType() {
+        return signType;
+    }
+
+    public void setSignType(String signType) {
+        this.signType = signType;
+    }
+
     /**
      * 自检测字段缺失
      */
@@ -88,6 +103,7 @@ public class WxPayBaseRequest implements Serializable {
         protected String appid;
         protected String mchid;
         protected String nonceStr;
+        protected String signType = WxPayConstants.SignType.MD5;
 
         public T appid(String appid) {
             this.appid = appid;
@@ -102,6 +118,11 @@ public class WxPayBaseRequest implements Serializable {
         public T nonceStr(String nonceStr) {
             this.nonceStr = nonceStr;
             return (T) this;
+        }
+
+        public T signType(String signType) {
+            this.signType = signType;
+            return (T)this;
         }
 
     }

@@ -46,6 +46,28 @@ public class WxPayBaseResult implements Serializable {
     @XStreamAlias("err_code_des")
     protected String errCodeDes;
 
+    /**
+     * 微信分配的公众账号ID
+     */
+    protected String appid;
+
+    /**
+     * 微信支付分配的商户号
+     */
+    @XStreamAlias("mch_id")
+    protected String mchid;
+
+    /**
+     * 随机字符串，不长于32位。
+     */
+    @XStreamAlias("nonce_str")
+    protected String nonceStr;
+
+    /**
+     * 签名
+     */
+    protected String sign;
+
     public String getReturnCode() {
         return returnCode;
     }
@@ -84,6 +106,38 @@ public class WxPayBaseResult implements Serializable {
 
     public void setErrCodeDes(String errCodeDes) {
         this.errCodeDes = errCodeDes;
+    }
+
+    public String getAppid() {
+        return appid;
+    }
+
+    public void setAppid(String appid) {
+        this.appid = appid;
+    }
+
+    public String getMchid() {
+        return mchid;
+    }
+
+    public void setMchid(String mchid) {
+        this.mchid = mchid;
+    }
+
+    public String getNonceStr() {
+        return nonceStr;
+    }
+
+    public void setNonceStr(String nonceStr) {
+        this.nonceStr = nonceStr;
+    }
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
     }
 
     public void checkResult() {

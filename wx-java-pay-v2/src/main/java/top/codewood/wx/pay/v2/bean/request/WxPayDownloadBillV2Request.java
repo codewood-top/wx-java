@@ -9,12 +9,6 @@ import top.codewood.wx.pay.v2.bean.WxPayBaseRequest;
 public class WxPayDownloadBillV2Request extends WxPayBaseRequest {
 
     /**
-     * 签名类型，目前支持HMAC-SHA256和MD5，默认为MD5
-     */
-    @XStreamAlias("sign_type")
-    private String signType = WxPayConstants.SignType.MD5;
-
-    /**
      * 对账单日期
      * 下载对账单的日期，格式：20140603
      */
@@ -38,14 +32,6 @@ public class WxPayDownloadBillV2Request extends WxPayBaseRequest {
      */
     @XStreamAlias("tar_type")
     private String tarType;
-
-    public String getSignType() {
-        return signType;
-    }
-
-    public void setSignType(String signType) {
-        this.signType = signType;
-    }
 
     public String getBillDate() {
         return billDate;
@@ -86,15 +72,9 @@ public class WxPayDownloadBillV2Request extends WxPayBaseRequest {
     }
 
     public static class Builder extends WxPayBaseRequest.Builder<Builder> {
-        private String signType;
         private String billDate;
         private String billType;
         private String tarType;
-
-        public Builder signType(String signType) {
-            this.signType = signType;
-            return this;
-        }
 
         public Builder billDate(String billDate) {
             this.billDate = billDate;

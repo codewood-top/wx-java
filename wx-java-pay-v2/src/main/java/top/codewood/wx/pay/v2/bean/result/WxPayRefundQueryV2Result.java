@@ -15,28 +15,6 @@ import java.util.List;
 public class WxPayRefundQueryV2Result extends WxPayBaseResult {
 
     /**
-     * 微信支付分配的公众账号ID（企业号corpid即为此appId）
-     */
-    private String appid;
-
-    /**
-     * 微信支付分配的商户号
-     */
-    @XStreamAlias("mch_id")
-    private String mchid;
-
-    /**
-     * 随机字符串，不长于32位。
-     */
-    @XStreamAlias("nonce_str")
-    private String nonceStr;
-
-    /**
-     * 签名
-     */
-    private String sign;
-
-    /**
      * 订单总退款次数
      * 订单总共已发生的部分退款次数，当请求参数传入offset后有返回
      */
@@ -90,38 +68,6 @@ public class WxPayRefundQueryV2Result extends WxPayBaseResult {
     private int refundCount;
 
     private List<RefundRecord> refundRecords;
-
-    public String getAppid() {
-        return appid;
-    }
-
-    public void setAppid(String appid) {
-        this.appid = appid;
-    }
-
-    public String getMchid() {
-        return mchid;
-    }
-
-    public void setMchid(String mchid) {
-        this.mchid = mchid;
-    }
-
-    public String getNonceStr() {
-        return nonceStr;
-    }
-
-    public void setNonceStr(String nonceStr) {
-        this.nonceStr = nonceStr;
-    }
-
-    public String getSign() {
-        return sign;
-    }
-
-    public void setSign(String sign) {
-        this.sign = sign;
-    }
 
     public int getTotalRefundCount() {
         return totalRefundCount;

@@ -14,12 +14,6 @@ public class WxPayOrderCloseV2Request extends WxPayBaseRequest {
     @XStreamAlias("out_trade_no")
     private String outTradeNo;
 
-    /**
-     * 签名类型，目前支持HMAC-SHA256和MD5，默认为MD5
-     */
-    @XStreamAlias("sign_type")
-    private String signType = WxPayConstants.SignType.MD5;
-
     public String getOutTradeNo() {
         return outTradeNo;
     }
@@ -27,15 +21,6 @@ public class WxPayOrderCloseV2Request extends WxPayBaseRequest {
     public void setOutTradeNo(String outTradeNo) {
         this.outTradeNo = outTradeNo;
     }
-
-    public String getSignType() {
-        return signType;
-    }
-
-    public void setSignType(String signType) {
-        this.signType = signType;
-    }
-
 
     public String toString() {
         return "WxPayOrderCloseV2Request{" +
@@ -50,15 +35,9 @@ public class WxPayOrderCloseV2Request extends WxPayBaseRequest {
 
     public static class Builder extends WxPayBaseRequest.Builder<Builder> {
         private String outTradeNo;
-        private String signType;
 
         public Builder outTradeNo(String outTradeNo) {
             this.outTradeNo = outTradeNo;
-            return this;
-        }
-
-        public Builder signType(String signType) {
-            this.signType = signType;
             return this;
         }
 

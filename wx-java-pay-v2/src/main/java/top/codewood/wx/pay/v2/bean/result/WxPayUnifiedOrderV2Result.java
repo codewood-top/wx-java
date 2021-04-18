@@ -13,33 +13,12 @@ import java.util.ArrayList;
 @XStreamAlias("xml")
 public class WxPayUnifiedOrderV2Result extends WxPayBaseResult {
 
-    /**
-     * 调用接口提交的公众账号ID
-     */
-    private String appid;
-
-    /**
-     * 调用接口提交的商户号
-     */
-    @XStreamAlias("mch_id")
-    private String mchid;
 
     /**
      * 自定义参数，可以为请求支付的终端设备号等
      */
     @XStreamAlias("device_info")
     public String deviceInfo;
-
-    /**
-     * 微信返回的随机字符串
-     */
-    @XStreamAlias("nonce_str")
-    private String nonceStr;
-
-    /**
-     * 微信返回的签名值，详见<a href="https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=4_3">签名算法</a>
-     */
-    private String sign;
 
     /**
      * 交易类型
@@ -65,22 +44,6 @@ public class WxPayUnifiedOrderV2Result extends WxPayBaseResult {
     @XStreamAlias("code_url")
     private String codeUrl;
 
-    public String getAppid() {
-        return appid;
-    }
-
-    public void setAppid(String appid) {
-        this.appid = appid;
-    }
-
-    public String getMchid() {
-        return mchid;
-    }
-
-    public void setMchid(String mchid) {
-        this.mchid = mchid;
-    }
-
     public String getDeviceInfo() {
         return deviceInfo;
     }
@@ -89,21 +52,6 @@ public class WxPayUnifiedOrderV2Result extends WxPayBaseResult {
         this.deviceInfo = deviceInfo;
     }
 
-    public String getNonceStr() {
-        return nonceStr;
-    }
-
-    public void setNonceStr(String nonceStr) {
-        this.nonceStr = nonceStr;
-    }
-
-    public String getSign() {
-        return sign;
-    }
-
-    public void setSign(String sign) {
-        this.sign = sign;
-    }
 
     public String getTradeType() {
         return tradeType;

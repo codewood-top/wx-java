@@ -87,7 +87,7 @@ public class WxPayDownloadFundFlowV2Request extends WxPayBaseRequest {
     }
 
     public static class Builder extends WxPayBaseRequest.Builder<Builder> {
-        private String signType;
+        private String signType = WxPayConstants.SignType.HMAC_SHA256;
         private String billDate;
         private String accountType;
         private String tarType;

@@ -11,12 +11,6 @@ import top.codewood.wx.pay.v2.bean.WxPayBaseRequest;
 public class WxPayRefundQueryV2Request extends WxPayBaseRequest {
 
     /**
-     * 签名类型，目前支持HMAC-SHA256和MD5，默认为MD5
-     */
-    @XStreamAlias("sign_type")
-    private String signType = WxPayConstants.SignType.MD5;
-
-    /**
      * 微信订单号
      * 微信订单号查询的优先级是： refund_id > out_refund_no > transaction_id > out_trade_no
      */
@@ -48,14 +42,6 @@ public class WxPayRefundQueryV2Request extends WxPayBaseRequest {
      * 偏移量，当部分退款次数超过10次时可使用，表示返回的查询结果从这个偏移量开始取记录
      */
     private int offset;
-
-    public String getSignType() {
-        return signType;
-    }
-
-    public void setSignType(String signType) {
-        this.signType = signType;
-    }
 
     public String getTransactionId() {
         return transactionId;
@@ -115,17 +101,11 @@ public class WxPayRefundQueryV2Request extends WxPayBaseRequest {
 
     public static class Builder extends WxPayBaseRequest.Builder<Builder> {
 
-        private String signType;
         private String transactionId;
         private String outTradeNo;
         private String outRefundNo;
         private String refundId;
         private Integer offset;
-
-        public Builder signType(String signType) {
-            this.signType = signType;
-            return this;
-        }
 
         public Builder transactionId(String transactionId) {
             this.transactionId = transactionId;

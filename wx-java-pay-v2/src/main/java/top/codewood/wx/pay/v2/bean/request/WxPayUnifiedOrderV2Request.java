@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import top.codewood.wx.annotation.Required;
 import top.codewood.wx.pay.v2.bean.WxPayBaseRequest;
+import top.codewood.wx.pay.v2.common.WxPayConstants;
 
 import java.io.Serializable;
 
@@ -14,7 +15,7 @@ public class WxPayUnifiedOrderV2Request extends WxPayBaseRequest {
      * 签名类型，默认为MD5，支持HMAC-SHA256和MD5。
      */
     @XStreamAlias("sign_type")
-    private String signType;
+    private String signType = WxPayConstants.SignType.MD5;
 
     /**
      * 自定义参数，可以为终端设备号(门店号或收银设备ID)，PC网页或公众号内支付可以传"WEB"
