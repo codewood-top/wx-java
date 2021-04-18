@@ -5,7 +5,7 @@
     <parent>
         <artifactId>wx-java</artifactId>
         <groupId>top.codewood.wx</groupId>
-        <version>1.0.3</version>
+        <version>1.0.4</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>wx-java-pay-v2</artifactId>
@@ -16,7 +16,7 @@
         <dependency>
             <groupId>top.codewood.wx</groupId>
             <artifactId>wx-java-common</artifactId>
-            <version>1.0.3</version>
+            <version>1.0.4</version>
         </dependency>
 
         <!-- 引入 BouncyCastleProvider, 用于退款通知结果 AES/ECB/PKCS7Padding 解密  -->

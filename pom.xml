@@ -7,7 +7,7 @@
     <groupId>top.codewood.wx</groupId>
     <artifactId>wx-java</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <name>wx-java</name>
     <description>微信公众号/小程序, App服务端API</description>
     <url>https://github.com/codewood-top/wx-java</url>
