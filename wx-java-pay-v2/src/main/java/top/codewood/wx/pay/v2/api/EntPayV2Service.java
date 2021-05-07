@@ -1,13 +1,11 @@
 package top.codewood.wx.pay.v2.api;
 
+import top.codewood.wx.common.util.StringUtils;
 import top.codewood.wx.common.util.bean.BeanUtils;
 import top.codewood.wx.common.util.xml.XStreamConverter;
+import top.codewood.wx.pay.v2.bean.entpay.*;
 import top.codewood.wx.pay.v2.common.WxPayConfig;
 import top.codewood.wx.pay.v2.common.WxPayConstants;
-import top.codewood.wx.pay.v2.bean.entpay.EntPayQueryRequest;
-import top.codewood.wx.pay.v2.bean.entpay.EntPayQueryResult;
-import top.codewood.wx.pay.v2.bean.entpay.EntPayRequest;
-import top.codewood.wx.pay.v2.bean.entpay.EntPayResult;
 import top.codewood.wx.pay.v2.bean.redpack.*;
 
 public class EntPayV2Service extends WxPayV2BaseService {
@@ -30,6 +28,7 @@ public class EntPayV2Service extends WxPayV2BaseService {
      */
     public WxPayRedPackResult sendRedPack(WxPayRedPackRequest redPackRequest) {
         assert redPackRequest != null && wxPayConfig != null;
+        checkNonceStr(redPackRequest);
         checkAndSign(redPackRequest, wxPayConfig.getKey());
         return requestWithCert(wxPayConfig, WxPayConstants.EntPayUrl.REDPACK_SEND_URL, redPackRequest.toXml(), WxPayRedPackResult.class);
     }
@@ -43,6 +42,7 @@ public class EntPayV2Service extends WxPayV2BaseService {
      */
     public WxPayRedPackResult sendGroupRedPack(WxPayGroupRedPackRequest groupRedPackRequest) {
         assert groupRedPackRequest != null && wxPayConfig != null;
+        checkNonceStr(groupRedPackRequest);
         checkAndSign(groupRedPackRequest, wxPayConfig.getKey());
         return requestWithCert(wxPayConfig, WxPayConstants.EntPayUrl.REDPACK_GROUP_SEND_URL, groupRedPackRequest.toXml(), WxPayRedPackResult.class);
     }
@@ -63,6 +63,7 @@ public class EntPayV2Service extends WxPayV2BaseService {
      */
     public WxPayRedPackQueryResult queryRedPack(WxPayRedPackQueryRequest redPackQueryRequest) {
         assert redPackQueryRequest != null && wxPayConfig != null;
+        checkNonceStr(redPackQueryRequest);
         checkAndSign(redPackQueryRequest, wxPayConfig.getKey());
         return requestWithCert(wxPayConfig, WxPayConstants.EntPayUrl.REDPACK_QUERY_URL, redPackQueryRequest.toXml(), WxPayRedPackQueryResult.class);
     }
@@ -77,6 +78,9 @@ public class EntPayV2Service extends WxPayV2BaseService {
      */
     public EntPayResult entPay(EntPayRequest entPayRequest) {
         assert entPayRequest != null && wxPayConfig != null;
+        if (entPayRequest.getNonceStr() == null) {
+            entPayRequest.setNonceStr(StringUtils.randomString(32));
+        }
         BeanUtils.checkRequiredFields(entPayRequest);
         if (entPayRequest.getSign() == null) {
             String sign = sign(entPayRequest, wxPayConfig.getKey());
@@ -95,8 +99,61 @@ public class EntPayV2Service extends WxPayV2BaseService {
      */
     public EntPayQueryResult entPayQuery(EntPayQueryRequest entPayQueryRequest) {
         assert entPayQueryRequest != null && wxPayConfig != null;
+        checkNonceStr(entPayQueryRequest);
         checkAndSign(entPayQueryRequest, wxPayConfig.getKey());
         return requestWithCert(wxPayConfig, WxPayConstants.EntPayUrl.ENTPAY_QUERY_URL, entPayQueryRequest.toXml(), EntPayQueryResult.class);
+    }
+
+    /**
+     * 企业付款到银行卡API
+     * 企业付款业务是基于微信支付商户平台的资金管理能力，为了协助商户方便地实现企业向银行卡付款，针对部分有开发能力的商户，提供通过API完成企业付款到银行卡的功能。
+     *
+     * @param entPayBankRequest
+     * @return
+     */
+    public EntPayBankResult entPayBank(EntPayBankRequest entPayBankRequest) {
+        assert entPayBankRequest != null && wxPayConfig != null;
+        checkNonceStr(entPayBankRequest);
+        BeanUtils.checkRequiredFields(entPayBankRequest);
+        if (entPayBankRequest.getSign() == null) {
+            String sign = sign(entPayBankRequest, wxPayConfig.getKey());
+            entPayBankRequest.setSign(sign);
+        }
+        return requestWithCert(wxPayConfig, WxPayConstants.EntPayUrl.ENTPAY_PAY_BANK_URL, XStreamConverter.toXml(entPayBankRequest), EntPayBankResult.class);
+    }
+
+    /**
+     * 查询企业付款银行卡API
+     * 用于对商户企业付款到银行卡操作进行结果查询，返回付款操作详细结果。
+     *
+     * @param entPayBankQueryRequest
+     * @return
+     */
+    public EntPayBankQueryResult entPayBankQuery(EntPayBankQueryRequest entPayBankQueryRequest) {
+        assert entPayBankQueryRequest != null && wxPayConfig != null;
+        if (entPayBankQueryRequest.getNonceStr() == null) {
+            entPayBankQueryRequest.setNonceStr(StringUtils.randomString(32));
+        }
+        BeanUtils.checkRequiredFields(entPayBankQueryRequest);
+        if (entPayBankQueryRequest.getSign() == null) {
+            String sign = sign(entPayBankQueryRequest, wxPayConfig.getKey());
+            entPayBankQueryRequest.setSign(sign);
+        }
+        return requestWithCert(wxPayConfig, WxPayConstants.EntPayUrl.ENTPAY_PAY_BANK_QUERY_URL, XStreamConverter.toXml(entPayBankQueryRequest), EntPayBankQueryResult.class);
+    }
+
+    /**
+     * 获取RSA加密公钥API
+     * <a href="https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=24_7&index=4">参考文档</a>
+     *
+     * @param getPublicKeyRequest
+     * @return
+     */
+    public GetPublicKeyResult getPublicKey(GetPublicKeyRequest getPublicKeyRequest) {
+        assert getPublicKeyRequest != null && wxPayConfig != null;
+        checkNonceStr(getPublicKeyRequest);
+        checkAndSign(getPublicKeyRequest, wxPayConfig.getKey());
+        return requestWithCert(wxPayConfig, WxPayConstants.EntPayUrl.ENTPAY_RSA_PUBLIC_KEY_URL, getPublicKeyRequest.toXml(), GetPublicKeyResult.class);
     }
 
 

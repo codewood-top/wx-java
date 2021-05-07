@@ -34,7 +34,6 @@ public class EntPayRequest implements Serializable {
      * 设备号
      * 微信支付分配的终端设备号
      */
-    @Required
     @XStreamAlias("device_info")
     private String deviceInfo;
 
@@ -50,7 +49,6 @@ public class EntPayRequest implements Serializable {
      * 签名
      * 详见<a href="https://pay.weixin.qq.com/wiki/doc/api/tools/cash_coupon.php?chapter=4_3">签名生成算法</a>
      */
-    @Required
     protected String sign;
 
     /**
@@ -222,4 +220,97 @@ public class EntPayRequest implements Serializable {
                 ", spbillCreateIp='" + spbillCreateIp + '\'' +
                 '}';
     }
+
+    public static class Builder {
+        private String mchAppid;
+        private String mchid;
+        private String deviceInfo;
+        private String nonceStr;
+        private String partnerTradeNo;
+        private String openid;
+        private String checkName;
+        private String reUserName;
+        private int amount;
+        private String desc;
+        private String spbillCreateIp;
+
+        public Builder mchAppid(String mchAppid) {
+            this.mchAppid = mchAppid;
+            return this;
+        }
+
+        public Builder mchid(String mchid) {
+            this.mchid = mchid;
+            return this;
+        }
+
+        public Builder deviceInfo(String deviceInfo) {
+            this.deviceInfo = deviceInfo;
+            return this;
+        }
+
+        public Builder nonceStr(String nonceStr) {
+            this.nonceStr = nonceStr;
+            return this;
+        }
+
+        public Builder partnerTradeNo(String partnerTradeNo) {
+            this.partnerTradeNo = partnerTradeNo;
+            return this;
+        }
+
+        public Builder openid(String openid) {
+            this.openid = openid;
+            return this;
+        }
+
+        public Builder checkName(String checkName) {
+            this.checkName = checkName;
+            return this;
+        }
+
+        public Builder reUserName(String reUserName) {
+            this.reUserName = reUserName;
+            return this;
+        }
+
+        public Builder amount(int amount) {
+            this.amount = amount;
+            return this;
+        }
+
+        public Builder desc(String desc) {
+            this.desc = desc;
+            return this;
+        }
+
+        public Builder spbillCreateIp(String spbillCreateIp) {
+            this.spbillCreateIp = spbillCreateIp;
+            return this;
+        }
+
+        public EntPayRequest build() {
+            EntPayRequest entPayRequest = new EntPayRequest();
+            entPayRequest.setMchAppid(this.mchAppid);
+            entPayRequest.setMchid(this.mchid);
+            entPayRequest.setDeviceInfo(this.deviceInfo);
+            entPayRequest.setNonceStr(this.nonceStr);
+            entPayRequest.setPartnerTradeNo(this.partnerTradeNo);
+            entPayRequest.setOpenid(this.openid);
+            entPayRequest.setAmount(this.amount);
+            entPayRequest.setDesc(this.desc);
+            entPayRequest.setSpbillCreateIp(this.spbillCreateIp);
+
+            if (this.checkName != null) {
+                entPayRequest.setCheckName(this.checkName);
+            }
+            if (this.reUserName != null) {
+                entPayRequest.setReUserName(this.reUserName);
+            }
+
+            return entPayRequest;
+        }
+
+    }
+
 }

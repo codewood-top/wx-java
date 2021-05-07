@@ -3,6 +3,7 @@ package top.codewood.wx.pay.v2.api;
 import org.apache.commons.codec.digest.DigestUtils;
 import top.codewood.wx.common.bean.error.WxErrorException;
 import top.codewood.wx.common.util.SignUtils;
+import top.codewood.wx.common.util.StringUtils;
 import top.codewood.wx.common.util.bean.BeanUtils;
 import top.codewood.wx.common.util.xml.XStreamConverter;
 import top.codewood.wx.common.util.xml.XmlUtils;
@@ -85,6 +86,12 @@ public abstract class WxPayV2BaseService {
         t.checkRequiredFields();
         String sign = sign(t, signKey);
         t.setSign(sign);
+    }
+
+    public  <T extends WxPayBaseRequest> void checkNonceStr(T t) {
+        if (t.getNonceStr() == null) {
+            t.setNonceStr(StringUtils.randomString(32));
+        }
     }
 
     protected <T extends WxPayBaseResult> T requestWithCert(WxPayConfig wxPayConfig, String url, String data, Class<T> clz) {

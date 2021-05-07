@@ -26,6 +26,7 @@ public class WxPayV2Service extends WxPayV2BaseService {
      */
     public WxPayUnifiedOrderV2Result unifiedOrder(WxPayUnifiedOrderV2Request unifiedOrderV2Request) {
         assert unifiedOrderV2Request != null && wxPayConfig != null;
+        checkNonceStr(unifiedOrderV2Request);
         checkAndSign(unifiedOrderV2Request, wxPayConfig.getKey());
         return request(wxPayConfig, WxPayConstants.V2PayUrl.UNIFIED_ORDER_URL, unifiedOrderV2Request.toXml(), WxPayUnifiedOrderV2Result.class);
     }
@@ -46,6 +47,7 @@ public class WxPayV2Service extends WxPayV2BaseService {
      */
     public WxPayOrderQueryV2Result orderQuery(WxPayOrderQueryV2Request orderQueryV2Request) {
         assert orderQueryV2Request != null && wxPayConfig != null;
+        checkNonceStr(orderQueryV2Request);
         checkAndSign(orderQueryV2Request, wxPayConfig.getKey());
         return request(wxPayConfig, WxPayConstants.V2PayUrl.ORDER_QUERY_URL, orderQueryV2Request.toXml(), WxPayOrderQueryV2Result.class);
 
@@ -63,6 +65,7 @@ public class WxPayV2Service extends WxPayV2BaseService {
      */
     public WxPayOrderCloseV2Result closeOrder(WxPayOrderCloseV2Request orderCloseV2Request) {
         assert orderCloseV2Request != null && wxPayConfig != null;
+        checkNonceStr(orderCloseV2Request);
         checkAndSign(orderCloseV2Request, wxPayConfig.getKey());
         return request(wxPayConfig, WxPayConstants.V2PayUrl.ORDER_CLOSE_URL, orderCloseV2Request.toXml(), WxPayOrderCloseV2Result.class);
 
@@ -88,6 +91,7 @@ public class WxPayV2Service extends WxPayV2BaseService {
      */
     public WxPayRefundV2Result refund(WxPayRefundV2Request refundV2Request) {
         assert refundV2Request != null && wxPayConfig != null;
+        checkNonceStr(refundV2Request);
         checkAndSign(refundV2Request, wxPayConfig.getKey());
         return requestWithCert(wxPayConfig, WxPayConstants.V2PayUrl.REFUND_URL, refundV2Request.toXml(), WxPayRefundV2Result.class);
     }
@@ -108,6 +112,7 @@ public class WxPayV2Service extends WxPayV2BaseService {
      */
     public WxPayRefundQueryV2Result refundQuery(WxPayRefundQueryV2Request refundQueryV2Request) {
         assert refundQueryV2Request != null && wxPayConfig != null;
+        checkNonceStr(refundQueryV2Request);
         checkAndSign(refundQueryV2Request, wxPayConfig.getKey());
         return request(wxPayConfig, WxPayConstants.V2PayUrl.REFUND_URL, refundQueryV2Request.toXml(), WxPayRefundQueryV2Result.class);
     }

@@ -31,6 +31,7 @@ public class ProfitSharingV2Service extends WxPayV2BaseService {
      */
     public ProfitSharingV2Result request(ProfitSharingV2Request profitSharingV2Request) {
         assert profitSharingV2Request != null;
+        checkNonceStr(profitSharingV2Request);
         checkAndSign(profitSharingV2Request, wxPayConfig.getKey());
         return requestWithCert(wxPayConfig, WxPayConstants.ProfitSharingUrl.PROFIT_SHARING_URL, profitSharingV2Request.toXml(), ProfitSharingV2Result.class);
     }
@@ -48,6 +49,7 @@ public class ProfitSharingV2Service extends WxPayV2BaseService {
      */
     public ProfitSharingV2Result multiRequest(ProfitSharingV2Request profitSharingV2Request) {
         assert profitSharingV2Request != null;
+        checkNonceStr(profitSharingV2Request);
         checkAndSign(profitSharingV2Request, wxPayConfig.getKey());
         return requestWithCert(wxPayConfig, WxPayConstants.ProfitSharingUrl.PROFIT_SHARING_MULTI_URL, profitSharingV2Request.toXml(), ProfitSharingV2Result.class);
     }
@@ -64,6 +66,7 @@ public class ProfitSharingV2Service extends WxPayV2BaseService {
      */
     public ProfitSharingQueryV2Result query(ProfitSharingQueryV2Request queryRequest) {
         assert queryRequest != null;
+        checkNonceStr(queryRequest);
         checkAndSign(queryRequest, wxPayConfig.getKey());
         return request(wxPayConfig, WxPayConstants.ProfitSharingUrl.PROFIT_SHARING_QUERY_URL, queryRequest.toXml(), ProfitSharingQueryV2Result.class);
     }
@@ -79,6 +82,7 @@ public class ProfitSharingV2Service extends WxPayV2BaseService {
      */
     public ProfitSharingReceiverV2Result addReceiver(ProfitSharingReceiverV2Request receiverRequest) {
         assert receiverRequest != null;
+        checkNonceStr(receiverRequest);
         checkAndSign(receiverRequest, wxPayConfig.getKey());
         return request(wxPayConfig, WxPayConstants.ProfitSharingUrl.PROFIT_SHARING_ADD_RECEIVER_URL, receiverRequest.toXml(), ProfitSharingReceiverV2Result.class);
     }
@@ -94,6 +98,7 @@ public class ProfitSharingV2Service extends WxPayV2BaseService {
      */
     public ProfitSharingReceiverV2Result removeReceiver(ProfitSharingReceiverV2Request receiverRequest) {
         assert receiverRequest != null;
+        checkNonceStr(receiverRequest);
         checkAndSign(receiverRequest, wxPayConfig.getKey());
         return request(wxPayConfig, WxPayConstants.ProfitSharingUrl.PROFIT_SHARING_REMOVE_RECEIVER_URL, receiverRequest.toXml(), ProfitSharingReceiverV2Result.class);
     }
@@ -111,6 +116,7 @@ public class ProfitSharingV2Service extends WxPayV2BaseService {
      */
     public ProfitSharingV2Result finish(ProfitSharingFinishV2Request finishRequest) {
         assert finishRequest != null;
+        checkNonceStr(finishRequest);
         checkAndSign(finishRequest, wxPayConfig.getKey());
         return requestWithCert(wxPayConfig, WxPayConstants.ProfitSharingUrl.PROFIT_SHARING_FINISH_URL, finishRequest.toXml(), ProfitSharingV2Result.class);
     }
@@ -128,6 +134,7 @@ public class ProfitSharingV2Service extends WxPayV2BaseService {
     public ProfitSharingAmountQueryV2Result orderAmountQuery(ProfitSharingAmountQueryV2Request amountQueryRequest) {
         assert amountQueryRequest != null;
         try {
+            checkNonceStr(amountQueryRequest);
             checkAndSign(amountQueryRequest, wxPayConfig.getKey());
             return request(wxPayConfig, WxPayConstants.ProfitSharingUrl.PROFIT_SHARING_ORDER_AMOUNT_QUERY_URL, amountQueryRequest.toXml(), ProfitSharingAmountQueryV2Result.class);
         } catch (WxErrorException e) {
@@ -153,6 +160,7 @@ public class ProfitSharingV2Service extends WxPayV2BaseService {
     public ProfitSharingReturnV2Result returnRequest(ProfitSharingReturnV2Request resultRequest) {
         assert resultRequest != null;
         try {
+            checkNonceStr(resultRequest);
             checkAndSign(resultRequest, wxPayConfig.getKey());
             String respStr = new WxPayHttpClient(wxPayConfig).requestWithCert(WxPayConstants.ProfitSharingUrl.PROFIT_SHARING_RETURN_URL, resultRequest.toXml());
             ProfitSharingReturnV2Result returnResult = XStreamConverter.fromXml(ProfitSharingReturnV2Result.class, respStr);
@@ -178,6 +186,7 @@ public class ProfitSharingV2Service extends WxPayV2BaseService {
     public ProfitSharingReturnV2Result returnQuery(ProfitSharingReturnQueryV2Request returnQueryRequest) {
         assert returnQueryRequest != null;
         try {
+            checkNonceStr(returnQueryRequest);
             checkAndSign(returnQueryRequest, wxPayConfig.getKey());
             String respStr = new WxPayHttpClient(wxPayConfig).requestWithoutCert(WxPayConstants.ProfitSharingUrl.PROFIT_SHARING_RETURN_QUERY_URL, returnQueryRequest.toXml());
             ProfitSharingReturnV2Result returnResult = XStreamConverter.fromXml(ProfitSharingReturnV2Result.class, respStr);
