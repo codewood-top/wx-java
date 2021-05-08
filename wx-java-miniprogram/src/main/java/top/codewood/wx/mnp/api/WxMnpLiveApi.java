@@ -13,6 +13,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 小程序直播-直播间接口
+ *
+ * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/studio-api.html">参考文档</a>
+ *
+ */
 public class WxMnpLiveApi extends WxBaseHttpApi {
 
     private static class Holder {
