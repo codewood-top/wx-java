@@ -32,6 +32,7 @@ public class WxMnpLiveApi extends WxBaseHttpApi {
     /**
      * 创建直播间
      * 调用此接口创建直播间，创建成功后将在直播间列表展
+     * 调用额度：10000次/一天
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/studio-api.html#1">参考文档</a>
      *
@@ -48,6 +49,7 @@ public class WxMnpLiveApi extends WxBaseHttpApi {
     /**
      * 获取直播间列表
      * 调用此接口获取直播间列表及直播间信息
+     * 调用额度：100000次/一天（与获取回放接口共用次数）
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/studio-api.html#2">参考文档</a>
      *
@@ -67,6 +69,7 @@ public class WxMnpLiveApi extends WxBaseHttpApi {
     /**
      * 获取直播间回放
      * 调用接口获取已结束直播间的回放源视频（一般在直播结束后10分钟内生成，源视频无评论等内容）
+     * 调用额度：100000次/一天
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/studio-api.html#3">参考文档</a>
      *
@@ -93,6 +96,7 @@ public class WxMnpLiveApi extends WxBaseHttpApi {
     /**
      * 直播间导入商品
      * 调用接口往指定直播间导入已入库的商品
+     * 调用额度：10000次/一天
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/studio-api.html#4">参考文档</a>
      *
@@ -113,6 +117,7 @@ public class WxMnpLiveApi extends WxBaseHttpApi {
 
     /**
      * 删除直播间
+     * 调用额度：10000次/一天
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/studio-api.html#5">参考文档</a>
      *
@@ -128,6 +133,7 @@ public class WxMnpLiveApi extends WxBaseHttpApi {
 
     /**
      * 编辑直播间
+     * 调用额度：10000次/一天
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/studio-api.html#6">参考文档</a>
      *
@@ -143,6 +149,7 @@ public class WxMnpLiveApi extends WxBaseHttpApi {
 
     /**
      * 获取直播间推流地址
+     * 调用额度：10000次/一天
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/studio-api.html#7">参考文档</a>
      *
@@ -161,6 +168,7 @@ public class WxMnpLiveApi extends WxBaseHttpApi {
 
     /**
      *  获取直播间分享二维码
+     *  调用额度：10000次/一天
      *
      *  <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/studio-api.html#8">参考文档</a>
      *
@@ -190,6 +198,7 @@ public class WxMnpLiveApi extends WxBaseHttpApi {
 
     /**
      * 添加管理直播间小助手
+     * 调用额度：10000次/一天
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/studio-api.html#9">参考文档</a>
      *
@@ -209,6 +218,7 @@ public class WxMnpLiveApi extends WxBaseHttpApi {
 
     /**
      * 修改管理直播间小助手
+     * 调用额度：10000次/一天
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/studio-api.html#10">参考文档</a>
      *
@@ -231,8 +241,8 @@ public class WxMnpLiveApi extends WxBaseHttpApi {
     }
 
     /**
-     *
      * 删除管理直播间小助手
+     * 调用额度：10000次/一天
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/studio-api.html#11">参考文档</a>
      *
@@ -253,6 +263,7 @@ public class WxMnpLiveApi extends WxBaseHttpApi {
 
     /**
      * 查询管理直播间小助手
+     * 调用额度：10000次/一天
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/studio-api.html#12">参考文档</a>
      *
@@ -270,6 +281,7 @@ public class WxMnpLiveApi extends WxBaseHttpApi {
 
     /**
      *  添加主播副号
+     *  调用额度：10000次/一天
      *
      *  <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/studio-api.html#13">参考文档</a>
      *
@@ -290,6 +302,7 @@ public class WxMnpLiveApi extends WxBaseHttpApi {
 
     /**
      * 修改主播副号
+     * 调用额度：10000次/一天
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/studio-api.html#14">参考文档</a>
      *
@@ -311,6 +324,7 @@ public class WxMnpLiveApi extends WxBaseHttpApi {
 
     /**
      * 删除主播副号
+     * 调用额度：10000次/一天
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/studio-api.html#15">参考文档</a>
      *
@@ -329,6 +343,7 @@ public class WxMnpLiveApi extends WxBaseHttpApi {
 
     /**
      * 获取主播副号
+     * 调用额度：10000次/一天
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/studio-api.html#16">参考文档</a>
      *
@@ -349,6 +364,7 @@ public class WxMnpLiveApi extends WxBaseHttpApi {
 
     /**
      * 开启/关闭直播间官方收录
+     * 调用额度：10000次/一天
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/studio-api.html#17">参考文档</a>
      *
@@ -369,6 +385,7 @@ public class WxMnpLiveApi extends WxBaseHttpApi {
 
     /**
      *  开启/关闭回放功能
+     *  调用额度：10000次/一天
      *
      *  <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/studio-api.html#18">参考文档</a>
      *
@@ -390,6 +407,7 @@ public class WxMnpLiveApi extends WxBaseHttpApi {
 
     /**
      * 开启/关闭客服功能
+     * 调用额度：10000次/一天
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/studio-api.html#19">参考文档</a>
      *
@@ -410,6 +428,7 @@ public class WxMnpLiveApi extends WxBaseHttpApi {
 
     /**
      *  开启/关闭直播间全局禁言
+     *  调用额度：10000次/一天
      *
      *  <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/studio-api.html#20">参考文档</a>
      *
@@ -430,6 +449,7 @@ public class WxMnpLiveApi extends WxBaseHttpApi {
 
     /**
      * 上下架商品
+     * 调用额度：10000次/一天
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/studio-api.html#21">参考文档</a>
      *
@@ -452,6 +472,7 @@ public class WxMnpLiveApi extends WxBaseHttpApi {
 
     /**
      * 删除直播间商品
+     * 调用额度：10000次/一天
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/studio-api.html#22">参考文档</a>
      *
@@ -472,6 +493,7 @@ public class WxMnpLiveApi extends WxBaseHttpApi {
 
     /**
      * 推送商品
+     * 调用额度：10000次/一天
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/studio-api.html#23">参考文档</a>
      *
@@ -492,6 +514,7 @@ public class WxMnpLiveApi extends WxBaseHttpApi {
 
     /**
      * 直播间商品排序
+     * 调用额度：10000次/一天
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/studio-api.html#24">参考文档</a>
      *
@@ -521,6 +544,7 @@ public class WxMnpLiveApi extends WxBaseHttpApi {
 
     /**
      * 下载商品讲解视频
+     * 调用额度：10000次/一天
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/studio-api.html#25">参考文档</a>
      *

@@ -31,6 +31,7 @@ public class WxMnpLiveGoodsApi extends WxBaseHttpApi {
      * 商品添加并提审
      * 调用此接口上传并提审需要直播的商品信息，审核通过后商品录入【小程序直播】商品库
      * 注意：开发者必须保存【商品ID】与【审核单ID】，如果丢失，则无法调用其他相关接口
+     * 调用额度：500次/一天
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/commodity-api.html#1">参考文档</a>
      *
@@ -52,6 +53,7 @@ public class WxMnpLiveGoodsApi extends WxBaseHttpApi {
     /**
      * 撤回审核
      * 调用此接口，可撤回直播商品的提审申请，消耗的提审次数不返还
+     * 调用额度：500次/一天
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/commodity-api.html#2">参考文档</a>
      *
@@ -73,6 +75,7 @@ public class WxMnpLiveGoodsApi extends WxBaseHttpApi {
     /**
      * 重新提交审核
      * 调用此接口可以对已撤回提审的商品再次发起提审申请
+     * 调用额度：500次/一天（与接口1共用500次限制）
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/commodity-api.html#3">参考文档</a>
      *
@@ -95,6 +98,7 @@ public class WxMnpLiveGoodsApi extends WxBaseHttpApi {
     /**
      * 删除商品
      * 调用此接口，可删除【小程序直播】商品库中的商品，删除后直播间上架的该商品也将被同步删除，不可恢复；
+     * 调用额度：1000次/一天
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/commodity-api.html#4">参考文档</a>
      *
@@ -114,6 +118,7 @@ public class WxMnpLiveGoodsApi extends WxBaseHttpApi {
     /**
      * 更新商品
      * 调用此接口可以更新商品信息，审核通过的商品仅允许更新价格类型与价格，审核中的商品不允许更新，未审核的商品允许更新所有字段， 只传入需要更新的字段。
+     * 调用额度：1000次/一天
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/commodity-api.html#5">参考文档</a>
      *
@@ -133,6 +138,7 @@ public class WxMnpLiveGoodsApi extends WxBaseHttpApi {
     /**
      * 获取商品状态
      * 调用此接口可获取商品的信息与审核状态
+     * 调用额度：1000次/一天
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/commodity-api.html#6">参考文档</a>
      *
@@ -155,6 +161,7 @@ public class WxMnpLiveGoodsApi extends WxBaseHttpApi {
     /**
      * 获取商品列表
      * 调用此接口可获取商品列表
+     * 调用额度：10000次/一天
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/liveplayer/commodity-api.html#7">参考文档</a>
      *
@@ -175,7 +182,6 @@ public class WxMnpLiveGoodsApi extends WxBaseHttpApi {
         map.put("status", status);
 
         String respStr = post(url, WxGsonBuilder.instance().toJson(map));
-
         return WxGsonBuilder.instance().fromJson(respStr, WxMnpLiveGoodsListResult.class);
     }
 
