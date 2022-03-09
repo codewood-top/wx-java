@@ -1,4 +1,4 @@
-package top.codewood.wx.mnp.bean.result;
+package top.codewood.wx.mnp.bean.auth;
 
 import com.google.gson.annotations.SerializedName;
 

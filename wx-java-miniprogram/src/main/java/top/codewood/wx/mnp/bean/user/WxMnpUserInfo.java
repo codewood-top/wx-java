@@ -5,15 +5,15 @@ import top.codewood.wx.mnp.bean.WaterMark;
 
 import java.io.Serializable;
 
+/**
+ * 2021年10月20日后 微信服务端不再提供用户性别及地区信息
+ */
 public class WxMnpUserInfo implements Serializable {
 
     @SerializedName("openId")
     private String openid;
     @SerializedName("nickName")
     private String nickname;
-    private String gender;
-    private String province;
-    private String city;
     private String avatarUrl;
     private String unionId;
 
@@ -36,29 +36,6 @@ public class WxMnpUserInfo implements Serializable {
         this.nickname = nickname;
     }
 
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getProvince() {
-        return province;
-    }
-
-    public void setProvince(String province) {
-        this.province = province;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
 
     public String getAvatarUrl() {
         return avatarUrl;
@@ -89,9 +66,6 @@ public class WxMnpUserInfo implements Serializable {
         return "WxMnpUserInfo{" +
                 "openid='" + openid + '\'' +
                 ", nickname='" + nickname + '\'' +
-                ", gender='" + gender + '\'' +
-                ", province='" + province + '\'' +
-                ", city='" + city + '\'' +
                 ", avatarUrl='" + avatarUrl + '\'' +
                 ", unionId='" + unionId + '\'' +
                 ", waterMark=" + waterMark +

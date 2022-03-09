@@ -162,7 +162,7 @@ public class WxMpUserApi extends WxMpApi {
     }
 
     /**
-     * 获取用户基本信息（包括UnionID机制） lang: 返回国家地区语言版本，zh_CN 简体，zh_TW 繁体，en 英语
+     * 获取用户基本信息（包括UnionID机制） lang: 微信服务端强制返回 zh_CN 简体
      * @param accessToken
      * @param openid
      * @return
