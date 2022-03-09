@@ -6,14 +6,16 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
-import top.codewood.wx.pay.v2.common.WxPayConfig;
-import top.codewood.wx.pay.v2.common.WxPayConstants;
-import top.codewood.wx.pay.v2.common.WxPayHttpClient;
+import top.codewood.wx.pay.v3.bean.error.WxPayError;
+import top.codewood.wx.pay.v3.bean.error.WxPayErrorException;
 import top.codewood.wx.pay.v3.bean.notify.WxPayTransaction;
 import top.codewood.wx.pay.v3.bean.request.WxPayRequest;
 import top.codewood.wx.pay.v3.bean.request.WxRefundRequest;
 import top.codewood.wx.pay.v3.bean.result.WxPayBillDownloadResult;
 import top.codewood.wx.pay.v3.bean.result.WxRefundResult;
+import top.codewood.wx.pay.v3.common.WxPayConfig;
+import top.codewood.wx.pay.v3.common.WxPayConstants;
+import top.codewood.wx.pay.v3.common.WxPayHttpClient;
 import top.codewood.wx.pay.v3.util.json.WxGsonBuilder;
 
 import java.io.ByteArrayInputStream;
@@ -39,11 +41,25 @@ public class WxPayV3Service {
         this.wxPayConfig = wxPayConfig;
     }
 
+    private static String errorFilterResponse(int httpStatus, String resp) {
+        JsonObject json = GSON.fromJson(resp, JsonObject.class);
+        if (json.has("code") && json.has("message")) {
+            WxPayError wxPayError = WxGsonBuilder.create().fromJson(resp, WxPayError.class);
+            if (wxPayError.getCode() != null) {
+                wxPayError.setStatus(httpStatus);
+                throw new WxPayErrorException(wxPayError);
+            }
+        }
+
+        return resp;
+    }
+
     private String get(String url) {
         try {
             String token = WxPayV3Api.getToken(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), WxPayConstants.HttpMethod.GET, url, WxPayV3Api.EMPTY_STR);
             HttpResponse httpResponse = new WxPayHttpClient().getWithResponse(url, token);
-            return verifyHttpResponse(httpResponse);
+            String respBody = verifyHttpResponse(httpResponse);
+            return errorFilterResponse(httpResponse.getStatusLine().getStatusCode(), respBody);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -53,7 +69,8 @@ public class WxPayV3Service {
         try {
             String token = WxPayV3Api.getToken(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), WxPayConstants.HttpMethod.POST, url, data);
             HttpResponse httpResponse = new WxPayHttpClient().postWithResponse(url, data,  token);
-            return verifyHttpResponse(httpResponse);
+            String respBody = verifyHttpResponse(httpResponse);
+            return errorFilterResponse(httpResponse.getStatusLine().getStatusCode(), respBody);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -117,7 +134,7 @@ public class WxPayV3Service {
     public Map<String, String> unifiedOrder(String payType, WxPayRequest wxPayRequest) {
         assert wxPayConfig != null && payType != null && wxPayRequest != null;
 
-        if (WxPayConstants.PayType.JSAPI.getType().equals(payType)) {
+        if (WxPayConstants.PayType.JSAPI.getType().equalsIgnoreCase(payType)) {
             JsonObject json = GSON.toJsonTree(wxPayRequest).getAsJsonObject();
             String respStr = post(WxPayConstants.V3PayUrl.WX_PAY_JSAPI_URL, json.toString());
             return GSON.fromJson(respStr, Map.class);

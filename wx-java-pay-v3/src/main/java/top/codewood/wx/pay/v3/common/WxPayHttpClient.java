@@ -1,4 +1,4 @@
-package top.codewood.wx.pay.v2.common;
+package top.codewood.wx.pay.v3.common;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;

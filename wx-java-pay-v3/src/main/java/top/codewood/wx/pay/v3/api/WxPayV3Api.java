@@ -2,12 +2,12 @@ package top.codewood.wx.pay.v3.api;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import top.codewood.wx.pay.v2.common.WxPayConstants;
-import top.codewood.wx.pay.v2.common.WxPayHttpClient;
 import top.codewood.wx.pay.v3.bean.error.WxPayError;
 import top.codewood.wx.pay.v3.bean.error.WxPayErrorException;
 import top.codewood.wx.pay.v3.cert.CertificateItem;
 import top.codewood.wx.pay.v3.cert.CertificateList;
+import top.codewood.wx.pay.v3.common.WxPayConstants;
+import top.codewood.wx.pay.v3.common.WxPayHttpClient;
 import top.codewood.wx.pay.v3.util.crypt.WxPayV3CryptUtils;
 import top.codewood.wx.pay.v3.util.crypt.PemUtils;
 import top.codewood.wx.pay.v3.util.json.WxGsonBuilder;
@@ -51,7 +51,7 @@ public class WxPayV3Api {
     public static String buildMessage(String method, String reqUrl, long timeStamp, String nonceStr, String body) throws MalformedURLException {
         URL url = new URL(reqUrl);
         String signUrl = url.getPath();
-        if ("get".equals(method.toLowerCase()) && url.getQuery() != null) {
+        if ("get".equalsIgnoreCase(method) && url.getQuery() != null) {
             signUrl += "?" + url.getQuery();
         }
         return method + "\n" + signUrl + "\n" + timeStamp + "\n" + nonceStr + "\n" + body + "\n";
@@ -146,7 +146,7 @@ public class WxPayV3Api {
         return signature.verify(Base64.getDecoder().decode(wechatSignature));
     }
 
-    private static String handleResponse(int httpStatus, String resp) {
+    private static String errorFilterResponse(int httpStatus, String resp) {
         JsonObject json = GSON.fromJson(resp, JsonObject.class);
         if (json.has("code") && json.has("message")) {
             WxPayError wxPayError = WxGsonBuilder.create().fromJson(resp, WxPayError.class);

@@ -114,7 +114,7 @@ public class WxPayV2Service extends WxPayV2BaseService {
         assert refundQueryV2Request != null && wxPayConfig != null;
         checkNonceStr(refundQueryV2Request);
         checkAndSign(refundQueryV2Request, wxPayConfig.getKey());
-        return request(wxPayConfig, WxPayConstants.V2PayUrl.REFUND_URL, refundQueryV2Request.toXml(), WxPayRefundQueryV2Result.class);
+        return request(wxPayConfig, WxPayConstants.V2PayUrl.REFUND_QUERY_URL, refundQueryV2Request.toXml(), WxPayRefundQueryV2Result.class);
     }
 
     public String sign(Map map) {

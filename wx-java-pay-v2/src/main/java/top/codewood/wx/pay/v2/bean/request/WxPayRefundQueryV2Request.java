@@ -41,7 +41,7 @@ public class WxPayRefundQueryV2Request extends WxPayBaseRequest {
     /**
      * 偏移量，当部分退款次数超过10次时可使用，表示返回的查询结果从这个偏移量开始取记录
      */
-    private int offset;
+    private Integer offset;
 
     public String getTransactionId() {
         return transactionId;
@@ -75,11 +75,11 @@ public class WxPayRefundQueryV2Request extends WxPayBaseRequest {
         this.refundId = refundId;
     }
 
-    public int getOffset() {
+    public Integer getOffset() {
         return offset;
     }
 
-    public void setOffset(int offset) {
+    public void setOffset(Integer offset) {
         this.offset = offset;
     }
 
@@ -127,7 +127,7 @@ public class WxPayRefundQueryV2Request extends WxPayBaseRequest {
             return this;
         }
 
-        public Builder offset(int offset) {
+        public Builder offset(Integer offset) {
             this.offset = offset;
             return this;
         }

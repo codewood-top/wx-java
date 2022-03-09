@@ -1,4 +1,4 @@
-package top.codewood.wx.pay.v2.common;
+package top.codewood.wx.pay.v3.common;
 
 public class WxPayConstants {
 
