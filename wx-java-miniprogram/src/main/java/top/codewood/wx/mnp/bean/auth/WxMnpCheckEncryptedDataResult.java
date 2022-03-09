@@ -9,19 +9,19 @@ public class WxMnpCheckEncryptedDataResult implements Serializable {
     /**
      * 是否是合法的数据
      */
-    private boolean valid;
+    private boolean vaild;
     /**
      * 加密数据生成的时间戳，计数单位：秒
      */
     @SerializedName("create_time")
     private int createTime;
 
-    public boolean isValid() {
-        return valid;
+    public boolean isVaild() {
+        return vaild;
     }
 
-    public void setValid(boolean valid) {
-        this.valid = valid;
+    public void setVaild(boolean vaild) {
+        this.vaild = vaild;
     }
 
     public int getCreateTime() {

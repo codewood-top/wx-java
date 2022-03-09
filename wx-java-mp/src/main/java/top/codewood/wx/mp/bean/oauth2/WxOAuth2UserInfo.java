@@ -5,6 +5,9 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.Arrays;
 
+/**
+ * 2021年10月20日起，微信服务端不再提供用户性别以及地区信息
+ */
 public class WxOAuth2UserInfo implements Serializable {
 
     /**
@@ -17,24 +20,6 @@ public class WxOAuth2UserInfo implements Serializable {
      */
     private String nickname;
 
-    /**
-     * 	用户的性别，值为1时是男性，值为2时是女性，值为0时是未知
-     */
-    private int sex;
-    /**
-     * 用户个人资料填写的省份
-     */
-    private String province;
-
-    /**
-     * 普通用户个人资料填写的城市
-     */
-    private String city;
-
-    /**
-     * 国家，如中国为CN
-     */
-    private String country;
     /**
      * 用户头像，最后一个数值代表正方形头像大小（有0、46、64、96、132数值可选，0代表640*640正方形头像），用户没有头像时该项为空。若用户更换头像，原有头像URL将失效。
      */
@@ -67,38 +52,6 @@ public class WxOAuth2UserInfo implements Serializable {
         this.nickname = nickname;
     }
 
-    public int getSex() {
-        return sex;
-    }
-
-    public void setSex(int sex) {
-        this.sex = sex;
-    }
-
-    public String getProvince() {
-        return province;
-    }
-
-    public void setProvince(String province) {
-        this.province = province;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
     public String getHeadImgUrl() {
         return headImgUrl;
     }
@@ -128,10 +81,6 @@ public class WxOAuth2UserInfo implements Serializable {
         return "WxOAuth2UserInfo{" +
                 "openid='" + openid + '\'' +
                 ", nickname='" + nickname + '\'' +
-                ", sex=" + sex +
-                ", province='" + province + '\'' +
-                ", city='" + city + '\'' +
-                ", country='" + country + '\'' +
                 ", headImgUrl='" + headImgUrl + '\'' +
                 ", privilege=" + Arrays.toString(privilege) +
                 ", unionId='" + unionid + '\'' +

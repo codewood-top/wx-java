@@ -54,4 +54,14 @@ public class WxMnpPhoneInfo implements Serializable {
     public void setWaterMark(WaterMark waterMark) {
         this.waterMark = waterMark;
     }
+
+    @Override
+    public String toString() {
+        return "WxMnpPhoneInfo{" +
+                "phoneNumber='" + phoneNumber + '\'' +
+                ", purePhoneNumber='" + purePhoneNumber + '\'' +
+                ", countryCode='" + countryCode + '\'' +
+                ", waterMark=" + waterMark +
+                '}';
+    }
 }
