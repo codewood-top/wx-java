@@ -1,47 +1,48 @@
-package top.codewood.wx.mnp.bean.scheme;
+package top.codewood.wx.mnp.bean.link;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class WxMnpUrlSchemeQueryResult implements Serializable {
+public class WxMnpUrlLinkQueryResult implements Serializable {
 
     /**
-     * scheme 配置
+     * url_link 配置
      */
-    @SerializedName("scheme_info")
-    private SchemeInfo schemeInfo;
+    @SerializedName("url_link_info")
+    private UrlLinkInfo urlLinkInfo;
     /**
      * quota 配置
      */
-    @SerializedName("scheme_quota")
-    private SchemeQuota schemeQuota;
+    @SerializedName("url_link_quota")
+    private UrlLinkQuota urlLinkQuota;
 
-    public SchemeInfo getSchemeInfo() {
-        return schemeInfo;
+    public UrlLinkInfo getUrlLinkInfo() {
+        return urlLinkInfo;
     }
 
-    public void setSchemeInfo(SchemeInfo schemeInfo) {
-        this.schemeInfo = schemeInfo;
+    public void setUrlLinkInfo(UrlLinkInfo urlLinkInfo) {
+        this.urlLinkInfo = urlLinkInfo;
     }
 
-    public SchemeQuota getSchemeQuota() {
-        return schemeQuota;
+    public UrlLinkQuota getUrlLinkQuota() {
+        return urlLinkQuota;
     }
 
-    public void setSchemeQuota(SchemeQuota schemeQuota) {
-        this.schemeQuota = schemeQuota;
+    public void setUrlLinkQuota(UrlLinkQuota urlLinkQuota) {
+        this.urlLinkQuota = urlLinkQuota;
     }
 
     @Override
     public String toString() {
-        return "WxMnpUrlSchemeQueryResult{" +
-                "schemeInfo=" + schemeInfo +
-                ", schemeQuota=" + schemeQuota +
+        return "WxMnpUrlLinkQueryResult{" +
+                "urlLinkInfo=" + urlLinkInfo +
+                ", urlLinkQuota=" + urlLinkQuota +
                 '}';
     }
 
-    public static class SchemeInfo implements Serializable {
+    public static class UrlLinkInfo implements Serializable {
+
         /**
          * 小程序 appid
          */
@@ -50,8 +51,8 @@ public class WxMnpUrlSchemeQueryResult implements Serializable {
          * 小程序页面路径
          */
         private String path;
-        /**
-         * 小程序页面query
+        /**小程序页面query
+         *
          */
         private String query;
         /**
@@ -64,11 +65,19 @@ public class WxMnpUrlSchemeQueryResult implements Serializable {
          */
         @SerializedName("expire_time")
         private int expireTime;
+
         /**
          * 要打开的小程序版本。正式版为"release"，体验版为"trial"，开发版为"develop"
          */
         @SerializedName("env_version")
         private String envVersion;
+
+        /**
+         * 云开发配置
+         */
+        @SerializedName("cloud_base")
+        private CloudBase cloudBase;
+
 
         public String getAppid() {
             return appid;
@@ -118,28 +127,37 @@ public class WxMnpUrlSchemeQueryResult implements Serializable {
             this.envVersion = envVersion;
         }
 
+        public CloudBase getCloudBase() {
+            return cloudBase;
+        }
+
+        public void setCloudBase(CloudBase cloudBase) {
+            this.cloudBase = cloudBase;
+        }
+
         @Override
         public String toString() {
-            return "SchemeInfo{" +
+            return "UrlLinkInfo{" +
                     "appid='" + appid + '\'' +
                     ", path='" + path + '\'' +
                     ", query='" + query + '\'' +
                     ", createTime=" + createTime +
                     ", expireTime=" + expireTime +
                     ", envVersion='" + envVersion + '\'' +
+                    ", cloudBase=" + cloudBase +
                     '}';
         }
+
     }
 
-    public static class SchemeQuota implements Serializable {
-
+    public static class UrlLinkQuota implements Serializable {
         /**
-         * 长期有效 scheme 已生成次数
+         * 长期有效 url_link 已生成次数
          */
         @SerializedName("long_time_used")
         private int longTimeUsed;
         /**
-         * 长期有效 scheme 生成次数上限
+         * 长期有效 url_link 生成次数上限
          */
         @SerializedName("long_time_limit")
         private int longTimeLimit;
@@ -162,7 +180,7 @@ public class WxMnpUrlSchemeQueryResult implements Serializable {
 
         @Override
         public String toString() {
-            return "SchemeQuota{" +
+            return "UrlLinkQuota{" +
                     "longTimeUsed=" + longTimeUsed +
                     ", longTimeLimit=" + longTimeLimit +
                     '}';
