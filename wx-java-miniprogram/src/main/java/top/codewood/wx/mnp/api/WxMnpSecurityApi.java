@@ -120,6 +120,8 @@ public class WxMnpSecurityApi extends WxBaseHttpApi {
      *      图片智能鉴黄：涉及拍照的工具类应用(如美拍，识图类应用)用户拍照上传检测；电商类商品上架图片检测；媒体类用户文章里的图片检测等；
      *      敏感人脸识别：用户头像；媒体类用户文章里的图片检测；社交类用户上传的图片检测等。 频率限制：单个 appId 调用上限为 2000 次/分钟，200,000 次/天；文件大小限制：单个文件大小不超过10M
      *
+     * <a href="https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/sec-check/security.mediaCheckAsync.html">参考文档</a>
+     *
      * @param accessToken
      * @param request
      * @return trace_id 唯一请求标识，标记单次请求，用于匹配异步推送结果
@@ -142,7 +144,7 @@ public class WxMnpSecurityApi extends WxBaseHttpApi {
      *      用户个人资料违规文字检测；
      *      媒体新闻类用户发表文章，评论内容检测；
      *      游戏类用户编辑上传的素材(如答题类小游戏用户上传的问题及答案)检测等。 频率限制：单个 appId 调用上限为 4000 次/分钟，2,000,000 次/天*
-     *
+     * <a href="https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/sec-check/security.msgSecCheck.html">参考文档</a>
      * @param accessToken
      * @param request
      * @return
