@@ -30,7 +30,7 @@ public class WxMnpSubscribeMsgGsonAdapter implements JsonSerializer<WxMnpSubscri
         return json;
     }
 
-    public static JsonObject templateDatasToJson(List<WxMnpTemplateData> templateDatas) {
+    public JsonObject templateDatasToJson(List<WxMnpTemplateData> templateDatas) {
         JsonObject dataJson = new JsonObject();
 
         if (templateDatas == null || templateDatas.size() == 0) return dataJson;

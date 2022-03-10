@@ -1,9 +1,6 @@
 package top.codewood.wx.mnp.bean;
 
-import com.google.gson.JsonObject;
-
 import java.io.Serializable;
-import java.util.List;
 
 public class WxMnpTemplateData  implements Serializable {
 
