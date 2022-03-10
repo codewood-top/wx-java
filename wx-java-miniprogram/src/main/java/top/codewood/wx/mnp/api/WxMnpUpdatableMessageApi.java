@@ -48,12 +48,12 @@ public class WxMnpUpdatableMessageApi extends WxBaseHttpApi {
      *
      * <a href="https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/updatable-message/updatableMessage.setUpdatableMsg.html#%E4%BA%91%E8%B0%83%E7%94%A8">参考文档</a>
      *
-     * @param acccessToken
+     * @param accessToken
      * @param setUpdatableMsgRequest
      */
-    public void setUpdatableMsg(String acccessToken, WxMnpSetUpdatableMsgRequest setUpdatableMsgRequest) {
-        assert acccessToken != null && setUpdatableMsgRequest != null;
-        String url = String.format("https://api.weixin.qq.com/cgi-bin/message/wxopen/updatablemsg/send?access_token=%s", acccessToken);
+    public void setUpdatableMsg(String accessToken, WxMnpSetUpdatableMsgRequest setUpdatableMsgRequest) {
+        assert accessToken != null && setUpdatableMsgRequest != null;
+        String url = String.format("https://api.weixin.qq.com/cgi-bin/message/wxopen/updatablemsg/send?access_token=%s", accessToken);
         post(url, WxGsonBuilder.instance().toJson(setUpdatableMsgRequest));
     }
 
