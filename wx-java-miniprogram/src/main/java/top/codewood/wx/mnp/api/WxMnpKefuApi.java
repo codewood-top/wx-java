@@ -48,20 +48,4 @@ public class WxMnpKefuApi extends WxBaseHttpApi {
         post(url, typingStr);
     }
 
-    /**
-     * uniformMessage.send
-     * 下发小程序和公众号统一的服务消息
-     *
-     * <a href="https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/uniform-message/uniformMessage.send.html#%E4%BA%91%E8%B0%83%E7%94%A8">参考文档</a>
-     *
-     * @param accessToken
-     * @param uniformMessage
-     */
-    public void sendUniformMsg(String accessToken, WxMnpUniformMessage uniformMessage) {
-        assert accessToken != null && uniformMessage != null;
-        String url = String.format("https://api.weixin.qq.com/cgi-bin/message/wxopen/template/uniform_send?access_token=%s", accessToken);
-        String postJson = WxGsonBuilder.instance().toJson(uniformMessage);
-        post(url, postJson);
-    }
-
 }
