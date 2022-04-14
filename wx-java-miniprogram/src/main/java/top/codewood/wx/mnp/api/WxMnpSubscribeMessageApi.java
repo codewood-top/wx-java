@@ -14,13 +14,13 @@ import java.util.List;
 /**
  * 小程序订阅消息接口
  */
-public class WxMnpSubscribeApi extends WxBaseHttpApi {
+public class WxMnpSubscribeMessageApi extends WxBaseHttpApi {
 
     private static class Holder {
-        private static final WxMnpSubscribeApi INSTANCE = new WxMnpSubscribeApi();
+        private static final WxMnpSubscribeMessageApi INSTANCE = new WxMnpSubscribeMessageApi();
     }
 
-    public static WxMnpSubscribeApi getInstance() {
+    public static WxMnpSubscribeMessageApi getInstance() {
         return Holder.INSTANCE;
     }
 
