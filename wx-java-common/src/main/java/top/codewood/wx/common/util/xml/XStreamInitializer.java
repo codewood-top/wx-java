@@ -9,9 +9,11 @@ import com.thoughtworks.xstream.security.WildcardTypePermission;
 
 import java.io.Writer;
 
-public class XStreamInitilizer {
+public class XStreamInitializer {
 
     private static final XppDriver XPP_DRIVER;
+
+    private XStreamInitializer() {}
 
     static {
         XPP_DRIVER = new XppDriver() {
@@ -19,7 +21,7 @@ public class XStreamInitilizer {
             public HierarchicalStreamWriter createWriter(Writer out) {
                 return new PrettyPrintWriter(out) {
 
-                    private Class clazz = null;
+                    private Class<?> clazz = null;
 
                     @Override
                     public void startNode(String name, Class clazz) {

@@ -22,14 +22,14 @@ public class WxMpMediaApi extends WxMpApi {
      * 上传临时素材
      * 图片（image）: 10M，支持PNG\JPEG\JPG\GIF格式, 语音（voice）：2M，播放长度不超过60s，支持AMR\MP3格式, 视频（video）：10MB，支持MP4格式, 缩略图（thumb）：64KB，支持JPG格式
      *
-     * @param acccessToken
+     * @param accessToken
      * @param mediaType 媒体文件类型，分别有图片（image）、语音（voice）、视频（video）和缩略图（thumb）
      * @param file
      * @return {"type":"TYPE","media_id":"MEDIA_ID","created_at":123456789}
      */
-    public WxMediaUploadResult upload(String acccessToken, String mediaType,  File file) throws IOException {
-        assert acccessToken != null && mediaType != null;
-        String url = String.format("https://api.weixin.qq.com/cgi-bin/media/upload?access_token=%s&type=%s", acccessToken, mediaType);
+    public WxMediaUploadResult upload(String accessToken, String mediaType,  File file) throws IOException {
+        assert accessToken != null && mediaType != null;
+        String url = String.format("https://api.weixin.qq.com/cgi-bin/media/upload?access_token=%s&type=%s", accessToken, mediaType);
         String respStr = upload(url, file);
         return WxGsonBuilder.create().fromJson(respStr, WxMediaUploadResult.class);
     }

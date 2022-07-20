@@ -34,7 +34,7 @@ public class XStreamConverter {
 
         if (xStream != null) return xStream;
 
-        xStream = XStreamInitilizer.create();
+        xStream = XStreamInitializer.create();
         xStream.processAnnotations(clz);
         xStream.processAnnotations(getInnerClass(clz));
 

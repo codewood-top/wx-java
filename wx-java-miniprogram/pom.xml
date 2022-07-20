@@ -16,7 +16,7 @@
         <dependency>
             <groupId>top.codewood.wx</groupId>
             <artifactId>wx-java-common</artifactId>
-            <version>1.0.5</version>
+            <version>1.0.6</version>
         </dependency>
         <!-- 引入 BouncyCastleProvider, 用于退款通知结果 AES/ECB/PKCS7Padding 解密  -->
         <dependency>
