@@ -12,12 +12,6 @@ import top.codewood.wx.pay.v2.bean.WxPayBaseRequest;
 public class ProfitSharingReturnQueryV2Request extends WxPayBaseRequest {
 
     /**
-     * 签名类型，目前只支持HMAC-SHA256
-     */
-    @XStreamAlias("sign_type")
-    private String signType = WxPayConstants.SignType.HMAC_SHA256;
-
-    /**
      * 微信分账订单号
      * 原发起分账请求时，微信返回的微信分账单号，与商户分账单号一一对应。
      * 微信分账单号与商户分账单号二选一填写
@@ -40,6 +34,10 @@ public class ProfitSharingReturnQueryV2Request extends WxPayBaseRequest {
     @Required
     @XStreamAlias("out_return_no")
     private String outReturnNo;
+
+    public ProfitSharingReturnQueryV2Request() {
+        signType = WxPayConstants.SignType.HMAC_SHA256;
+    }
 
     public String getSignType() {
         return signType;

@@ -8,17 +8,14 @@ import top.codewood.wx.pay.v2.bean.WxPayBaseRequest;
 public class ProfitSharingReceiverV2Request extends WxPayBaseRequest {
 
     /**
-     * 签名类型
-     * 签名类型，目前只支持HMAC-SHA256
-     */
-    @XStreamAlias("sign_type")
-    private String signType = WxPayConstants.SignType.HMAC_SHA256;
-
-    /**
      * 分账接收方
      * 分账接收方对象，json格式
      */
     private String receiver;
+
+    public ProfitSharingReceiverV2Request() {
+        signType = WxPayConstants.SignType.HMAC_SHA256;
+    }
 
     public String getSignType() {
         return signType;

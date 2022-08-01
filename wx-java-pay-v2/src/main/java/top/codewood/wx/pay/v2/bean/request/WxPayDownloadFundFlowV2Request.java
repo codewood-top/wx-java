@@ -9,12 +9,6 @@ import top.codewood.wx.pay.v2.bean.WxPayBaseRequest;
 public class WxPayDownloadFundFlowV2Request extends WxPayBaseRequest {
 
     /**
-     * 签名类型，目前仅支持HMAC-SHA256
-     */
-    @XStreamAlias("sign_type")
-    private String signType = WxPayConstants.SignType.HMAC_SHA256;
-
-    /**
      * 资金账单日期
      * 下载对账单的日期，格式：20140603
      */
@@ -39,6 +33,10 @@ public class WxPayDownloadFundFlowV2Request extends WxPayBaseRequest {
      */
     @XStreamAlias("tar_type")
     private String tarType;
+
+    public WxPayDownloadFundFlowV2Request() {
+        signType = WxPayConstants.SignType.HMAC_SHA256;
+    }
 
     public String getSignType() {
         return signType;

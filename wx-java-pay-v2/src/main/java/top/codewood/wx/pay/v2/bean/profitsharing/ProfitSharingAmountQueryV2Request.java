@@ -18,13 +18,9 @@ public class ProfitSharingAmountQueryV2Request extends WxPayBaseRequest {
     @XStreamAlias("transaction_id")
     private String transactionId;
 
-    /**
-     * 签名类型
-     * 签名类型，目前只支持HMAC-SHA256
-     */
-    @Required
-    @XStreamAlias("sign_type")
-    private String signType = WxPayConstants.SignType.HMAC_SHA256;
+    public ProfitSharingAmountQueryV2Request() {
+        signType = WxPayConstants.SignType.HMAC_SHA256;
+    }
 
 
     public String getTransactionId() {
