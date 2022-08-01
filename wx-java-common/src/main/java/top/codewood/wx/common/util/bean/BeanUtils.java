@@ -5,6 +5,7 @@ import top.codewood.wx.annotation.Required;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class BeanUtils {
 
@@ -37,7 +38,9 @@ public class BeanUtils {
     public static List<Field> getClassFields(Class<?> clazz) {
         if (clazz == null) return Collections.EMPTY_LIST;
         List<Field> fields = new ArrayList<>(Arrays.asList(clazz.getDeclaredFields()));
-        fields.addAll(getClassFields(clazz.getSuperclass()));
+        List<Field> superClassFields = getClassFields(clazz.getSuperclass());
+        List<String> fieldNames = fields.stream().map(Field::getName).collect(Collectors.toList());
+        fields.addAll(superClassFields.stream().filter(f -> !fieldNames.contains(f.getName())).collect(Collectors.toList()));
         return fields;
     }
 
