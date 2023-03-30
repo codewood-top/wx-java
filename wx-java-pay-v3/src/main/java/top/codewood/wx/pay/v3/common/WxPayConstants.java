@@ -75,6 +75,7 @@ public class WxPayConstants {
          * 退款URL
          */
         String REFUND_URL = "https://api.mch.weixin.qq.com/v3/refund/domestic/refunds";
+
     }
 
     public interface SignType {

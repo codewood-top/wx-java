@@ -20,15 +20,14 @@ import java.io.IOException;
 
 public class WxPayHttpClient {
 
-    public static final String CHARSET = "UTF-8";
 
+    public static final String CHARSET = "UTF-8";
     public static final String USER_AGENT = "codewood.top/wx-java" +
             " (" + System.getProperty("os.arch") + " " + System.getProperty("os.name") + " " + System.getProperty("os.version") +
             ") Java/" + System.getProperty("java.version") + " HttpClient/" + HttpClient.class.getPackage().getImplementationVersion();
 
     private int connectTimeoutMs = 5 * 1000;
     private int readTimeoutMs = 5 * 1000;
-
 
     private HttpResponse request(String url, String method, String data, String token) throws IOException {
         BasicHttpClientConnectionManager connManager = new BasicHttpClientConnectionManager(
@@ -85,6 +84,14 @@ public class WxPayHttpClient {
 
     public HttpResponse postWithResponse(String url, String data, String token) throws IOException {
         return request(url, WxPayConstants.HttpMethod.POST, data, token);
+    }
+
+    private static class Holder {
+        private static final WxPayHttpClient INSTANCE = new WxPayHttpClient();
+    }
+
+    public static final WxPayHttpClient getInstance() {
+        return Holder.INSTANCE;
     }
 
 }

@@ -2,14 +2,18 @@ package top.codewood.wx.pay.v3.api;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.util.EntityUtils;
 import top.codewood.wx.pay.v3.bean.error.WxPayError;
 import top.codewood.wx.pay.v3.bean.error.WxPayErrorException;
 import top.codewood.wx.pay.v3.cert.CertificateItem;
 import top.codewood.wx.pay.v3.cert.CertificateList;
 import top.codewood.wx.pay.v3.common.WxPayConstants;
 import top.codewood.wx.pay.v3.common.WxPayHttpClient;
-import top.codewood.wx.pay.v3.util.crypt.WxPayV3CryptUtils;
 import top.codewood.wx.pay.v3.util.crypt.PemUtils;
+import top.codewood.wx.pay.v3.util.crypt.WxPayV3CryptUtils;
 import top.codewood.wx.pay.v3.util.json.WxGsonBuilder;
 
 import java.io.ByteArrayInputStream;
@@ -140,6 +144,73 @@ public class WxPayV3Api {
         signature.update(message.getBytes(StandardCharsets.UTF_8));
 
         return signature.verify(Base64.getDecoder().decode(wechatSignature));
+    }
+
+    private static String verifyHttpResponse(HttpResponse httpResponse) throws IOException {
+
+        HttpEntity httpEntity = httpResponse.getEntity();
+        String respBody = EntityUtils.toString(httpEntity, "UTF-8");
+
+        String requestId = null, wechatPayNonce = null, wechatPaySignature = null, wechatPayTimeStamp = null, wechatPaySerial = null;
+
+        Header requestIdHeader = httpResponse.getFirstHeader("Request-ID");
+        if (requestIdHeader != null) {
+            requestId = requestIdHeader.getValue();
+        }
+        Header wechatPayNonceHeader = httpResponse.getFirstHeader("Wechatpay-Nonce");
+        if (wechatPayNonceHeader != null) {
+            wechatPayNonce = wechatPayNonceHeader.getValue();
+        }
+        Header wechatPaySignatureHeader = httpResponse.getFirstHeader("Wechatpay-Signature");
+        if (wechatPayNonceHeader != null) {
+            wechatPaySignature = wechatPaySignatureHeader.getValue();
+        }
+        Header wechatPayTimeStampHeader = httpResponse.getFirstHeader("Wechatpay-Timestamp");
+        if (wechatPayTimeStampHeader != null) {
+            wechatPayTimeStamp = wechatPayTimeStampHeader.getValue();
+        }
+        Header wechatPaySerialHeader = httpResponse.getFirstHeader("Wechatpay-Serial");
+        if (wechatPaySerialHeader != null) {
+            wechatPaySerial = wechatPaySerialHeader.getValue();
+        }
+
+        try {
+            boolean verify = WxPayV3Api.verify(wechatPaySerial, wechatPayTimeStamp, wechatPayNonce, respBody, wechatPaySignature);
+            if (!verify) {
+                throw new RuntimeException(String.format("请求数据签名校验失败, request-id: %s", requestId));
+            }
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("校验算法错误！");
+        } catch (InvalidKeyException e) {
+            throw new RuntimeException("invalid key!");
+        } catch (SignatureException e) {
+            throw new RuntimeException("签名错误！");
+        }
+
+        return respBody;
+    }
+
+    public static String get(String mchid, String serialNo, String url) {
+        try {
+            String token  = getToken(mchid, serialNo, WxPayConstants.HttpMethod.GET, url, EMPTY_STR);
+            HttpResponse httpResponse = WxPayHttpClient.getInstance().getWithResponse(url, token);
+            String respBody = verifyHttpResponse(httpResponse);
+            return errorFilterResponse(httpResponse.getStatusLine().getStatusCode(), respBody);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String post(String mchid, String serialNo, String url, String data) {
+        try {
+            String token = WxPayV3Api.getToken(mchid, serialNo, WxPayConstants.HttpMethod.POST, url, data);
+            HttpResponse httpResponse = WxPayHttpClient.getInstance().postWithResponse(url, data, token);
+            String respBody = verifyHttpResponse(httpResponse);
+            return errorFilterResponse(httpResponse.getStatusLine().getStatusCode(), respBody);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     private static String errorFilterResponse(int httpStatus, String resp) {

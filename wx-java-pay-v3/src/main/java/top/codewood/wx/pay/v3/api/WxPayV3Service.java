@@ -2,12 +2,6 @@ package top.codewood.wx.pay.v3.api;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.util.EntityUtils;
-import top.codewood.wx.pay.v3.bean.error.WxPayError;
-import top.codewood.wx.pay.v3.bean.error.WxPayErrorException;
 import top.codewood.wx.pay.v3.bean.notify.WxPayTransaction;
 import top.codewood.wx.pay.v3.bean.request.WxPayRequest;
 import top.codewood.wx.pay.v3.bean.request.WxRefundRequest;
@@ -15,16 +9,11 @@ import top.codewood.wx.pay.v3.bean.result.WxPayBillDownloadResult;
 import top.codewood.wx.pay.v3.bean.result.WxRefundResult;
 import top.codewood.wx.pay.v3.common.WxPayConfig;
 import top.codewood.wx.pay.v3.common.WxPayConstants;
-import top.codewood.wx.pay.v3.common.WxPayHttpClient;
 import top.codewood.wx.pay.v3.util.json.WxGsonBuilder;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SignatureException;
 import java.util.Map;
 
 public class WxPayV3Service {
@@ -34,86 +23,6 @@ public class WxPayV3Service {
     public WxPayV3Service(WxPayConfig wxPayConfig) {
         this.wxPayConfig = wxPayConfig;
     }
-
-    private static String errorFilterResponse(int httpStatus, String resp) {
-        JsonObject json = WxGsonBuilder.instance().fromJson(resp, JsonObject.class);
-        if (json.has("code") && json.has("message")) {
-            WxPayError wxPayError = WxGsonBuilder.create().fromJson(resp, WxPayError.class);
-            if (wxPayError.getCode() != null) {
-                wxPayError.setStatus(httpStatus);
-                throw new WxPayErrorException(wxPayError);
-            }
-        }
-
-        return resp;
-    }
-
-    private String get(String url) {
-        try {
-            String token = WxPayV3Api.getToken(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), WxPayConstants.HttpMethod.GET, url, WxPayV3Api.EMPTY_STR);
-            HttpResponse httpResponse = new WxPayHttpClient().getWithResponse(url, token);
-            String respBody = verifyHttpResponse(httpResponse);
-            return errorFilterResponse(httpResponse.getStatusLine().getStatusCode(), respBody);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private String post(String url, String data) {
-        try {
-            String token = WxPayV3Api.getToken(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), WxPayConstants.HttpMethod.POST, url, data);
-            HttpResponse httpResponse = new WxPayHttpClient().postWithResponse(url, data,  token);
-            String respBody = verifyHttpResponse(httpResponse);
-            return errorFilterResponse(httpResponse.getStatusLine().getStatusCode(), respBody);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private String verifyHttpResponse(HttpResponse httpResponse) throws IOException {
-
-        HttpEntity httpEntity = httpResponse.getEntity();
-        String respBody = EntityUtils.toString(httpEntity, "UTF-8");
-
-        String requestId = null, wechatPayNonce = null, wechatPaySignature = null, wechatPayTimeStamp = null, wechatPaySerial = null;
-
-        Header requestIdHeader = httpResponse.getFirstHeader("Request-ID");
-        if (requestIdHeader != null) {
-            requestId = requestIdHeader.getValue();
-        }
-        Header wechatPayNonceHeader = httpResponse.getFirstHeader("Wechatpay-Nonce");
-        if (wechatPayNonceHeader != null) {
-            wechatPayNonce = wechatPayNonceHeader.getValue();
-        }
-        Header wechatPaySignatureHeader = httpResponse.getFirstHeader("Wechatpay-Signature");
-        if (wechatPayNonceHeader != null) {
-            wechatPaySignature = wechatPaySignatureHeader.getValue();
-        }
-        Header wechatPayTimeStampHeader = httpResponse.getFirstHeader("Wechatpay-Timestamp");
-        if (wechatPayTimeStampHeader != null) {
-            wechatPayTimeStamp = wechatPayTimeStampHeader.getValue();
-        }
-        Header wechatPaySerialHeader = httpResponse.getFirstHeader("Wechatpay-Serial");
-        if (wechatPaySerialHeader != null) {
-            wechatPaySerial = wechatPaySerialHeader.getValue();
-        }
-
-        try {
-            boolean verify = WxPayV3Api.verify(wechatPaySerial, wechatPayTimeStamp, wechatPayNonce, respBody, wechatPaySignature);
-            if (!verify) {
-                throw new RuntimeException(String.format("请求数据签名校验失败, request-id: %s", requestId));
-            }
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("校验算法错误！");
-        } catch (InvalidKeyException e) {
-            throw new RuntimeException("invalid key!");
-        } catch (SignatureException e) {
-            throw new RuntimeException("签名错误！");
-        }
-
-        return respBody;
-    }
-
 
     /**
      * 统一下单API
@@ -129,8 +38,7 @@ public class WxPayV3Service {
         assert wxPayConfig != null && payType != null && wxPayRequest != null;
 
         if (WxPayConstants.PayType.JSAPI.getType().equalsIgnoreCase(payType)) {
-            JsonObject json = WxGsonBuilder.instance().toJsonTree(wxPayRequest).getAsJsonObject();
-            String respStr = post(WxPayConstants.V3PayUrl.WX_PAY_JSAPI_URL, json.toString());
+            String respStr = WxPayV3Api.post(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), WxPayConstants.V3PayUrl.WX_PAY_JSAPI_URL, WxGsonBuilder.instance().toJson(wxPayRequest));
             return WxGsonBuilder.instance().fromJson(respStr, Map.class);
         } else {
             throw new RuntimeException("无效的支付方式：" + payType);
@@ -147,10 +55,8 @@ public class WxPayV3Service {
      */
     public WxRefundResult refund(WxRefundRequest wxRefundRequest) {
         assert  wxPayConfig != null && wxRefundRequest != null;
-        Gson gson = WxGsonBuilder.create();
-        JsonObject json = gson.toJsonTree(wxRefundRequest).getAsJsonObject();
-        String respStr = post(WxPayConstants.V3PayUrl.REFUND_URL, json.toString());
-        return gson.fromJson(respStr, WxRefundResult.class);
+        String respStr = WxPayV3Api.post(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), WxPayConstants.V3PayUrl.REFUND_URL, WxGsonBuilder.instance().toJson(wxRefundRequest));
+        return WxGsonBuilder.instance().fromJson(respStr, WxRefundResult.class);
     }
 
     /**
@@ -163,10 +69,9 @@ public class WxPayV3Service {
      */
     public WxRefundResult queryRefund(String outTradeNo) {
         assert wxPayConfig != null && outTradeNo != null;
-        Gson gson = WxGsonBuilder.create();
         String url = String.format("https://api.mch.weixin.qq.com/v3/refund/domestic/refunds/%s", outTradeNo);
-        String respStr = get(url);
-        return gson.fromJson(respStr, WxRefundResult.class);
+        String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
+        return WxGsonBuilder.instance().fromJson(respStr, WxRefundResult.class);
     }
 
     /**
@@ -179,8 +84,8 @@ public class WxPayV3Service {
     public  WxPayTransaction queryWithTransactionId(String transactionId) {
         assert wxPayConfig != null && transactionId != null;
         String url = String.format("https://api.mch.weixin.qq.com/v3/pay/transactions/id/%s?mchid=%s", transactionId, wxPayConfig.getMchid());
-        String respStr = get(url);
-        return WxGsonBuilder.create().fromJson(respStr, WxPayTransaction.class);
+        String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
+        return WxGsonBuilder.instance().fromJson(respStr, WxPayTransaction.class);
     }
 
     /**
@@ -193,8 +98,8 @@ public class WxPayV3Service {
     public WxPayTransaction queryWithOutTradeNo(String outTradeNo) {
         assert wxPayConfig != null && outTradeNo != null;
         String url = String.format("https://api.mch.weixin.qq.com/v3/pay/transactions/out-trade-no/%s?mchid=%s", outTradeNo, wxPayConfig.getMchid());
-        String respStr = get(url);
-        return WxGsonBuilder.create().fromJson(respStr, WxPayTransaction.class);
+        String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
+        return WxGsonBuilder.instance().fromJson(respStr, WxPayTransaction.class);
     }
 
     /**
@@ -210,7 +115,7 @@ public class WxPayV3Service {
         assert wxPayConfig != null && outTradeNo != null;
         String body = String.format("{\"mchid\": \"%s\"}", wxPayConfig.getMchid());
         String url = String.format("https://api.mch.weixin.qq.com/v3/pay/transactions/out-trade-no/%s/close", outTradeNo);
-        post(url, body);
+        WxPayV3Api.post(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url, body);
     }
 
     /**
@@ -246,7 +151,7 @@ public class WxPayV3Service {
         if (tarType != null) {
             url += "&tar_type=" + tarType;
         }
-        String respStr = get(url);
+        String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
         return WxGsonBuilder.instance().fromJson(respStr, WxPayBillDownloadResult.class);
     }
 
@@ -278,7 +183,7 @@ public class WxPayV3Service {
     public InputStream downloadTradeBill(String billDate, String billType, String tarType) {
         WxPayBillDownloadResult wxPayBillDownloadResult = tradeBill(billDate, billType, tarType);
         String url = wxPayBillDownloadResult.getDownloadUrl();
-        String respStr = get(url);
+        String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
         return new ByteArrayInputStream(respStr.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -309,7 +214,7 @@ public class WxPayV3Service {
         if (tarType != null) {
             url += "&tar_type=" + tarType;
         }
-        String respStr = get(url);
+        String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
         return WxGsonBuilder.instance().fromJson(respStr, WxPayBillDownloadResult.class);
 
     }
@@ -334,7 +239,7 @@ public class WxPayV3Service {
     public InputStream downloadFundFlowBill(String billDate, String accountType, String tarType) {
         WxPayBillDownloadResult wxPayBillDownloadResult = fundFlowBill(billDate, accountType, tarType);
         String url = wxPayBillDownloadResult.getDownloadUrl();
-        String respStr = get(url);
+        String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
         return new ByteArrayInputStream(respStr.getBytes(StandardCharsets.UTF_8));
     }
 
