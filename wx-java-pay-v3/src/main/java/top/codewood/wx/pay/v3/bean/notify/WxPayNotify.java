@@ -27,7 +27,23 @@ public class WxPayNotify implements Serializable {
 
     /**
      * 通知类型
-     * 通知的类型，支付成功通知的类型为TRANSACTION.SUCCESS
+     * 通知的类型，
+     * 支付成功通知的类型为TRANSACTION.SUCCESS
+     * 支付失败通知的类型为TRANSACTION.FAIL
+     * 还款通知的类型为TRANSACTION.PAY_BACK
+     *
+     * REFUND.SUCCESS：退款成功通知
+     * REFUND.ABNORMAL：退款异常通知
+     * REFUND.CLOSED：退款关闭通知
+     *
+     * 微信支付分支付成功回调通知
+     * 授权成功通知的类型为PAYSCORE.USER_OPEN_SERVICE
+     * 解除授权成功通知的类型为PAYSCORE.USER_CLOSE_SERVICE
+     * 用户确认成功通知的类型为PAYSCORE.USER_CONFIRM
+     * 支付成功通知的类型为PAYSCORE.USER_PAID
+     *
+     * 商圈会员场内退款通知
+     * 退款通知的类型为：MALL_REFUND.SUCCESS
      */
     @SerializedName("event_type")
     private String eventType;
