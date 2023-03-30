@@ -29,12 +29,6 @@ import java.util.Map;
 
 public class WxPayV3Service {
 
-    private static final Gson GSON;
-
-    static {
-        GSON = WxGsonBuilder.create();
-    }
-
     private WxPayConfig wxPayConfig;
 
     public WxPayV3Service(WxPayConfig wxPayConfig) {
@@ -42,7 +36,7 @@ public class WxPayV3Service {
     }
 
     private static String errorFilterResponse(int httpStatus, String resp) {
-        JsonObject json = GSON.fromJson(resp, JsonObject.class);
+        JsonObject json = WxGsonBuilder.instance().fromJson(resp, JsonObject.class);
         if (json.has("code") && json.has("message")) {
             WxPayError wxPayError = WxGsonBuilder.create().fromJson(resp, WxPayError.class);
             if (wxPayError.getCode() != null) {
@@ -135,9 +129,9 @@ public class WxPayV3Service {
         assert wxPayConfig != null && payType != null && wxPayRequest != null;
 
         if (WxPayConstants.PayType.JSAPI.getType().equalsIgnoreCase(payType)) {
-            JsonObject json = GSON.toJsonTree(wxPayRequest).getAsJsonObject();
+            JsonObject json = WxGsonBuilder.instance().toJsonTree(wxPayRequest).getAsJsonObject();
             String respStr = post(WxPayConstants.V3PayUrl.WX_PAY_JSAPI_URL, json.toString());
-            return GSON.fromJson(respStr, Map.class);
+            return WxGsonBuilder.instance().fromJson(respStr, Map.class);
         } else {
             throw new RuntimeException("无效的支付方式：" + payType);
         }
@@ -253,7 +247,7 @@ public class WxPayV3Service {
             url += "&tar_type=" + tarType;
         }
         String respStr = get(url);
-        return GSON.fromJson(respStr, WxPayBillDownloadResult.class);
+        return WxGsonBuilder.instance().fromJson(respStr, WxPayBillDownloadResult.class);
     }
 
     /**
@@ -316,7 +310,7 @@ public class WxPayV3Service {
             url += "&tar_type=" + tarType;
         }
         String respStr = get(url);
-        return GSON.fromJson(respStr, WxPayBillDownloadResult.class);
+        return WxGsonBuilder.instance().fromJson(respStr, WxPayBillDownloadResult.class);
 
     }
 

@@ -28,11 +28,7 @@ public class WxPayV3Api {
 
     private static final Map<String, PrivateKey> PRIVATE_KEY_MAP = new HashMap<>();
     private static final Map<String, Certificate> CERTIFICATE_MAP = new HashMap<>();
-    private static final Gson GSON;
 
-    static {
-        GSON = WxGsonBuilder.create();
-    }
 
     public static String getToken(String mchid, String serialNo, String method, String reqUrl, String body) {
         try {
@@ -147,7 +143,7 @@ public class WxPayV3Api {
     }
 
     private static String errorFilterResponse(int httpStatus, String resp) {
-        JsonObject json = GSON.fromJson(resp, JsonObject.class);
+        JsonObject json = WxGsonBuilder.instance().fromJson(resp, JsonObject.class);
         if (json.has("code") && json.has("message")) {
             WxPayError wxPayError = WxGsonBuilder.create().fromJson(resp, WxPayError.class);
             if (wxPayError.getCode() != null) {
