@@ -37,12 +37,13 @@ public class WxPayV3Service {
     public Map<String, String> unifiedOrder(String payType, WxPayRequest wxPayRequest) {
         assert wxPayConfig != null && payType != null && wxPayRequest != null;
 
-        if (WxPayConstants.PayType.JSAPI.getType().equalsIgnoreCase(payType)) {
-            String respStr = WxPayV3Api.post(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), WxPayConstants.V3PayUrl.WX_PAY_JSAPI_URL, WxGsonBuilder.instance().toJson(wxPayRequest));
-            return WxGsonBuilder.instance().fromJson(respStr, Map.class);
-        } else {
+        if (WxPayConstants.PayType.get(payType) == null) {
             throw new RuntimeException("无效的支付方式：" + payType);
         }
+
+        String url = "https://api.mch.weixin.qq.com/v3/pay/transactions/" + payType.toLowerCase();
+        String respStr = WxPayV3Api.post(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url, WxGsonBuilder.instance().toJson(wxPayRequest));
+        return WxGsonBuilder.instance().fromJson(respStr, Map.class);
     }
 
     /**

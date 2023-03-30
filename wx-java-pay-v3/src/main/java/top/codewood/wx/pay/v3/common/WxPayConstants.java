@@ -1,5 +1,7 @@
 package top.codewood.wx.pay.v3.common;
 
+import java.lang.reflect.Type;
+
 public class WxPayConstants {
 
     public interface HttpMethod {
@@ -44,6 +46,14 @@ public class WxPayConstants {
         public void setPayUrl(String payUrl) {
             this.payUrl = payUrl;
         }
+
+        public static PayType get(String type) {
+            for (PayType pt : PayType.values()) {
+                if (pt.type.equalsIgnoreCase(type)) return pt;
+            }
+            return null;
+        }
+
     }
 
 
