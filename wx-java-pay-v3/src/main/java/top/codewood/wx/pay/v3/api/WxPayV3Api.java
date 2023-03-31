@@ -2,6 +2,8 @@ package top.codewood.wx.pay.v3.api;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import jdk.internal.org.objectweb.asm.TypeReference;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -19,6 +21,8 @@ import top.codewood.wx.pay.v3.util.json.WxGsonBuilder;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -201,6 +205,11 @@ public class WxPayV3Api {
         }
     }
 
+    public static <T> T getForResult(String mchid, String serialNo, String url, Class<T> resultClass) {
+        String respStr = get(mchid, serialNo, url);
+        return WxGsonBuilder.instance().fromJson(respStr, resultClass);
+    }
+
     public static String post(String mchid, String serialNo, String url, String data) {
         try {
             String token = WxPayV3Api.getToken(mchid, serialNo, WxPayConstants.HttpMethod.POST, url, data);
@@ -211,6 +220,11 @@ public class WxPayV3Api {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public static <T> T postForResult(String mchid, String serialNo, String url, String data, Class<T> resultClass) {
+        String respStr = post(mchid, serialNo, url, data);
+        return WxGsonBuilder.instance().fromJson(respStr, resultClass);
     }
 
     private static String errorFilterResponse(int httpStatus, String resp) {
