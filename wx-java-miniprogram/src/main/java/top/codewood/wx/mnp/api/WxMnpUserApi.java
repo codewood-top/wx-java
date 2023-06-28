@@ -1,9 +1,7 @@
 package top.codewood.wx.mnp.api;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import top.codewood.util.http.WxHttpClient;
 import top.codewood.wx.common.api.WxBaseHttpApi;
-import top.codewood.wx.mnp.bean.user.WxMnpPhoneInfo;
 import top.codewood.wx.mnp.bean.user.WxMnpUserInfo;
 import top.codewood.wx.mnp.util.crypt.WxMnpCryptUtils;
 import top.codewood.wx.mnp.util.json.WxGsonBuilder;

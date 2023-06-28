@@ -1,7 +1,6 @@
 package top.codewood.wx.mnp.api;
 
 import com.google.gson.JsonObject;
-import top.codewood.wx.annotation.Required;
 import top.codewood.wx.common.api.WxBaseHttpApi;
 import top.codewood.wx.mnp.bean.express.delivery.WxMnpExpressGetContactResult;
 import top.codewood.wx.mnp.bean.express.delivery.WxMnpExpressPreviewTemplateRequest;

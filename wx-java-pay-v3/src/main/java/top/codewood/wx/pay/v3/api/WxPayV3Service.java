@@ -1,7 +1,5 @@
 package top.codewood.wx.pay.v3.api;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import top.codewood.wx.pay.v3.bean.notify.WxPayTransaction;
 import top.codewood.wx.pay.v3.bean.request.WxPayRequest;
 import top.codewood.wx.pay.v3.bean.request.WxRefundRequest;

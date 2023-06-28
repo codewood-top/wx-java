@@ -1,12 +1,9 @@
 package top.codewood.wx.pay.v3.api;
 
 import com.google.gson.JsonObject;
-import com.sun.org.apache.regexp.internal.RE;
 import top.codewood.wx.pay.v3.bean.profitsharing.*;
 import top.codewood.wx.pay.v3.common.WxPayConfig;
 import top.codewood.wx.pay.v3.util.json.WxGsonBuilder;
-
-import java.math.BigDecimal;
 
 public class ProfitSharingV3Service {
 

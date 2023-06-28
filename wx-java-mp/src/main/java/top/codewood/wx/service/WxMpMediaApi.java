@@ -1,7 +1,7 @@
 package top.codewood.wx.service;
 
-import top.codewood.wx.mp.bean.media.WxMediaUploadImgResult;
 import top.codewood.wx.common.bean.media.WxMediaUploadResult;
+import top.codewood.wx.mp.bean.media.WxMediaUploadImgResult;
 import top.codewood.wx.mp.util.json.WxGsonBuilder;
 
 import java.io.File;

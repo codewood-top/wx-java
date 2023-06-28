@@ -4,9 +4,9 @@ import top.codewood.wx.common.util.StringUtils;
 import top.codewood.wx.common.util.bean.BeanUtils;
 import top.codewood.wx.common.util.xml.XStreamConverter;
 import top.codewood.wx.pay.v2.bean.entpay.*;
+import top.codewood.wx.pay.v2.bean.redpack.*;
 import top.codewood.wx.pay.v2.common.WxPayConfig;
 import top.codewood.wx.pay.v2.common.WxPayConstants;
-import top.codewood.wx.pay.v2.bean.redpack.*;
 
 public class EntPayV2Service extends WxPayV2BaseService {
 

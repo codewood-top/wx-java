@@ -2,7 +2,6 @@ package top.codewood.wx.mnp.api;
 
 import top.codewood.wx.common.api.WxBaseHttpApi;
 import top.codewood.wx.mnp.bean.msg.WxMnpKefuMessage;
-import top.codewood.wx.mnp.bean.msg.WxMnpUniformMessage;
 import top.codewood.wx.mnp.util.json.WxGsonBuilder;
 
 public class WxMnpKefuApi extends WxBaseHttpApi {

@@ -2,10 +2,10 @@ package top.codewood.wx.pay.v2.api;
 
 import top.codewood.wx.common.bean.error.WxErrorException;
 import top.codewood.wx.common.util.xml.XStreamConverter;
+import top.codewood.wx.pay.v2.bean.profitsharing.*;
 import top.codewood.wx.pay.v2.common.WxPayConfig;
 import top.codewood.wx.pay.v2.common.WxPayConstants;
 import top.codewood.wx.pay.v2.common.WxPayHttpClient;
-import top.codewood.wx.pay.v2.bean.profitsharing.*;
 
 public class ProfitSharingV2Service extends WxPayV2BaseService {
 

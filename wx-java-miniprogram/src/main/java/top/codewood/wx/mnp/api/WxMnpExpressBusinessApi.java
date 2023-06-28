@@ -1,6 +1,5 @@
 package top.codewood.wx.mnp.api;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import top.codewood.wx.common.api.WxBaseHttpApi;
 import top.codewood.wx.mnp.bean.express.business.*;

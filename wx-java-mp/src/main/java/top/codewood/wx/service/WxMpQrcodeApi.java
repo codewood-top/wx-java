@@ -1,8 +1,8 @@
 package top.codewood.wx.service;
 
 import com.google.gson.JsonObject;
-import top.codewood.wx.mp.util.json.WxGsonBuilder;
 import top.codewood.wx.mp.bean.result.WxMpQrcodeTicket;
+import top.codewood.wx.mp.util.json.WxGsonBuilder;
 
 public class WxMpQrcodeApi extends WxMpApi {
 

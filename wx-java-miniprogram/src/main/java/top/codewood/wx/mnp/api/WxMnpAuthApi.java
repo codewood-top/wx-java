@@ -8,8 +8,6 @@ import top.codewood.wx.mnp.bean.auth.WxMnpCheckEncryptedDataResult;
 import top.codewood.wx.mnp.bean.auth.WxMnpCode2SessionResult;
 import top.codewood.wx.mnp.util.json.WxGsonBuilder;
 
-import java.nio.charset.StandardCharsets;
-
 
 public class WxMnpAuthApi extends WxBaseHttpApi {
 
