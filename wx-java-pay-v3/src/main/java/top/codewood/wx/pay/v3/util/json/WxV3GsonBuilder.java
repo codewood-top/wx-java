@@ -1,14 +1,11 @@
 package top.codewood.wx.pay.v3.util.json;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import top.codewood.wx.common.bean.error.WxError;
-import top.codewood.wx.common.util.json.WxErrorGsonAdapter;
 import top.codewood.wx.common.util.json.WxGsonBaseBuilder;
 
 import java.time.OffsetDateTime;
 
-public class WxGsonBuilder extends WxGsonBaseBuilder {
+public class WxV3GsonBuilder extends WxGsonBaseBuilder {
 
     private static final Gson INSTANCE;
 
@@ -17,7 +14,7 @@ public class WxGsonBuilder extends WxGsonBaseBuilder {
         INSTANCE = BUILDER.create();
     }
 
-    public static Gson instance() {
+    public static Gson getInstance() {
         return INSTANCE;
     }
 

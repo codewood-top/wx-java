@@ -14,7 +14,7 @@ import top.codewood.wx.pay.v3.common.WxPayConstants;
 import top.codewood.wx.pay.v3.common.WxPayHttpClient;
 import top.codewood.wx.pay.v3.util.crypt.PemUtils;
 import top.codewood.wx.pay.v3.util.crypt.WxPayV3CryptUtils;
-import top.codewood.wx.pay.v3.util.json.WxGsonBuilder;
+import top.codewood.wx.pay.v3.util.json.WxV3GsonBuilder;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -83,7 +83,7 @@ public class WxPayV3Api {
             String url = WxPayConstants.V3PayUrl.CERTIFICATE_LIST_URL;
             String token = getToken(mchid, serialNo, WxPayConstants.HttpMethod.GET, url, EMPTY_STR);
             String respStr = new WxPayHttpClient().get(url, token);
-            Gson gson = WxGsonBuilder.create();
+            Gson gson = WxV3GsonBuilder.getInstance();
             CertificateList certificateList = gson.fromJson(respStr, CertificateList.class);
             return certificateList.getCerts();
         } catch (IOException e) {
@@ -203,7 +203,7 @@ public class WxPayV3Api {
 
     public static <T> T getForResult(String mchid, String serialNo, String url, Class<T> resultClass) {
         String respStr = get(mchid, serialNo, url);
-        return WxGsonBuilder.instance().fromJson(respStr, resultClass);
+        return WxV3GsonBuilder.getInstance().fromJson(respStr, resultClass);
     }
 
     public static String post(String mchid, String serialNo, String url, String data) {
@@ -220,13 +220,13 @@ public class WxPayV3Api {
 
     public static <T> T postForResult(String mchid, String serialNo, String url, String data, Class<T> resultClass) {
         String respStr = post(mchid, serialNo, url, data);
-        return WxGsonBuilder.instance().fromJson(respStr, resultClass);
+        return WxV3GsonBuilder.getInstance().fromJson(respStr, resultClass);
     }
 
     private static String errorFilterResponse(int httpStatus, String resp) {
-        JsonObject json = WxGsonBuilder.instance().fromJson(resp, JsonObject.class);
+        JsonObject json = WxV3GsonBuilder.getInstance().fromJson(resp, JsonObject.class);
         if (json.has("code") && json.has("message")) {
-            WxPayError wxPayError = WxGsonBuilder.create().fromJson(resp, WxPayError.class);
+            WxPayError wxPayError = WxV3GsonBuilder.getInstance().fromJson(resp, WxPayError.class);
             if (wxPayError.getCode() != null) {
                 wxPayError.setStatus(httpStatus);
                 throw new WxPayErrorException(wxPayError);

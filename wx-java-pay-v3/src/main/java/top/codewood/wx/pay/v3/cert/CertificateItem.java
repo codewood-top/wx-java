@@ -3,6 +3,7 @@ package top.codewood.wx.pay.v3.cert;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 public class CertificateItem implements Serializable {

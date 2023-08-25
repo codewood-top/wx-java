@@ -3,7 +3,7 @@ package top.codewood.wx.pay.v3.api;
 import com.google.gson.JsonObject;
 import top.codewood.wx.pay.v3.bean.profitsharing.*;
 import top.codewood.wx.pay.v3.common.WxPayConfig;
-import top.codewood.wx.pay.v3.util.json.WxGsonBuilder;
+import top.codewood.wx.pay.v3.util.json.WxV3GsonBuilder;
 
 public class ProfitSharingV3Service {
 
@@ -28,7 +28,7 @@ public class ProfitSharingV3Service {
     public ProfitSharingV3Result request(ProfitSharingV3Request request) {
         assert wxPayConfig != null && request != null;
         String url = "https://api.mch.weixin.qq.com/v3/profitsharing/orders";
-        return WxPayV3Api.postForResult(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url, WxGsonBuilder.instance().toJson(request), ProfitSharingV3Result.class);
+        return WxPayV3Api.postForResult(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url, WxV3GsonBuilder.getInstance().toJson(request), ProfitSharingV3Result.class);
     }
 
     /**
@@ -69,7 +69,7 @@ public class ProfitSharingV3Service {
     public ProfitSharingReturnV3Result returnRequest(ProfitSharingReturnV3Request request) {
         assert wxPayConfig != null && request != null;
         String url = "https://api.mch.weixin.qq.com/v3/profitsharing/return-orders";
-        return WxPayV3Api.postForResult(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url, WxGsonBuilder.instance().toJson(request), ProfitSharingReturnV3Result.class);
+        return WxPayV3Api.postForResult(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url, WxV3GsonBuilder.getInstance().toJson(request), ProfitSharingReturnV3Result.class);
     }
 
     /**
@@ -150,7 +150,7 @@ public class ProfitSharingV3Service {
     public void addReceiver(ProfitSharingReceiverAddV3Request request) {
         assert wxPayConfig != null && request != null;
         String url = "https://api.mch.weixin.qq.com/v3/profitsharing/receivers/add";
-        WxPayV3Api.post(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url, WxGsonBuilder.instance().toJson(request));
+        WxPayV3Api.post(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url, WxV3GsonBuilder.getInstance().toJson(request));
     }
 
     /**

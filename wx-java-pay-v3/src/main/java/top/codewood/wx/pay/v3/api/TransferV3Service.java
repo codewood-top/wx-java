@@ -3,7 +3,7 @@ package top.codewood.wx.pay.v3.api;
 import com.google.gson.JsonObject;
 import top.codewood.wx.pay.v3.bean.transfer.*;
 import top.codewood.wx.pay.v3.common.WxPayConfig;
-import top.codewood.wx.pay.v3.util.json.WxGsonBuilder;
+import top.codewood.wx.pay.v3.util.json.WxV3GsonBuilder;
 
 public class TransferV3Service {
 
@@ -22,8 +22,8 @@ public class TransferV3Service {
     public BatchV3Result batches(BatchV3Request request) {
         assert wxPayConfig != null && request != null;
         String url = "https://api.mch.weixin.qq.com/v3/transfer/batches";
-        String respStr = WxPayV3Api.post(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url, WxGsonBuilder.instance().toJson(request));
-        return WxGsonBuilder.instance().fromJson(respStr, BatchV3Result.class);
+        String respStr = WxPayV3Api.post(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url, WxV3GsonBuilder.getInstance().toJson(request));
+        return WxV3GsonBuilder.getInstance().fromJson(respStr, BatchV3Result.class);
     }
 
     /**
@@ -39,7 +39,7 @@ public class TransferV3Service {
         assert wxPayConfig != null && batchId != null;
         String url = "https://api.mch.weixin.qq.com/v3/transfer/batches/batch-id/" + batchId;
         String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
-        return WxGsonBuilder.instance().fromJson(respStr, GetBatchV3Result.class);
+        return WxV3GsonBuilder.getInstance().fromJson(respStr, GetBatchV3Result.class);
     }
 
     /**
@@ -55,7 +55,7 @@ public class TransferV3Service {
         assert wxPayConfig != null && outBatchNo != null;
         String url = "https://api.mch.weixin.qq.com/v3/transfer/batches/out-batch-no/" + outBatchNo;
         String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
-        return WxGsonBuilder.instance().fromJson(respStr, GetBatchV3Result.class);
+        return WxV3GsonBuilder.getInstance().fromJson(respStr, GetBatchV3Result.class);
     }
 
     /**
@@ -72,7 +72,7 @@ public class TransferV3Service {
         assert wxPayConfig != null && batchId != null && detailId != null;
         String url = String.format("https://api.mch.weixin.qq.com/v3/transfer/batches/batch-id/%s/details/detail-id/%s", batchId, detailId);
         String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
-        return WxGsonBuilder.instance().fromJson(respStr, GetBatchDetailV3Result.class);
+        return WxV3GsonBuilder.getInstance().fromJson(respStr, GetBatchDetailV3Result.class);
     }
 
     /**
@@ -89,7 +89,7 @@ public class TransferV3Service {
         assert wxPayConfig != null && outBatchNo != null && outDetailNo != null;
         String url = String.format("https://api.mch.weixin.qq.com/v3/transfer/batches/out-batch-no/%s/details/out-detail-no/%s", outBatchNo, outDetailNo);
         String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
-        return WxGsonBuilder.instance().fromJson(respStr, GetBatchDetailV3Result.class);
+        return WxV3GsonBuilder.getInstance().fromJson(respStr, GetBatchDetailV3Result.class);
     }
 
     /**
@@ -105,7 +105,7 @@ public class TransferV3Service {
         assert wxPayConfig != null && outBatchNo != null;
         String url = "https://api.mch.weixin.qq.com/v3/transfer/bill-receipt";
         String respStr = WxPayV3Api.post(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url, outBatchNo);
-        return WxGsonBuilder.instance().fromJson(respStr, BillReceiptV3Result.class);
+        return WxV3GsonBuilder.getInstance().fromJson(respStr, BillReceiptV3Result.class);
     }
 
     /**
@@ -122,7 +122,7 @@ public class TransferV3Service {
 
         String url = "https://api.mch.weixin.qq.com/v3/transfer/bill-receipt/" + outBatchNo;
         String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
-        return WxGsonBuilder.instance().fromJson(respStr, BillReceiptV3Result.class);
+        return WxV3GsonBuilder.getInstance().fromJson(respStr, BillReceiptV3Result.class);
     }
 
     /**
@@ -153,7 +153,7 @@ public class TransferV3Service {
 
         String url = "https://api.mch.weixin.qq.com/v3/transfer-detail/electronic-receipts";
         String respStr = WxPayV3Api.post(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url, paramJson.toString());
-        return WxGsonBuilder.instance().fromJson(respStr, DetailElectronicReceiptV3Result.class);
+        return WxV3GsonBuilder.getInstance().fromJson(respStr, DetailElectronicReceiptV3Result.class);
     }
 
     /**
@@ -177,7 +177,7 @@ public class TransferV3Service {
             url += "&out_batch_no=" + outBatchNo;
         }
         String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
-        return WxGsonBuilder.instance().fromJson(respStr, DetailElectronicReceiptV3Result.class);
+        return WxV3GsonBuilder.getInstance().fromJson(respStr, DetailElectronicReceiptV3Result.class);
     }
 
 

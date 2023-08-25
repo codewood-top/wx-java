@@ -7,7 +7,7 @@ import top.codewood.wx.pay.v3.bean.result.WxPayBillDownloadResult;
 import top.codewood.wx.pay.v3.bean.result.WxRefundResult;
 import top.codewood.wx.pay.v3.common.WxPayConfig;
 import top.codewood.wx.pay.v3.common.WxPayConstants;
-import top.codewood.wx.pay.v3.util.json.WxGsonBuilder;
+import top.codewood.wx.pay.v3.util.json.WxV3GsonBuilder;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -32,7 +32,7 @@ public class WxPayV3Service {
      * @param wxPayRequest
      * @return
      */
-    public Map<String, String> unifiedOrder(String payType, WxPayRequest wxPayRequest) {
+    public Map<String, String> prepay(String payType, WxPayRequest wxPayRequest) {
         assert wxPayConfig != null && payType != null && wxPayRequest != null;
 
         if (WxPayConstants.PayType.get(payType) == null) {
@@ -40,8 +40,8 @@ public class WxPayV3Service {
         }
 
         String url = "https://api.mch.weixin.qq.com/v3/pay/transactions/" + payType.toLowerCase();
-        String respStr = WxPayV3Api.post(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url, WxGsonBuilder.instance().toJson(wxPayRequest));
-        return WxGsonBuilder.instance().fromJson(respStr, Map.class);
+        String respStr = WxPayV3Api.post(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url, WxV3GsonBuilder.getInstance().toJson(wxPayRequest));
+        return WxV3GsonBuilder.getInstance().fromJson(respStr, Map.class);
     }
 
     /**
@@ -54,8 +54,8 @@ public class WxPayV3Service {
      */
     public WxRefundResult refund(WxRefundRequest wxRefundRequest) {
         assert  wxPayConfig != null && wxRefundRequest != null;
-        String respStr = WxPayV3Api.post(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), WxPayConstants.V3PayUrl.REFUND_URL, WxGsonBuilder.instance().toJson(wxRefundRequest));
-        return WxGsonBuilder.instance().fromJson(respStr, WxRefundResult.class);
+        String respStr = WxPayV3Api.post(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), WxPayConstants.V3PayUrl.REFUND_URL, WxV3GsonBuilder.getInstance().toJson(wxRefundRequest));
+        return WxV3GsonBuilder.getInstance().fromJson(respStr, WxRefundResult.class);
     }
 
     /**
@@ -70,7 +70,7 @@ public class WxPayV3Service {
         assert wxPayConfig != null && outTradeNo != null;
         String url = String.format("https://api.mch.weixin.qq.com/v3/refund/domestic/refunds/%s", outTradeNo);
         String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
-        return WxGsonBuilder.instance().fromJson(respStr, WxRefundResult.class);
+        return WxV3GsonBuilder.getInstance().fromJson(respStr, WxRefundResult.class);
     }
 
     /**
@@ -84,7 +84,7 @@ public class WxPayV3Service {
         assert wxPayConfig != null && transactionId != null;
         String url = String.format("https://api.mch.weixin.qq.com/v3/pay/transactions/id/%s?mchid=%s", transactionId, wxPayConfig.getMchid());
         String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
-        return WxGsonBuilder.instance().fromJson(respStr, WxPayTransaction.class);
+        return WxV3GsonBuilder.getInstance().fromJson(respStr, WxPayTransaction.class);
     }
 
     /**
@@ -98,7 +98,7 @@ public class WxPayV3Service {
         assert wxPayConfig != null && outTradeNo != null;
         String url = String.format("https://api.mch.weixin.qq.com/v3/pay/transactions/out-trade-no/%s?mchid=%s", outTradeNo, wxPayConfig.getMchid());
         String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
-        return WxGsonBuilder.instance().fromJson(respStr, WxPayTransaction.class);
+        return WxV3GsonBuilder.getInstance().fromJson(respStr, WxPayTransaction.class);
     }
 
     /**
@@ -151,7 +151,7 @@ public class WxPayV3Service {
             url += "&tar_type=" + tarType;
         }
         String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
-        return WxGsonBuilder.instance().fromJson(respStr, WxPayBillDownloadResult.class);
+        return WxV3GsonBuilder.getInstance().fromJson(respStr, WxPayBillDownloadResult.class);
     }
 
     /**
@@ -214,7 +214,7 @@ public class WxPayV3Service {
             url += "&tar_type=" + tarType;
         }
         String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
-        return WxGsonBuilder.instance().fromJson(respStr, WxPayBillDownloadResult.class);
+        return WxV3GsonBuilder.getInstance().fromJson(respStr, WxPayBillDownloadResult.class);
 
     }
 
