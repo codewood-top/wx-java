@@ -417,6 +417,102 @@ public class WxRefundResult implements Serializable {
         }
     }
 
+    public String getRefundId() {
+        return refundId;
+    }
+
+    public void setRefundId(String refundId) {
+        this.refundId = refundId;
+    }
+
+    public String getOutRefundNo() {
+        return outRefundNo;
+    }
+
+    public void setOutRefundNo(String outRefundNo) {
+        this.outRefundNo = outRefundNo;
+    }
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
+    }
+
+    public String getOutTradeNo() {
+        return outTradeNo;
+    }
+
+    public void setOutTradeNo(String outTradeNo) {
+        this.outTradeNo = outTradeNo;
+    }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
+
+    public String getUserReceivedAccount() {
+        return userReceivedAccount;
+    }
+
+    public void setUserReceivedAccount(String userReceivedAccount) {
+        this.userReceivedAccount = userReceivedAccount;
+    }
+
+    public OffsetDateTime getSuccessTime() {
+        return successTime;
+    }
+
+    public void setSuccessTime(OffsetDateTime successTime) {
+        this.successTime = successTime;
+    }
+
+    public OffsetDateTime getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(OffsetDateTime createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getFundsAccount() {
+        return fundsAccount;
+    }
+
+    public void setFundsAccount(String fundsAccount) {
+        this.fundsAccount = fundsAccount;
+    }
+
+    public Amount getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Amount amount) {
+        this.amount = amount;
+    }
+
+    public PromotionDetail[] getPromotionDetails() {
+        return promotionDetails;
+    }
+
+    public void setPromotionDetails(PromotionDetail[] promotionDetails) {
+        this.promotionDetails = promotionDetails;
+    }
+
     @Override
     public String toString() {
         return "WxRefundResult{" +

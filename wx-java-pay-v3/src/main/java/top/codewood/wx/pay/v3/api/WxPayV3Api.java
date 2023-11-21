@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.util.EntityUtils;
 import top.codewood.wx.pay.v3.bean.error.WxPayError;
 import top.codewood.wx.pay.v3.bean.error.WxPayErrorException;
@@ -83,8 +84,7 @@ public class WxPayV3Api {
             String url = WxPayConstants.V3PayUrl.CERTIFICATE_LIST_URL;
             String token = getToken(mchid, serialNo, WxPayConstants.HttpMethod.GET, url, EMPTY_STR);
             String respStr = new WxPayHttpClient().get(url, token);
-            Gson gson = WxV3GsonBuilder.getInstance();
-            CertificateList certificateList = gson.fromJson(respStr, CertificateList.class);
+            CertificateList certificateList = WxV3GsonBuilder.getInstance().fromJson(respStr, CertificateList.class);
             return certificateList.getCerts();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -99,7 +99,7 @@ public class WxPayV3Api {
      */
     public static Map<String, CertificateItem> certificateListToMap(List<CertificateItem> certificates) {
         Map<String, CertificateItem> map = new HashMap<>();
-        certificates.stream().forEach(certificateItem -> map.put(certificateItem.getSerialNo(), certificateItem));
+        certificates.forEach(certificateItem -> map.put(certificateItem.getSerialNo(), certificateItem));
         return map;
     }
 
@@ -173,8 +173,16 @@ public class WxPayV3Api {
         if (wechatPaySerialHeader != null) {
             wechatPaySerial = wechatPaySerialHeader.getValue();
         }
+        if (httpResponse.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+            WxPayError wxPayError = WxV3GsonBuilder.getInstance().fromJson(respBody, WxPayError.class);
+            if (wxPayError.getCode() != null && wxPayError.getMessage() != null) {
+                throw new RuntimeException(wxPayError.getMessage());
+            }
+
+        }
 
         try {
+
             boolean verify = WxPayV3Api.verify(wechatPaySerial, wechatPayTimeStamp, wechatPayNonce, respBody, wechatPaySignature);
             if (!verify) {
                 throw new RuntimeException(String.format("请求数据签名校验失败, request-id: %s", requestId));
@@ -228,7 +236,7 @@ public class WxPayV3Api {
         if (json.has("code") && json.has("message")) {
             WxPayError wxPayError = WxV3GsonBuilder.getInstance().fromJson(resp, WxPayError.class);
             if (wxPayError.getCode() != null) {
-                wxPayError.setStatus(httpStatus);
+                //wxPayError.setStatus(httpStatus);
                 throw new WxPayErrorException(wxPayError);
             }
         }

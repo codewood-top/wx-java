@@ -26,8 +26,8 @@ public class WxPayHttpClient {
             " (" + System.getProperty("os.arch") + " " + System.getProperty("os.name") + " " + System.getProperty("os.version") +
             ") Java/" + System.getProperty("java.version") + " HttpClient/" + HttpClient.class.getPackage().getImplementationVersion();
 
-    private int connectTimeoutMs = 5 * 1000;
-    private int readTimeoutMs = 5 * 1000;
+    private final int connectTimeoutMs = 5 * 1000;
+    private final int readTimeoutMs = 5 * 1000;
 
     private HttpResponse request(String url, String method, String data, String token) throws IOException {
         BasicHttpClientConnectionManager connManager = new BasicHttpClientConnectionManager(
