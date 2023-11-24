@@ -5,7 +5,6 @@ import top.codewood.wx.pay.v3.bean.request.WxPayRequest;
 import top.codewood.wx.pay.v3.bean.request.WxRefundRequest;
 import top.codewood.wx.pay.v3.bean.result.WxPayBillDownloadResult;
 import top.codewood.wx.pay.v3.bean.result.WxRefundResult;
-import top.codewood.wx.pay.v3.common.WxPayConfig;
 import top.codewood.wx.pay.v3.common.WxPayConstants;
 import top.codewood.wx.pay.v3.util.json.WxV3GsonBuilder;
 
@@ -15,12 +14,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class WxPayV3Service {
-
-    private WxPayConfig wxPayConfig;
-
-    public WxPayV3Service(WxPayConfig wxPayConfig) {
-        this.wxPayConfig = wxPayConfig;
-    }
 
     /**
      * 统一下单API
@@ -32,15 +25,15 @@ public class WxPayV3Service {
      * @param wxPayRequest
      * @return
      */
-    public Map<String, String> prepay(String payType, WxPayRequest wxPayRequest) {
-        assert wxPayConfig != null && payType != null && wxPayRequest != null;
+    public Map<String, String> prepay(String mchid, String serialNo, String payType, WxPayRequest wxPayRequest) {
+        assert payType != null && wxPayRequest != null;
 
         if (WxPayConstants.PayType.get(payType) == null) {
             throw new RuntimeException("无效的支付方式：" + payType);
         }
 
         String url = "https://api.mch.weixin.qq.com/v3/pay/transactions/" + payType.toLowerCase();
-        String respStr = WxPayV3Api.post(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url, WxV3GsonBuilder.getInstance().toJson(wxPayRequest));
+        String respStr = WxPayV3Api.post(mchid, serialNo, url, WxV3GsonBuilder.getInstance().toJson(wxPayRequest));
         return WxV3GsonBuilder.getInstance().fromJson(respStr, Map.class);
     }
 
@@ -52,9 +45,9 @@ public class WxPayV3Service {
      * @param wxRefundRequest
      * @return
      */
-    public WxRefundResult refund(WxRefundRequest wxRefundRequest) {
-        assert  wxPayConfig != null && wxRefundRequest != null;
-        String respStr = WxPayV3Api.post(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), WxPayConstants.V3PayUrl.REFUND_URL, WxV3GsonBuilder.getInstance().toJson(wxRefundRequest));
+    public WxRefundResult refund(String mchid, String serialNo, WxRefundRequest wxRefundRequest) {
+        assert wxRefundRequest != null;
+        String respStr = WxPayV3Api.post(mchid, serialNo, WxPayConstants.V3PayUrl.REFUND_URL, WxV3GsonBuilder.getInstance().toJson(wxRefundRequest));
         return WxV3GsonBuilder.getInstance().fromJson(respStr, WxRefundResult.class);
     }
 
@@ -66,10 +59,10 @@ public class WxPayV3Service {
      * @param outTradeNo 商户退款单号: 商户系统内部的退款单号，商户系统内部唯一，只能是数字、大小写字母_-|*@ ，同一退款单号多次请求只退一笔。
      * @return
      */
-    public WxRefundResult queryRefund(String outTradeNo) {
-        assert wxPayConfig != null && outTradeNo != null;
+    public WxRefundResult queryRefund(String mchid, String serialNo, String outTradeNo) {
+        assert outTradeNo != null;
         String url = String.format("https://api.mch.weixin.qq.com/v3/refund/domestic/refunds/%s", outTradeNo);
-        String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
+        String respStr = WxPayV3Api.get(mchid, serialNo, url);
         return WxV3GsonBuilder.getInstance().fromJson(respStr, WxRefundResult.class);
     }
 
@@ -80,10 +73,10 @@ public class WxPayV3Service {
      * @param transactionId
      * @return
      */
-    public  WxPayTransaction queryWithTransactionId(String transactionId) {
-        assert wxPayConfig != null && transactionId != null;
-        String url = String.format("https://api.mch.weixin.qq.com/v3/pay/transactions/id/%s?mchid=%s", transactionId, wxPayConfig.getMchid());
-        String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
+    public  WxPayTransaction queryWithTransactionId(String mchid, String serialNo, String transactionId) {
+        assert transactionId != null;
+        String url = String.format("https://api.mch.weixin.qq.com/v3/pay/transactions/id/%s?mchid=%s", transactionId, mchid);
+        String respStr = WxPayV3Api.get(mchid, serialNo, url);
         return WxV3GsonBuilder.getInstance().fromJson(respStr, WxPayTransaction.class);
     }
 
@@ -94,10 +87,10 @@ public class WxPayV3Service {
      * @param outTradeNo
      * @return
      */
-    public WxPayTransaction queryWithOutTradeNo(String outTradeNo) {
-        assert wxPayConfig != null && outTradeNo != null;
-        String url = String.format("https://api.mch.weixin.qq.com/v3/pay/transactions/out-trade-no/%s?mchid=%s", outTradeNo, wxPayConfig.getMchid());
-        String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
+    public WxPayTransaction queryWithOutTradeNo(String mchid, String serialNo, String outTradeNo) {
+        assert outTradeNo != null;
+        String url = String.format("https://api.mch.weixin.qq.com/v3/pay/transactions/out-trade-no/%s?mchid=%s", outTradeNo, mchid);
+        String respStr = WxPayV3Api.get(mchid, serialNo, url);
         return WxV3GsonBuilder.getInstance().fromJson(respStr, WxPayTransaction.class);
     }
 
@@ -110,11 +103,11 @@ public class WxPayV3Service {
      * <a href="https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_3.shtml">关闭订单</a>
      * @param outTradeNo
      */
-    public void closeTransaction(String outTradeNo) {
-        assert wxPayConfig != null && outTradeNo != null;
-        String body = String.format("{\"mchid\": \"%s\"}", wxPayConfig.getMchid());
+    public void closeTransaction(String mchid, String serialNo, String outTradeNo) {
+        assert outTradeNo != null;
+        String body = String.format("{\"mchid\": \"%s\"}", mchid);
         String url = String.format("https://api.mch.weixin.qq.com/v3/pay/transactions/out-trade-no/%s/close", outTradeNo);
-        WxPayV3Api.post(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url, body);
+        WxPayV3Api.post(mchid, serialNo, url, body);
     }
 
     /**
@@ -141,8 +134,8 @@ public class WxPayV3Service {
      *                  GZIP：返回格式为.gzip的压缩包账单
      *                  示例值：GZIP
      */
-    public WxPayBillDownloadResult tradeBill(String billDate, String billType, String tarType) {
-        assert wxPayConfig != null &&  billDate != null;
+    public WxPayBillDownloadResult tradeBill(String mchid, String serialNo, String billDate, String billType, String tarType) {
+        assert billDate != null;
         String url = String.format("https://api.mch.weixin.qq.com/v3/bill/tradebill?bill_date=%s", billDate);
         if (billType != null) {
             url += "&bill_type=" + billType;
@@ -150,7 +143,7 @@ public class WxPayV3Service {
         if (tarType != null) {
             url += "&tar_type=" + tarType;
         }
-        String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
+        String respStr = WxPayV3Api.get(mchid, serialNo, url);
         return WxV3GsonBuilder.getInstance().fromJson(respStr, WxPayBillDownloadResult.class);
     }
 
@@ -179,10 +172,10 @@ public class WxPayV3Service {
      *                  GZIP：返回格式为.gzip的压缩包账单
      *                  示例值：GZIP
      */
-    public InputStream downloadTradeBill(String billDate, String billType, String tarType) {
-        WxPayBillDownloadResult wxPayBillDownloadResult = tradeBill(billDate, billType, tarType);
+    public InputStream downloadTradeBill(String mchid, String serialNo, String billDate, String billType, String tarType) {
+        WxPayBillDownloadResult wxPayBillDownloadResult = tradeBill(mchid, serialNo, billDate, billType, tarType);
         String url = wxPayBillDownloadResult.getDownloadUrl();
-        String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
+        String respStr = WxPayV3Api.get(mchid, serialNo, url);
         return new ByteArrayInputStream(respStr.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -203,7 +196,7 @@ public class WxPayV3Service {
      *                  示例值：GZIP
      * @return
      */
-    public WxPayBillDownloadResult fundFlowBill(String billDate, String accountType, String tarType) {
+    public WxPayBillDownloadResult fundFlowBill(String mchid, String serialNo, String billDate, String accountType, String tarType) {
         assert billDate != null;
 
         String url = String.format("https://api.mch.weixin.qq.com/v3/bill/fundflowbill?bill_date=%s", billDate);
@@ -213,7 +206,7 @@ public class WxPayV3Service {
         if (tarType != null) {
             url += "&tar_type=" + tarType;
         }
-        String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
+        String respStr = WxPayV3Api.get(mchid, serialNo, url);
         return WxV3GsonBuilder.getInstance().fromJson(respStr, WxPayBillDownloadResult.class);
 
     }
@@ -235,10 +228,10 @@ public class WxPayV3Service {
      *                  示例值：GZIP
      * @return
      */
-    public InputStream downloadFundFlowBill(String billDate, String accountType, String tarType) {
-        WxPayBillDownloadResult wxPayBillDownloadResult = fundFlowBill(billDate, accountType, tarType);
+    public InputStream downloadFundFlowBill(String mchid, String serialNo, String billDate, String accountType, String tarType) {
+        WxPayBillDownloadResult wxPayBillDownloadResult = fundFlowBill(mchid, serialNo, billDate, accountType, tarType);
         String url = wxPayBillDownloadResult.getDownloadUrl();
-        String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
+        String respStr = WxPayV3Api.get(mchid, serialNo, url);
         return new ByteArrayInputStream(respStr.getBytes(StandardCharsets.UTF_8));
     }
 

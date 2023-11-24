@@ -1,6 +1,5 @@
 package top.codewood.wx.pay.v3.api;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -27,12 +26,95 @@ import java.security.*;
 import java.security.cert.Certificate;
 import java.util.*;
 
+/**
+ *  添加相应的微信支付商户资料
+ *  WxPayV3Api.setPrivateKey(mchid, cert);
+ *  WxPayV3Api.loadCertificates(mchid, serialNo, v3SecretKey);
+ */
 public class WxPayV3Api {
 
     public static final String EMPTY_STR = "";
 
-    private static final Map<String, PrivateKey> PRIVATE_KEY_MAP = new HashMap<>();
-    private static final Map<String, Certificate> CERTIFICATE_MAP = new HashMap<>();
+    private static WxPayStorageService wxPayStorageService = new WxPayStorageServiceDefaultImpl();
+
+    public static void setWxPayStorageService(WxPayStorageService wxPayStorageService) {
+        WxPayV3Api.wxPayStorageService = wxPayStorageService;
+    }
+
+    private static PrivateKey loadPrivateKey(String mchid) {
+        String privateKeyStr = wxPayStorageService.getPrivateKey(mchid);
+        return PemUtils.loadPrivateKey(privateKeyStr);
+    }
+
+    /**
+     * 加载私钥
+     * @param mchid 微信支付商户号
+     * @param inputStream apiclient_key.pem文件输入流
+     */
+    public static PrivateKey setPrivateKey(String mchid, InputStream inputStream) {
+
+        String privateKeyStr = PemUtils.loadPrivateKeyString(inputStream);
+        return setPrivateKey(mchid, privateKeyStr);
+    }
+
+    /**
+     * 加载私钥
+     * @param mchid 微信支付商户号
+     * @param privateKeyStr apiclient_key.pem文件内容
+     */
+    public static PrivateKey setPrivateKey(String mchid, String privateKeyStr) {
+        PrivateKey privateKey = PemUtils.loadPrivateKey(privateKeyStr);
+        wxPayStorageService.setPrivateKey(mchid, privateKeyStr);
+        return privateKey;
+    }
+
+    private static Certificate getCertificate(String serialNo) {
+        String publicKey = wxPayStorageService.getCertificatePublicKey(serialNo);
+        return PemUtils.loadCertificate(new ByteArrayInputStream(publicKey.getBytes(StandardCharsets.UTF_8)));
+    }
+
+    /**
+     * 在更换证书过程中，新老证书都生效，这时可转成map,通过serialNo快速查找
+     * List<CertificateItem> to Map<String, CertificateItem> -> serialNo: CertificateItem
+     * @param certificates
+     * @return
+     */
+    public static Map<String, CertificateItem> certificateListToMap(List<CertificateItem> certificates) {
+        Map<String, CertificateItem> map = new HashMap<>();
+        certificates.forEach(certificateItem -> map.put(certificateItem.getSerialNo(), certificateItem));
+        return map;
+    }
+
+    /**
+     *
+     * 这个api没有做签名校验
+     *
+     * <a href="https://pay.weixin.qq.com/wiki/doc/apiv3/wechatpay/wechatpay5_1.shtml">商户API证书</a>
+     *
+     * @param mchid 发起请求的商户（包括直连商户、服务商或渠道商）的商户号 mchid
+     * @param serialNo 用于声明所使用的证书
+     *
+     * @return
+     */
+    public static void loadCertificates(String mchid, String serialNo, String apiV3Key) {
+        try {
+            String url = WxPayConstants.V3PayUrl.CERTIFICATE_LIST_URL;
+            String token = getToken(mchid, serialNo, WxPayConstants.HttpMethod.GET, url, EMPTY_STR);
+            String respStr = new WxPayHttpClient().get(url, token);
+            CertificateList certificateList = WxV3GsonBuilder.getInstance().fromJson(respStr, CertificateList.class);
+            WxPayV3CryptUtils wxPayV3CryptUtils = new WxPayV3CryptUtils(apiV3Key.getBytes(StandardCharsets.UTF_8));
+            List<CertificateItem> certificateItems = certificateList.getCerts();
+            for (CertificateItem certificateItem : certificateItems) {
+                String publicKey = wxPayV3CryptUtils.decrypt(certificateItem.getEncryptCertificateItem().getAssociatedData().getBytes(StandardCharsets.UTF_8),
+                        certificateItem.getEncryptCertificateItem().getNonce().getBytes(StandardCharsets.UTF_8),
+                        certificateItem.getEncryptCertificateItem().getCipherText());
+                wxPayStorageService.setCertificateSerialPublicKey(certificateItem.getSerialNo(), publicKey);
+
+            }
+        } catch (IOException | GeneralSecurityException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
     public static String getToken(String mchid, String serialNo, String method, String reqUrl, String body) {
@@ -59,88 +141,18 @@ public class WxPayV3Api {
     }
 
     public static String sign(String mchid, byte[] message) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
-        PrivateKey privateKey = PRIVATE_KEY_MAP.get(mchid);
-        if (privateKey == null) throw new RuntimeException("私钥未初始化");
+        PrivateKey privateKey = loadPrivateKey(mchid);
         Signature sign = Signature.getInstance("SHA256withRSA");
         sign.initSign(privateKey);
         sign.update(message);
         return Base64.getEncoder().encodeToString(sign.sign());
     }
 
-    /**
-     *
-     * 这个api没有做签名校验
-     *
-     * <a href="https://pay.weixin.qq.com/wiki/doc/apiv3/wechatpay/wechatpay5_1.shtml">商户API证书</a>
-     *
-     * @param mchid 发起请求的商户（包括直连商户、服务商或渠道商）的商户号 mchid
-     * @param serialNo 用于声明所使用的证书
-     *
-     * @return
-     */
-    public static List<CertificateItem> certificates(String mchid, String serialNo) {
-
-        try {
-            String url = WxPayConstants.V3PayUrl.CERTIFICATE_LIST_URL;
-            String token = getToken(mchid, serialNo, WxPayConstants.HttpMethod.GET, url, EMPTY_STR);
-            String respStr = new WxPayHttpClient().get(url, token);
-            CertificateList certificateList = WxV3GsonBuilder.getInstance().fromJson(respStr, CertificateList.class);
-            return certificateList.getCerts();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * 在更换证书过程中，新老证书都生效，这时可转成map,通过serialNo快速查找
-     * List<CertificateItem> to Map<String, CertificateItem> -> serialNo: CertificateItem
-     * @param certificates
-     * @return
-     */
-    public static Map<String, CertificateItem> certificateListToMap(List<CertificateItem> certificates) {
-        Map<String, CertificateItem> map = new HashMap<>();
-        certificates.forEach(certificateItem -> map.put(certificateItem.getSerialNo(), certificateItem));
-        return map;
-    }
-
-    /**
-     * 加载私钥
-     * @param inputStream
-     */
-    public static PrivateKey loadPrivateKey(String mchid, InputStream inputStream) {
-        PrivateKey privateKey = PemUtils.loadPrivateKey(inputStream);
-        PRIVATE_KEY_MAP.put(mchid, privateKey);
-        return privateKey;
-    }
-
-    public static void loadCertificates(String apiV3Key, List<CertificateItem> certificateItems) {
-        assert certificateItems != null;
-        if (certificateItems.size() > 0) {
-            WxPayV3CryptUtils wxPayV3CryptUtils = new WxPayV3CryptUtils(apiV3Key.getBytes(StandardCharsets.UTF_8));
-            certificateItems.stream().forEach(certificateItem -> {
-                try {
-                    String publicKey = wxPayV3CryptUtils.decrypt(certificateItem.getEncryptCertificateItem().getAssociatedData().getBytes(StandardCharsets.UTF_8),
-                            certificateItem.getEncryptCertificateItem().getNonce().getBytes(StandardCharsets.UTF_8),
-                            certificateItem.getEncryptCertificateItem().getCipherText());
-                    CERTIFICATE_MAP.put(certificateItem.getSerialNo(), PemUtils.loadCertificate(new ByteArrayInputStream(publicKey.getBytes(StandardCharsets.UTF_8))));
-                } catch (GeneralSecurityException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-        }
-
-    }
-
-
     public static boolean verify(String serialNo, String wechatTimeStamp, String wechatPayNonce, String body, String wechatSignature) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
-        if (!CERTIFICATE_MAP.containsKey(serialNo)) {
-            throw new RuntimeException(String.format("serialNo: %s 证书未配置!", serialNo));
-        }
+        Certificate certificate = getCertificate(serialNo);
         String message = wechatTimeStamp + "\n" + wechatPayNonce + "\n" + body + "\n";
         Signature signature = Signature.getInstance("SHA256withRSA");
-        signature.initVerify(CERTIFICATE_MAP.get(serialNo));
+        signature.initVerify(certificate);
         signature.update(message.getBytes(StandardCharsets.UTF_8));
 
         return signature.verify(Base64.getDecoder().decode(wechatSignature));

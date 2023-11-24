@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.util.Arrays;
 
 public class WxRefundResult implements Serializable {
 
@@ -226,6 +227,20 @@ public class WxRefundResult implements Serializable {
         public void setCurrency(String currency) {
             this.currency = currency;
         }
+
+        @Override
+        public String toString() {
+            return "Amount{" +
+                    "total=" + total +
+                    ", refund=" + refund +
+                    ", payerTotal=" + payerTotal +
+                    ", payerRefund=" + payerRefund +
+                    ", settlementRefund=" + settlementRefund +
+                    ", settlementTotal=" + settlementTotal +
+                    ", discountRefund=" + discountRefund +
+                    ", currency='" + currency + '\'' +
+                    '}';
+        }
     }
 
     public static class PromotionDetail {
@@ -322,6 +337,18 @@ public class WxRefundResult implements Serializable {
         public void setGoodsDetails(GoodsDetail[] goodsDetails) {
             this.goodsDetails = goodsDetails;
         }
+
+        @Override
+        public String toString() {
+            return "PromotionDetail{" +
+                    "promotionId='" + promotionId + '\'' +
+                    ", scope='" + scope + '\'' +
+                    ", type='" + type + '\'' +
+                    ", amount=" + amount +
+                    ", refundAmount=" + refundAmount +
+                    ", goodsDetails=" + Arrays.toString(goodsDetails) +
+                    '}';
+        }
     }
 
     public static class GoodsDetail implements Serializable {
@@ -414,6 +441,18 @@ public class WxRefundResult implements Serializable {
 
         public void setRefundQuantity(int refundQuantity) {
             this.refundQuantity = refundQuantity;
+        }
+
+        @Override
+        public String toString() {
+            return "GoodsDetail{" +
+                    "merchantGoodsId='" + merchantGoodsId + '\'' +
+                    ", wechatPayGoodsId='" + wechatPayGoodsId + '\'' +
+                    ", goodsName='" + goodsName + '\'' +
+                    ", unitPrice=" + unitPrice +
+                    ", refundAmount=" + refundAmount +
+                    ", refundQuantity=" + refundQuantity +
+                    '}';
         }
     }
 
@@ -527,7 +566,7 @@ public class WxRefundResult implements Serializable {
                 ", status='" + status + '\'' +
                 ", fundsAccount='" + fundsAccount + '\'' +
                 ", amount=" + amount +
-                ", promotionDetails=" + promotionDetails +
+                ", promotionDetails=" + Arrays.toString(promotionDetails) +
                 '}';
     }
 }

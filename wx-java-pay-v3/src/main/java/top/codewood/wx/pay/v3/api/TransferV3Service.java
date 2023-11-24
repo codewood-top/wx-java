@@ -2,16 +2,10 @@ package top.codewood.wx.pay.v3.api;
 
 import com.google.gson.JsonObject;
 import top.codewood.wx.pay.v3.bean.transfer.*;
-import top.codewood.wx.pay.v3.common.WxPayConfig;
 import top.codewood.wx.pay.v3.util.json.WxV3GsonBuilder;
 
 public class TransferV3Service {
 
-    private WxPayConfig wxPayConfig;
-
-    public TransferV3Service(WxPayConfig wxPayConfig) {
-        this.wxPayConfig = wxPayConfig;
-    }
 
     /**
      * 发起商家转账
@@ -19,10 +13,10 @@ public class TransferV3Service {
      *
      * <a href=“https://pay.weixin.qq.com/docs/merchant/apis/batch-transfer-to-balance/transfer-batch/initiate-batch-transfer.html”>开发文档</a>
      */
-    public BatchV3Result batches(BatchV3Request request) {
-        assert wxPayConfig != null && request != null;
+    public BatchV3Result batches(String mchid, String serialNo, BatchV3Request request) {
+        assert request != null;
         String url = "https://api.mch.weixin.qq.com/v3/transfer/batches";
-        String respStr = WxPayV3Api.post(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url, WxV3GsonBuilder.getInstance().toJson(request));
+        String respStr = WxPayV3Api.post(mchid, serialNo, url, WxV3GsonBuilder.getInstance().toJson(request));
         return WxV3GsonBuilder.getInstance().fromJson(respStr, BatchV3Result.class);
     }
 
@@ -35,10 +29,10 @@ public class TransferV3Service {
      * @param batchId 【微信批次单号】 微信批次单号，微信商家转账系统返回的唯一标识
      * @return
      */
-    public GetBatchV3Result getWithBatchId(String batchId) {
-        assert wxPayConfig != null && batchId != null;
+    public GetBatchV3Result getWithBatchId(String mchid, String serialNo, String batchId) {
+        assert batchId != null;
         String url = "https://api.mch.weixin.qq.com/v3/transfer/batches/batch-id/" + batchId;
-        String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
+        String respStr = WxPayV3Api.get(mchid, serialNo, url);
         return WxV3GsonBuilder.getInstance().fromJson(respStr, GetBatchV3Result.class);
     }
 
@@ -51,10 +45,10 @@ public class TransferV3Service {
      * @param outBatchNo 【商家批次单号】 商户系统内部的商家批次单号，在商户系统内部唯一
      * @return
      */
-    public GetBatchV3Result getWithOutNo(String outBatchNo) {
-        assert wxPayConfig != null && outBatchNo != null;
+    public GetBatchV3Result getWithOutNo(String mchid, String serialNo, String outBatchNo) {
+        assert outBatchNo != null;
         String url = "https://api.mch.weixin.qq.com/v3/transfer/batches/out-batch-no/" + outBatchNo;
-        String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
+        String respStr = WxPayV3Api.get(mchid, serialNo, url);
         return WxV3GsonBuilder.getInstance().fromJson(respStr, GetBatchV3Result.class);
     }
 
@@ -68,10 +62,10 @@ public class TransferV3Service {
      * @param detailId 【微信明细单号】 微信支付系统内部区分转账批次单下不同转账明细单的唯一标识
      * @return
      */
-    public GetBatchDetailV3Result getDetailWithId(String batchId, String detailId) {
-        assert wxPayConfig != null && batchId != null && detailId != null;
+    public GetBatchDetailV3Result getDetailWithId(String mchid, String serialNo, String batchId, String detailId) {
+        assert batchId != null && detailId != null;
         String url = String.format("https://api.mch.weixin.qq.com/v3/transfer/batches/batch-id/%s/details/detail-id/%s", batchId, detailId);
-        String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
+        String respStr = WxPayV3Api.get(mchid, serialNo, url);
         return WxV3GsonBuilder.getInstance().fromJson(respStr, GetBatchDetailV3Result.class);
     }
 
@@ -85,10 +79,10 @@ public class TransferV3Service {
      * @param outDetailNo 【商家明细单号】 商户系统内部区分转账批次单下不同转账明细单的唯一标识
      * @return
      */
-    public GetBatchDetailV3Result getDetailWithOutNo(String outBatchNo, String outDetailNo) {
-        assert wxPayConfig != null && outBatchNo != null && outDetailNo != null;
+    public GetBatchDetailV3Result getDetailWithOutNo(String mchid, String serialNo, String outBatchNo, String outDetailNo) {
+        assert outBatchNo != null && outDetailNo != null;
         String url = String.format("https://api.mch.weixin.qq.com/v3/transfer/batches/out-batch-no/%s/details/out-detail-no/%s", outBatchNo, outDetailNo);
-        String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
+        String respStr = WxPayV3Api.get(mchid, serialNo, url);
         return WxV3GsonBuilder.getInstance().fromJson(respStr, GetBatchDetailV3Result.class);
     }
 
@@ -101,10 +95,10 @@ public class TransferV3Service {
      * @param outBatchNo 【商家批次单号】 商户系统内部的商家批次单号，在商户系统内部唯一。需要电子回单的批次单号
      * @return
      */
-    public BillReceiptV3Result billReceipt(String outBatchNo) {
-        assert wxPayConfig != null && outBatchNo != null;
+    public BillReceiptV3Result billReceipt(String mchid, String serialNo, String outBatchNo) {
+        assert outBatchNo != null;
         String url = "https://api.mch.weixin.qq.com/v3/transfer/bill-receipt";
-        String respStr = WxPayV3Api.post(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url, outBatchNo);
+        String respStr = WxPayV3Api.post(mchid, serialNo, url, outBatchNo);
         return WxV3GsonBuilder.getInstance().fromJson(respStr, BillReceiptV3Result.class);
     }
 
@@ -117,11 +111,11 @@ public class TransferV3Service {
      * @param outBatchNo 【商家批次单号】 商户系统内部的商家批次单号，在商户系统内部唯一。需要电子回单的批次单号
      * @return
      */
-    public BillReceiptV3Result queryBillReceipt(String outBatchNo) {
-        assert wxPayConfig != null && outBatchNo != null;
+    public BillReceiptV3Result queryBillReceipt(String mchid, String serialNo, String outBatchNo) {
+        assert outBatchNo != null;
 
         String url = "https://api.mch.weixin.qq.com/v3/transfer/bill-receipt/" + outBatchNo;
-        String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
+        String respStr = WxPayV3Api.get(mchid, serialNo, url);
         return WxV3GsonBuilder.getInstance().fromJson(respStr, BillReceiptV3Result.class);
     }
 
@@ -140,8 +134,8 @@ public class TransferV3Service {
      * @param outDetailNo 必填 【商家转账明细单号】 该单号为商户申请转账时生成的商家转账明细单号。 1.受理类型为BATCH_TRANSFER时填写商家批量转账明细单号。2. 受理类型为TRANSFER_TO_POCKET或TRANSFER_TO_BANK时填写商家转账单号。
      * @return
      */
-    public DetailElectronicReceiptV3Result detailElectronicReceipts(String acceptType, String outBatchNo, String outDetailNo) {
-        assert wxPayConfig != null && acceptType != null && outDetailNo != null;
+    public DetailElectronicReceiptV3Result detailElectronicReceipts(String mchid, String serialNo, String acceptType, String outBatchNo, String outDetailNo) {
+        assert acceptType != null && outDetailNo != null;
 
         JsonObject paramJson = new JsonObject();
         paramJson.addProperty("access_type", acceptType);
@@ -152,7 +146,7 @@ public class TransferV3Service {
         }
 
         String url = "https://api.mch.weixin.qq.com/v3/transfer-detail/electronic-receipts";
-        String respStr = WxPayV3Api.post(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url, paramJson.toString());
+        String respStr = WxPayV3Api.post(mchid, serialNo, url, paramJson.toString());
         return WxV3GsonBuilder.getInstance().fromJson(respStr, DetailElectronicReceiptV3Result.class);
     }
 
@@ -169,14 +163,14 @@ public class TransferV3Service {
      * @param outDetailNo 必填 【商家转账明细单号】 该单号为商户申请转账时生成的商家转账明细单号。 1.受理类型为BATCH_TRANSFER时填写商家批量转账明细单号。2. 受理类型为TRANSFER_TO_POCKET或TRANSFER_TO_BANK时填写商家转账单号。
      * @return
      */
-    public DetailElectronicReceiptV3Result getDetailElectronicReceipts(String acceptType, String outBatchNo, String outDetailNo) {
-        assert wxPayConfig != null && acceptType != null && outDetailNo != null;
+    public DetailElectronicReceiptV3Result getDetailElectronicReceipts(String mchid, String serialNo, String acceptType, String outBatchNo, String outDetailNo) {
+        assert acceptType != null && outDetailNo != null;
 
         String url = String.format("https://api.mch.weixin.qq.com/v3/transfer-detail/electronic-receipts?accept_type=%s&out_detail_no=%s", acceptType, outDetailNo);
         if (outBatchNo != null) {
             url += "&out_batch_no=" + outBatchNo;
         }
-        String respStr = WxPayV3Api.get(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url);
+        String respStr = WxPayV3Api.get(mchid, serialNo, url);
         return WxV3GsonBuilder.getInstance().fromJson(respStr, DetailElectronicReceiptV3Result.class);
     }
 

@@ -12,12 +12,12 @@ public class WxPayConfig {
     /**
      * 密钥: 微信商户平台(pay.weixin.qq.com)-->账户设置-->API安全-->APIV3密钥设置
      */
-    private String v3Key;
+    private String v3SecretKey;
 
     /**
      * v3: apiclient_key.pem
      */
-    private String v3KeyPath;
+    private String cert;
 
     /**
      * 支付通知url
@@ -45,20 +45,20 @@ public class WxPayConfig {
         this.serialNo = serialNo;
     }
 
-    public String getV3Key() {
-        return v3Key;
+    public String getV3SecretKey() {
+        return v3SecretKey;
     }
 
-    public void setV3Key(String v3Key) {
-        this.v3Key = v3Key;
+    public void setV3SecretKey(String v3SecretKey) {
+        this.v3SecretKey = v3SecretKey;
     }
 
-    public String getV3KeyPath() {
-        return v3KeyPath;
+    public String getCert() {
+        return cert;
     }
 
-    public void setV3KeyPath(String v3KeyPath) {
-        this.v3KeyPath = v3KeyPath;
+    public void setCert(String cert) {
+        this.cert = cert;
     }
 
     public String getNotifyUrl() {
@@ -82,8 +82,8 @@ public class WxPayConfig {
         return "WxPayConfig{" +
                 "mchid='" + mchid + '\'' +
                 ", serialNo='" + serialNo + '\'' +
-                ", v3Key='" + v3Key + '\'' +
-                ", v3KeyPath='" + v3KeyPath + '\'' +
+                ", v3SecretKey='" + v3SecretKey + '\'' +
+                ", cert='" + cert + '\'' +
                 ", notifyUrl='" + notifyUrl + '\'' +
                 ", refundNotifyUrl='" + refundNotifyUrl + '\'' +
                 '}';

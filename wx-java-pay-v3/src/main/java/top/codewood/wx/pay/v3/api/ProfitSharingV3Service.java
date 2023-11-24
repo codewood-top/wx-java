@@ -2,15 +2,9 @@ package top.codewood.wx.pay.v3.api;
 
 import com.google.gson.JsonObject;
 import top.codewood.wx.pay.v3.bean.profitsharing.*;
-import top.codewood.wx.pay.v3.common.WxPayConfig;
 import top.codewood.wx.pay.v3.util.json.WxV3GsonBuilder;
 
 public class ProfitSharingV3Service {
-
-    private WxPayConfig wxPayConfig;
-    public ProfitSharingV3Service(WxPayConfig wxPayConfig) {
-        this.wxPayConfig = wxPayConfig;
-    }
 
     /**
      * 请求分账API
@@ -25,10 +19,10 @@ public class ProfitSharingV3Service {
      * @param request
      * @return
      */
-    public ProfitSharingV3Result request(ProfitSharingV3Request request) {
-        assert wxPayConfig != null && request != null;
+    public ProfitSharingV3Result request(String mchid, String serialNo, ProfitSharingV3Request request) {
+        assert request != null;
         String url = "https://api.mch.weixin.qq.com/v3/profitsharing/orders";
-        return WxPayV3Api.postForResult(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url, WxV3GsonBuilder.getInstance().toJson(request), ProfitSharingV3Result.class);
+        return WxPayV3Api.postForResult(mchid, serialNo, url, WxV3GsonBuilder.getInstance().toJson(request), ProfitSharingV3Result.class);
     }
 
     /**
@@ -44,10 +38,10 @@ public class ProfitSharingV3Service {
      * @param outOrderNo 商户分账单号 查询分账结果，输入申请分账时的商户分账单号； 查询分账完结执行的结果，输入发起分账完结时的商户分账单号。
      * @return
      */
-    public ProfitSharingV3Result query(String transactionId, String outOrderNo) {
-        assert wxPayConfig != null && transactionId != null && outOrderNo != null;
+    public ProfitSharingV3Result query(String mchid, String serialNo, String transactionId, String outOrderNo) {
+        assert transactionId != null && outOrderNo != null;
         String url = String.format("https://api.mch.weixin.qq.com/v3/profitsharing/orders/%s?transation_id=%s", outOrderNo, transactionId);
-        return WxPayV3Api.getForResult(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url, ProfitSharingV3Result.class);
+        return WxPayV3Api.getForResult(mchid, serialNo, url, ProfitSharingV3Result.class);
     }
 
     /**
@@ -66,10 +60,10 @@ public class ProfitSharingV3Service {
      * @param request
      * @return
      */
-    public ProfitSharingReturnV3Result returnRequest(ProfitSharingReturnV3Request request) {
-        assert wxPayConfig != null && request != null;
+    public ProfitSharingReturnV3Result returnRequest(String mchid, String serialNo, ProfitSharingReturnV3Request request) {
+        assert request != null;
         String url = "https://api.mch.weixin.qq.com/v3/profitsharing/return-orders";
-        return WxPayV3Api.postForResult(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url, WxV3GsonBuilder.getInstance().toJson(request), ProfitSharingReturnV3Result.class);
+        return WxPayV3Api.postForResult(mchid, serialNo, url, WxV3GsonBuilder.getInstance().toJson(request), ProfitSharingReturnV3Result.class);
     }
 
     /**
@@ -85,10 +79,10 @@ public class ProfitSharingV3Service {
      * @param outReturnNo 商户回退单号 调用回退接口提供的商户系统内部的回退单号
      * @return
      */
-    public ProfitSharingReturnV3Result returnQuery(String outOrderNo, String outReturnNo) {
-        assert wxPayConfig != null && outOrderNo != null && outReturnNo != null;
+    public ProfitSharingReturnV3Result returnQuery(String mchid, String serialNo, String outOrderNo, String outReturnNo) {
+        assert outOrderNo != null && outReturnNo != null;
         String url = String.format("https://api.mch.weixin.qq.com/v3/profitsharing/return-orders/%s?out_order_no=%s");
-        return WxPayV3Api.getForResult(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url, ProfitSharingReturnV3Result.class);
+        return WxPayV3Api.getForResult(mchid, serialNo, url, ProfitSharingReturnV3Result.class);
     }
 
     /**
@@ -106,8 +100,8 @@ public class ProfitSharingV3Service {
      * @param description 比填 分账描述 分账的原因描述，分账账单中需要体现
      * @return
      */
-    public ProfitSharingV3Result unfreeze(String transactionId, String outOrderNo, String description) {
-        assert wxPayConfig != null && transactionId != null && outOrderNo != null && description != null;
+    public ProfitSharingV3Result unfreeze(String mchid, String serialNo, String transactionId, String outOrderNo, String description) {
+        assert transactionId != null && outOrderNo != null && description != null;
 
         JsonObject paramJson = new JsonObject();
         paramJson.addProperty("transaction_id", transactionId);
@@ -116,7 +110,7 @@ public class ProfitSharingV3Service {
 
         String url = "https://api.mch.weixin.qq.com/v3/profitsharing/orders/unfreeze";
 
-        return WxPayV3Api.postForResult(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url, paramJson.toString(), ProfitSharingV3Result.class);
+        return WxPayV3Api.postForResult(mchid, serialNo, url, paramJson.toString(), ProfitSharingV3Result.class);
     }
 
     /**
@@ -128,11 +122,11 @@ public class ProfitSharingV3Service {
      * @param transactionId 微信支付订单号
      * @return 订单剩余待分金额 整数，单元为分
      */
-    public Integer queryUnSplitAmount(String transactionId) {
-        assert wxPayConfig != null && transactionId != null;
+    public Integer queryUnSplitAmount(String mchid, String serialNo, String transactionId) {
+        assert transactionId != null;
         String url = String.format("https://api.mch.weixin.qq.com/v3/profitsharing/transactions/%s/amounts", transactionId);
 
-        JsonObject retJson = WxPayV3Api.getForResult(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url, JsonObject.class);
+        JsonObject retJson = WxPayV3Api.getForResult(mchid, serialNo, url, JsonObject.class);
         return retJson.get("unsplit_amount").getAsInt();
     }
 
@@ -147,10 +141,10 @@ public class ProfitSharingV3Service {
      *
      * @param request
      */
-    public void addReceiver(ProfitSharingReceiverAddV3Request request) {
-        assert wxPayConfig != null && request != null;
+    public void addReceiver(String mchid, String serialNo, ProfitSharingReceiverAddV3Request request) {
+        assert request != null;
         String url = "https://api.mch.weixin.qq.com/v3/profitsharing/receivers/add";
-        WxPayV3Api.post(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url, WxV3GsonBuilder.getInstance().toJson(request));
+        WxPayV3Api.post(mchid, serialNo, url, WxV3GsonBuilder.getInstance().toJson(request));
     }
 
     /**
@@ -166,8 +160,8 @@ public class ProfitSharingV3Service {
      * @param account 分账接收方账号 类型是MERCHANT_ID时，是商户号
      * 类型是PERSONAL_OPENID时，是个人openid
      */
-    public void delReceiver(String appid, String type, String account) {
-        assert wxPayConfig != null && type != null && account != null;
+    public void delReceiver(String mchid, String serialNo, String appid, String type, String account) {
+        assert type != null && account != null;
 
         JsonObject paramJson = new JsonObject();
         paramJson.addProperty("appid", appid);
@@ -176,7 +170,7 @@ public class ProfitSharingV3Service {
 
         String url = "https://api.mch.weixin.qq.com/v3/profitsharing/receivers/delete";
 
-        WxPayV3Api.post(wxPayConfig.getMchid(), wxPayConfig.getSerialNo(), url, paramJson.toString());
+        WxPayV3Api.post(mchid, serialNo, url, paramJson.toString());
     }
 
 
