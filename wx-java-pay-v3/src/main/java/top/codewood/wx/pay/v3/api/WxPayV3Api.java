@@ -1,6 +1,7 @@
 package top.codewood.wx.pay.v3.api;
 
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -8,6 +9,7 @@ import org.apache.http.HttpStatus;
 import org.apache.http.util.EntityUtils;
 import top.codewood.wx.pay.v3.bean.error.WxPayError;
 import top.codewood.wx.pay.v3.bean.error.WxPayErrorException;
+import top.codewood.wx.pay.v3.bean.notify.WxPayNotify;
 import top.codewood.wx.pay.v3.cert.CertificateItem;
 import top.codewood.wx.pay.v3.cert.CertificateList;
 import top.codewood.wx.pay.v3.common.WxPayConstants;
@@ -34,6 +36,8 @@ import java.util.*;
 public class WxPayV3Api {
 
     public static final String EMPTY_STR = "";
+
+    private static Map<String, WxPayV3CryptUtils> wxPayV3CryptUtilsMap = new HashMap<>();
 
     private static WxPayStorageService wxPayStorageService = new WxPayStorageServiceDefaultImpl();
 
@@ -102,7 +106,11 @@ public class WxPayV3Api {
             String token = getToken(mchid, serialNo, WxPayConstants.HttpMethod.GET, url, EMPTY_STR);
             String respStr = new WxPayHttpClient().get(url, token);
             CertificateList certificateList = WxV3GsonBuilder.getInstance().fromJson(respStr, CertificateList.class);
-            WxPayV3CryptUtils wxPayV3CryptUtils = new WxPayV3CryptUtils(apiV3Key.getBytes(StandardCharsets.UTF_8));
+            WxPayV3CryptUtils wxPayV3CryptUtils = wxPayV3CryptUtilsMap.get(mchid);
+            if (wxPayV3CryptUtils == null) {
+                wxPayV3CryptUtils = new WxPayV3CryptUtils(apiV3Key.getBytes(StandardCharsets.UTF_8));
+                wxPayV3CryptUtilsMap.put(mchid, wxPayV3CryptUtils);
+            }
             List<CertificateItem> certificateItems = certificateList.getCerts();
             for (CertificateItem certificateItem : certificateItems) {
                 String publicKey = wxPayV3CryptUtils.decrypt(certificateItem.getEncryptCertificateItem().getAssociatedData().getBytes(StandardCharsets.UTF_8),
@@ -113,6 +121,32 @@ public class WxPayV3Api {
             }
         } catch (IOException | GeneralSecurityException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 解密证书和回调报文
+     *
+     * <a href="https://pay.weixin.qq.com/docs/merchant/development/interface-rules/certificate-callback-decryption.html">如何解密证书和回调报文</a>
+     *
+     * @param mchid
+     * @param encryptedData
+     * @param tClass
+     * @return
+     * @param <T>
+     */
+    public static <T> T decryptNotifyData(String mchid, String encryptedData, Class<T> tClass) {
+        WxPayNotify wxPayNotify = WxV3GsonBuilder.getInstance().fromJson(encryptedData, WxPayNotify.class);
+        WxPayV3CryptUtils wxPayV3CryptUtils = wxPayV3CryptUtilsMap.get(mchid);
+        if (wxPayV3CryptUtils == null) throw new IllegalStateException(String.format("支付商户号[%s]未调用loadCertificates", mchid));
+
+        try {
+            String decrypted = wxPayV3CryptUtils.decrypt(wxPayNotify.getResource().getAssociatedData().getBytes(StandardCharsets.UTF_8),
+                    wxPayNotify.getResource().getNonce().getBytes(StandardCharsets.UTF_8),
+                    wxPayNotify.getResource().getCipherText());
+            return WxV3GsonBuilder.getInstance().fromJson(decrypted, tClass);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
         }
     }
 

@@ -132,6 +132,17 @@ public class WxRefundTransaction implements Serializable {
         public void setPayerRefund(int payerRefund) {
             this.payerRefund = payerRefund;
         }
+
+        @Override
+        public String toString() {
+            return "Amount{" +
+                    "total=" + total +
+                    ", refund=" + refund +
+                    ", payerTotal=" + payerTotal +
+                    ", payerRefund=" + payerRefund +
+                    '}';
+        }
+
     }
 
     @Override
