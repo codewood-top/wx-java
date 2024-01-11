@@ -37,6 +37,59 @@ public class ProfitSharingNotifyV3Result implements Serializable {
     @SerializedName("success_time")
     private OffsetDateTime successTime;
 
+    /**
+     * 分账接收方列表
+     */
+    private Receiver receiver;
+
+    public String getMchid() {
+        return mchid;
+    }
+
+    public void setMchid(String mchid) {
+        this.mchid = mchid;
+    }
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getOutOrderNo() {
+        return outOrderNo;
+    }
+
+    public void setOutOrderNo(String outOrderNo) {
+        this.outOrderNo = outOrderNo;
+    }
+
+    public OffsetDateTime getSuccessTime() {
+        return successTime;
+    }
+
+    public void setSuccessTime(OffsetDateTime successTime) {
+        this.successTime = successTime;
+    }
+
+    public Receiver getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(Receiver receiver) {
+        this.receiver = receiver;
+    }
+
     public static class Receiver implements Serializable {
         /**
          * 分账接收方的类型，枚举值：
@@ -111,6 +164,7 @@ public class ProfitSharingNotifyV3Result implements Serializable {
                 ", orderId='" + orderId + '\'' +
                 ", outOrderNo='" + outOrderNo + '\'' +
                 ", successTime=" + successTime +
+                ", receiver=" + receiver +
                 '}';
     }
 }
